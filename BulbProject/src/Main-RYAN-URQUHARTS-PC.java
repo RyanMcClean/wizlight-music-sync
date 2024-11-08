@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.sound.sampled.*;
-
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Mixer.Info;
 
 /**
  * @author : Ryan Urquhart
@@ -21,41 +25,23 @@ public class Main {
     static int repeatNumber = 100;
 
     public static void main(String[] args) {
-        // run(38899);
+        run(38899);
 
-        // Mixer.Info[] mixersInfo = AudioSystem.getMixerInfo();
+        Mixer.Info[] mixersInfo = AudioSystem.getMixerInfo();
 
-        // for (Mixer.Info mixerInfo : mixersInfo) {
-        //     System.out.println("Mixer: " + mixerInfo.getName());
+        for (Mixer.Info mixerInfo : mixersInfo) {
+            System.out.println("Mixer: " + mixerInfo.getName());
 
-        //     Mixer mixer = AudioSystem.getMixer(mixerInfo);
-
-        //     Line.Info[] sourceLineInfo = mixer.getSourceLineInfo();
-        //     for (Line.Info info : sourceLineInfo)
-        //         showLineInfo(info);
-
-        //     Line.Info[] targetLineInfo = mixer.getTargetLineInfo();
-        //     for (Line.Info info : targetLineInfo)
-        //         showLineInfo(info);
-        // }
-
-
-        Mixer.Info[] mixers = AudioSystem.getMixerInfo();
-        for (Mixer.Info mixerInfo : mixers) {
             Mixer mixer = AudioSystem.getMixer(mixerInfo);
-            try {
-                mixer.open();
-                Line.Info[] lines = mixer.getSourceLineInfo();
-                for (Line.Info linfo : lines) {
-                    DataLine line = (DataLine)AudioSystem.getLine(linfo);
-                    if(line != null)
-                        System.out.println(line.getLevel());
-                }
-            } catch (LineUnavailableException e) {
-                e.printStackTrace();
-            }
+
+            Line.Info[] sourceLineInfo = mixer.getSourceLineInfo();
+            for (Line.Info info : sourceLineInfo)
+                showLineInfo(info);
+
+            Line.Info[] targetLineInfo = mixer.getTargetLineInfo();
+            for (Line.Info info : targetLineInfo)
+                showLineInfo(info);
         }
-    
     }
 
     public static void run(int port) {

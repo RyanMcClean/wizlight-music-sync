@@ -1,0 +1,41 @@
+html,
+body {
+    height: 100%;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+
+.bulb-icon {
+    height: 50%;
+    width: 50%;
+}
+
+.button {
+    transition: 0.25s;
+}
+
+.image-color {
+    filter: grayscale(100%);
+    transition: 0.25s;
+}
+
+.image-class {
+    display: inline-flex;
+}
+
+.fa-lightbulb {
+    font-size: 5em;
+    color: orange;
+    color:
+        transition: 0.5s;
+}

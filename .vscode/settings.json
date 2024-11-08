@@ -2,5 +2,10 @@
     "java.debug.settings.onBuildFailureProceed": true,
     "java.project.referencedLibraries": [
         "BulbProject/lib/**/*.jar"
-    ]
+    ],
+    "python.analysis.extraPaths": [
+        "./QUBProject40099112/bulbControl/bulbControlFrontend"
+    ],
+    "djlint.showInstallError": false,
+    "java.compile.nullAnalysis.mode": "disabled"
 }

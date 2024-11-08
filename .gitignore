@@ -26,3 +26,13 @@ replay_pid*
 *.docx
 *.xlsx
 *.pdf
+
+/TarsosDSP
+/Realtime_PyAudio_FFT
+**/__pycache__
+**/*.sqlite3
+**/migrations
+**/Scripts
+**/share
+**/pyvenv.cfg
+**/images

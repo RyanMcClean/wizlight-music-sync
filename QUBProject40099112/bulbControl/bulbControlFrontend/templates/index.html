@@ -1,0 +1,51 @@
+{% extends "master.html" %}
+{% load static %}
+{% block title %}Wizlight Bulb Control{% endblock %}
+{% block content %}
+    <script type="text/javascript" src="{% static 'js/imageHandler.js' %}"></script>
+    <script>window.setInterval(backgroundUpdate, 100)</script>
+    <h1>Your Bulbs</h1>
+    <h3>Bulbs</h3>
+    <p>
+        <form action="" method="post">
+            <input type='hidden' name='discover'>
+            <button>Click to find bulbs</button>
+        </form>
+        <br>
+        <br>
+        {% for x in bulbs %}
+            <p>{{ x.BulbName }}</p>
+            <i name="{{ x.BulbName }}"
+               class="fa-solid fa-lightbulb"
+               onclick="updateImage.call(this)"
+               value="{{ x.BulbIp }}"></i>
+        {% endfor %}
+        {% for x in ips %}
+            <form action="" method="post">
+                <button>Click to flicker bulb at {{ x }}</button>
+                <input type='hidden' name='ip' value="{{ x }}">
+                <br>
+                <br>
+            </form>
+        {% endfor %}
+        {% for x in ips %}
+            <form action='' method='post'>
+                {% for field in regForm %}
+                    {% if field.html_name == 'bulbIp' %}
+                        <input type='hidden' name="{{ field.html_name }}" value="{{ x }}">
+                    {% elif field.html_name == 'bulbName' %}
+                        {{ field.errors }}
+                        <label for="{{ field.id_for_label }}">Input a name for the bulb at ip: {{ x }}</label>
+                        {{ field }}
+                        <br>
+                    {% else %}
+                        <input type='hidden' name="{{ field.html_name }}" value="">
+                    {% endif %}
+                {% endfor %}
+                <br>
+                <input type="submit" value="save">
+                <br>
+                <br>
+            </form>
+        {% endfor %}
+    {% endblock %}

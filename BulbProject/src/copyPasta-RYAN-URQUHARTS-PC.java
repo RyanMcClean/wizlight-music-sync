@@ -12,6 +12,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
+import com.tagtraum.jipes.audio.FFT;
 import com.tagtraum.jipes.math.*;
 
 public class copyPasta {
@@ -30,8 +31,7 @@ public class copyPasta {
 
         final byte[] buf = new byte[256]; // <--- increase this for higher frequency resolution
         final int numberOfSamples = buf.length / format.getFrameSize();
-        FFTFactory testFFT = FFTFactory.getInstance();
-        final Transform fft = testFFT.create(numberOfSamples);
+        final JavaFTT ftt = new JavaFTT(numberOfSamples);
         while (true) {
             // in real impl, don't just ignore how many bytes you read
             audioStream.read(buf);
@@ -42,7 +42,6 @@ public class copyPasta {
             final float[] imaginaryPart = transformed[1];
             final double[] magnitudes = toMagnitudes(realPart, imaginaryPart);
 
-            System.out.println(magnitudes[0]);
             // do something with magnitudes...
         }
     }

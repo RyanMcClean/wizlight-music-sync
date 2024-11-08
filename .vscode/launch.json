@@ -23,6 +23,22 @@
             "request": "launch",
             "mainClass": "copyPasta",
             "projectName": "BulbProject"
+        },
+        {
+            "name": "Django",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceRoot}/QUBProject40099112/bulbControl/manage.py",
+            "args": [
+                "runserver",
+                "127.0.0.1:9000"
+            ],
+            "console": "integratedTerminal",
+            "serverReadyAction": {
+                "pattern": ".*(http?:\\/\\/\\S+:[0-9]+\\/?).*",
+                "uriFormat": "%s",
+                "action": "openExternally",
+            }
         }
     ]
 }
