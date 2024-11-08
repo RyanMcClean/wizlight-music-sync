@@ -1,0 +1,14 @@
+Java FFT library:
+    TarsosDSP
+    tagtraum.jipes
+
+Python FFT library:
+    Realtime_PyAudio_FFT
+        - I've forked this, I'm going to edit it, so it isn't a visualiser, but rather a library I can use for the FFT algo
+
+Python PyAudio Library Fork:
+    PyAudioWPatch
+
+
+Beat Detection Algo:
+    https://www.parallelcube.com/2018/03/30/beat-detection-algorithm/
