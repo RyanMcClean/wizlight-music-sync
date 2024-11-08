@@ -36,3 +36,4 @@ replay_pid*
 **/share
 **/pyvenv.cfg
 **/images
+**/env

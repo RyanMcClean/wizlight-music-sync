@@ -12,3 +12,14 @@ Python PyAudio Library Fork:
 
 Beat Detection Algo:
     https://www.parallelcube.com/2018/03/30/beat-detection-algorithm/
+
+
+Running in linux:
+    Must be running PulseAudio
+    Have to create a loopback device for main output
+    Have to switch fallback to this speaker device
+    (If this could be done via the cli this would be great)
+    Might not be the best situation for someone who's running this on their home machine
+
+    Cannot run PyAudioWPatch, has to use og PyAudio
+    TODO have to build in a way of only loading PyAudioWPatch if it's available
