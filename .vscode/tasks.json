@@ -46,7 +46,13 @@
             "linux": {
                 "command": "cat ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 ${workspaceFolder}/QUBProject40099112/env/bin/pip3 install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi"
             },
-            "dependsOn": "start_venv"
+            "dependsOn": "start_venv",
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "close": true
+            }
         },
         {
             "label": "setup_venv",
@@ -62,7 +68,13 @@
             "linux": {
                 "command": "source ${workspaceFolder}/QUBProject40099112/env/bin/activate"
             },
-            "dependsOn": "setup_venv"
+            "dependsOn": "setup_venv",
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "close": true
+            }
         }
     ]
 }
