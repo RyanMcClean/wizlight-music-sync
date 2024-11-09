@@ -1,0 +1,3 @@
+[submodule "QUBProject40099112/bulbControl/bulbControlFrontend/Realtime_PyAudio_FFT"]
+	path = QUBProject40099112/bulbControl/bulbControlFrontend/Realtime_PyAudio_FFT
+	url = git@github.com:RyanU1328/Realtime_PyAudio_FFT.git
