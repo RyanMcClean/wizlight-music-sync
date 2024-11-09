@@ -37,3 +37,6 @@ replay_pid*
 **/pyvenv.cfg
 **/images
 **/env
+**/build
+**/include
+**/lib

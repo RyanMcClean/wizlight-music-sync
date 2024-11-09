@@ -38,7 +38,8 @@
                 "pattern": ".*(http?:\\/\\/\\S+:[0-9]+\\/?).*",
                 "uriFormat": "%s",
                 "action": "openExternally",
-            }
+            },
+            "preLaunchTask": "Runtime_Setup_Part_2",
         }
     ]
 }
