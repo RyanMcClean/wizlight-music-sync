@@ -16,8 +16,6 @@
                 "reveal": "always",
                 "focus": true,
                 "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false
             },
             "dependsOn": "install_requirements"
         },
@@ -35,8 +33,7 @@
                 "reveal": "always",
                 "focus": true,
                 "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false
+                "close": true
             }
         },
         {
