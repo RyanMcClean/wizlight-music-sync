@@ -29,7 +29,7 @@
             "type": "debugpy",
             "request": "launch",
             "windows": {
-                "python": "${workspaceFolder}/QUBProject40099112/env/Scripts/python3.exe",
+                "python": "${workspaceFolder}/QUBProject40099112/env/Scripts/python.exe",
             },
             "linux": {
                 "python": "${workspaceFolder}/QUBProject40099112/env/bin/python3",

@@ -54,10 +54,22 @@
                 "close": true
             }
         },
+        // The below task will fail if the interprester is set to a 
         {
             "label": "setup_venv",
             "type": "shell",
-            "command": "${command:python.interpreterPath} -m venv ${workspaceFolder}/QUBProject40099112/env"
+            "windows": {
+                "command": "if (-not (Test-Path -Path ${workspaceFolder}/QUBProject40099112/env)) { ${command:python.interpreterPath} -m venv ${workspaceFolder}/QUBProject40099112/env }",
+            },
+            "linux": {
+                "command": "if [ -d ${workspaceFolder}/QUBProject40099112/env ]; then ${command:python.interpreterPath} -m venv ${workspaceFolder}/QUBProject40099112/env; fi",
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "close": true
+            }
         },
         {
             "label": "start_venv",
