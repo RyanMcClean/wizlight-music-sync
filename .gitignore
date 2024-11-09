@@ -27,8 +27,6 @@ replay_pid*
 *.xlsx
 *.pdf
 
-/TarsosDSP
-/Realtime_PyAudio_FFT
 **/__pycache__
 **/*.sqlite3
 **/migrations
