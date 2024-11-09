@@ -28,6 +28,12 @@
             "name": "Django",
             "type": "debugpy",
             "request": "launch",
+            "windows": {
+                "python": "${workspaceFolder}/QUBProject40099112/env/Scripts/python3.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/QUBProject40099112/env/bin/python3",
+            },
             "program": "${workspaceRoot}/QUBProject40099112/bulbControl/manage.py",
             "args": [
                 "runserver",
