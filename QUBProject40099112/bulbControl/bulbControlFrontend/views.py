@@ -72,6 +72,10 @@ def index(request):
                 model.bulbBlue = bulbResponse['b'] if 'b' in bulbResponse.keys() else 0
                 model.bulbTemp = bulbResponse['temp'] if 'temp' in bulbResponse.keys() else 0
                 model.save()
+                bulbs = wizBulb.objects.all()
+                for x in bulbs:
+                    updateBulbObjects(x)
+                    context['bulbs'].append(x.returnJSON())
                 return render(request, 'index.html', context)
             else:
                 return render(request, 'index.html', context)

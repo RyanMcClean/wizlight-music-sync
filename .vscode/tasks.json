@@ -6,7 +6,12 @@
         {
             "label": "Runtime_Setup_Part_1",
             "type": "shell",
-            "command": "${command:python.interpreterPath} ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py makemigrations bulbControlFrontend",
+            "windows": {
+                "command": "${workspaceFolder}/QUBProject40099112/env/Scripts/python.exe ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py makemigrations bulbControlFrontend"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/QUBProject40099112/env/bin/python ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py makemigrations bulbControlFrontend"
+            },
             "presentation": {
                 "reveal": "always",
                 "focus": true,
@@ -19,7 +24,12 @@
         {
             "label": "Runtime_Setup_Part_2",
             "type": "shell",
-            "command": "${command:python.interpreterPath} ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py migrate",
+            "windows": {
+                "command": "${workspaceFolder}/QUBProject40099112/env/Scripts/python.exe ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py migrate"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/QUBProject40099112/env/bin/python ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py migrate"
+            },
             "dependsOn": "Runtime_Setup_Part_1",
             "presentation": {
                 "reveal": "always",
@@ -33,11 +43,28 @@
             "label": "install_requirements",
             "type": "shell",
             "windows": {
-                "command": "FOR /F %k in (${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt) DO pip install %k"
+                "command": "Foreach ($package in (Get-Content -Path ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt)) { ${workspaceFolder}/QUBProject40099112/env/Scripts/pip.exe install $package }"
             },
             "linux": {
-                "command": "cat ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -t -n 1 ${command:python.interpreterPath} -m pip install"
-            }
+                "command": "cat ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -t -n 1 ${command:python.interpreterPath} -m ${workspaceFolder}/QUBProject40099112/env/bin/pip install"
+            },
+            "dependsOn": "start_venv"
+        },
+        {
+            "label": "setup_venv",
+            "type": "shell",
+            "command": "${command:python.interpreterPath} -m venv ${workspaceFolder}/QUBProject40099112/env"
+        },
+        {
+            "label": "start_venv",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}/QUBProject40099112/env/Scripts/Activate.ps1"
+            },
+            "linux": {
+                "command": "source ${workspaceFolder}/QUBProject40099112/env/bin/activate"
+            },
+            "dependsOn": "setup_venv"
         }
     ]
 }
