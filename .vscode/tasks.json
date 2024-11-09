@@ -44,7 +44,7 @@
                 "command": "Foreach ($package in (Get-Content -Path ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt)) { ${workspaceFolder}/QUBProject40099112/env/Scripts/pip.exe install $package }"
             },
             "linux": {
-                "command": "cat ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 ${workspaceFolder}/QUBProject40099112/env/bin/pip3 install; echo $? && sleep 10"
+                "command": "cat ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 ${workspaceFolder}/QUBProject40099112/env/bin/pip3 install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi"
             },
             "dependsOn": "start_venv"
         },
