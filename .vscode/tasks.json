@@ -36,7 +36,7 @@
                 "command": "FOR /F %k in (${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt) DO pip install %k"
             },
             "linux": {
-                "command": "cat ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 pip install"
+                "command": "cat ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -0 -n 1 pip install"
             }
         }
     ]
