@@ -6,7 +6,7 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Current File",
+            "name": "Current File (Java)",
             "request": "launch",
             "mainClass": "${file}"
         },
@@ -46,6 +46,20 @@
                 "action": "openExternally",
             },
             "preLaunchTask": "Runtime_Setup_Part_2",
+        },
+        {
+            "name": "Current File (Python)",
+            "type": "debugpy",
+            "request": "launch",
+            "windows": {
+                "python": "${workspaceFolder}/QUBProject40099112/env/Scripts/python.exe",
+            },
+            "linux": {
+                "python": "${workspaceFolder}/QUBProject40099112/env/bin/python3",
+            },
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "preLaunchTask": "install_requirements",
         }
     ]
 }

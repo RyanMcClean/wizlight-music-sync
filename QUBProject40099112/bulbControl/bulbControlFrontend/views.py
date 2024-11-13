@@ -16,7 +16,7 @@ port = 38899
 
 def index(request):
     bulbs = wizBulb.objects.all() # To add a limit to the returned bulb objects the line would read bulbs = wizBulb.objects.all()[x] where x is the number of bulb objects returned
-    context = {'regForm': bulbForm(), 'ips': [], 'count': 0, 'bulbs': []}
+    context = {'regForm': bulbForm(), 'ips': [], 'count': 0, 'bulbs': [], 'numBulbs': 0}
     for x in bulbs:
         updateBulbObjects(x)
         context['bulbs'].append(x.returnJSON())
@@ -54,6 +54,7 @@ def index(request):
             print('-' * 20)
                 
             sock.close()
+            context['numBulbs'] = len(context['bulbs'])
             return render(request, 'index.html', context)
         
                 # Create bulb object in db
@@ -76,8 +77,10 @@ def index(request):
                 for x in bulbs:
                     updateBulbObjects(x)
                     context['bulbs'].append(x.returnJSON())
+                context['numBulbs'] = len(context['bulbs'])
                 return render(request, 'index.html', context)
             else:
+                context['numBulbs'] = len(context['bulbs'])
                 return render(request, 'index.html', context)
     
     elif request.method == 'GET':
@@ -85,17 +88,17 @@ def index(request):
         print("load home page")
         print('-' * 20)
 
+        context['numBulbs'] = len(context['bulbs'])    
         return render(None, 'index.html', context)
 
 def toggleBulb(request):
     if request.method == 'POST':
         print(request.POST)
-        body = json.loads(request.body.decode('utf-8'))
         
         # Flicker specific bulb
-        if 'ip' in request.POST.keys() or 'ip' in body.keys():
+        if 'ip' in request.POST.keys() or 'ip' in json.loads(request.body.decode('utf-8')).keys():
             print("toggle")
-            ip = request.POST['ip'] if 'ip' in request.POST.keys() else body['ip']
+            ip = request.POST['ip'] if 'ip' in request.POST.keys() else json.loads(request.body.decode('utf-8'))['ip']
             print('-' * 20)
             startTime = time_ns()
             m = json.loads(sendUDPPacket(ip, port, discover)[0].decode("utf-8"))['result']
@@ -104,10 +107,10 @@ def toggleBulb(request):
             print("Toggle time: " + str(totalTime))
             if m['state']:
                 sendUDPPacket(ip, port, turn_off)
-                return JsonResponse({'state': False})
+                return JsonResponse(m)
             else:
                 sendUDPPacket(ip, port, turn_on)
-                return JsonResponse({'state': True})
+                return JsonResponse(m)
             
 def queryBulb(request):
     if request.method == 'POST':
@@ -121,6 +124,6 @@ def queryBulb(request):
             
             m = json.loads(sendUDPPacket(ip, port, discover)[0].decode("utf-8"))['result']
             if m['state']:
-                return JsonResponse({'state': True})
+                return JsonResponse(m)
             else:
-                return JsonResponse({'state': False})
+                return JsonResponse(m)

@@ -3,7 +3,9 @@
 {% block title %}Wizlight Bulb Control{% endblock %}
 {% block content %}
     <script type="text/javascript" src="{% static 'js/imageHandler.js' %}"></script>
-    <script>window.setInterval(backgroundUpdate, 100)</script>
+    {% if numBulbs > 0 %}
+    <script>window.setInterval(backgroundUpdate, 1000)</script>
+    {% endif %}
     <h1>Your Bulbs</h1>
     <h3>Bulbs</h3>
     <p>
@@ -12,7 +14,6 @@
             <button>Click to find bulbs</button>
         </form>
         <br>
-        <br>
         {% for x in bulbs %}
             <p>{{ x.BulbName }}</p>
             <i name="{{ x.BulbName }}"
@@ -20,13 +21,12 @@
                onclick="updateImage.call(this)"
                value="{{ x.BulbIp }}"></i>
         {% endfor %}
+        <br>
+        <br>
         {% for x in ips %}
-            <form action="" method="post">
-                <button>Click to flicker bulb at {{ x }}</button>
-                <input type='hidden' name='ip' value="{{ x }}">
+                <button name="{{ x }}" value="{{ x }}" onclick="updateImage.call(this)">Click to toggle bulb at {{ x }}</button>
                 <br>
                 <br>
-            </form>
         {% endfor %}
         {% for x in ips %}
             <form action='' method='post'>

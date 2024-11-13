@@ -35,7 +35,6 @@ body {
 
 .fa-lightbulb {
     font-size: 5em;
-    color: orange;
-    color:
-        transition: 0.5s;
+    transition: color 0.5s;
+    text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
 }
