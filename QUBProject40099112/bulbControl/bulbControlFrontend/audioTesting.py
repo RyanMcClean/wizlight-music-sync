@@ -24,7 +24,7 @@ timeout = 0.5
 
 
 ear = Stream_Analyzer(
-                    device = 10,                    # Pyaudio (portaudio) device index, defaults to first mic input
+                    device = None,                    # Pyaudio (portaudio) device index, defaults to first mic input
                     rate   = None,                 # Audio samplerate, None uses the default source settings
                     FFT_window_size_ms  = 60,       # Window size used for the FFT transform
                     updates_per_second  = 500,      # How often to read the audio stream for new data
@@ -41,30 +41,17 @@ sock.sendto(b"{\"id\":1,\"method\":\"setPilot\",\"params\":{\"temp\":2000,\"dimm
 bufferSize = 100
 
 freqArray = {}
-midArray = []
-highArray = []
-lowAvg = 1
-midAvg = 1
-highAvg = 1
 
 
 for x in range(bufferSize):
     fftx, fft, freqBins, freqAmp = ear.get_audio_features()
-    lowFreq = 1
-    midFreq = 1
-    highFreq = 1
     for i, x in enumerate(freqBins):
-        if x < 43:
-            lowFreq += freqAmp[i].item()
-        elif 43 < x < 86:
-            midFreq += freqAmp[i].item()
-        elif 86 < x < 129:
-            highFreq += freqAmp[i].item()
+        if x.item() < 129:
+            freqArray.setdefault(x.item(), []).append(freqAmp[i].item())
         else:
             break
-    lowArray.append(lowFreq)
-    midArray.append(midFreq)
-    highArray.append(highFreq)
+for x in range(len(freqArray.keys())):
+    freqArray[x] = _sum(freqArray.keys()[x]) / len(freqArray.keys()[x])
 
 
 brightness = 100
@@ -75,36 +62,21 @@ end = time()
 while (end - start) < 600:
     for num in range(bufferSize):
         fftx, fft, freqBins, freqAmp = ear.get_audio_features()
-
-        lowFreq = 0
-        midFreq = 0
-        highFreq = 0
         for i, x in enumerate(freqBins):
-            
             if x.item() < 129:
-                freqArray[x]
+                freqArray[x.item()][num] = freqAmp[i].item()
             else:
                 break
 
-        if ((lowFreq >= (lowAvg + abs(lowAvg/sensitivity))) and (midFreq >= (midAvg + 
-                abs(midAvg/sensitivity))) and (highFreq >= (highAvg + 
-                abs(highAvg/sensitivity)))) and not lowAvg <= 1 and not midAvg <= 1 and not highAvg <= 1:
-            if brightness < 50:
-                brightness = 100
+        for x in freqArray.keys():
+            if '_avg' not in x and freqArray[x][num] >= freqArray[str(x) + "_avg"] + (freqArray[str(x) + "_avg"] / sensitivity):
                 beat(brightness)
-            else:
-                brightness = 10
-                beat(brightness)
-        lowArray[num] = lowFreq
-        midArray[num] = midFreq
-        highArray[num] = highFreq
+                if brightness > 50:
+                    brightness = 10
+                else:
+                    brightness = 100
         
-        lowAvg = _sum(lowArray)/len(lowArray)
-        lowVar = 0
-        for x in lowArray:
-            lowVar += (x - lowAvg)**2
-        lowVar = lowVar/len(lowArray)
-        midAvg = _sum(midArray)/len(midArray)
-        highAvg = _sum(highArray)/len(highArray)
-
+        for x in freqArray.keys():
+            if '_avg' not in x:
+                freqArray[str(x) + "_avg"] = _sum(freqArray[x]) / len(freqArray[x])
         end = time()
