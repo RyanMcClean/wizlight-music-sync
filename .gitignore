@@ -33,7 +33,6 @@ replay_pid*
 **/Scripts
 **/share
 **/pyvenv.cfg
-**/images
 **/env
 **/build
 **/include

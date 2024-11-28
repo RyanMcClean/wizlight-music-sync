@@ -3,7 +3,8 @@ orange = 'rgb(255, 165, 0)'
 grey = 'rgb(200, 200, 200)'
 
 async function updateImage() {
-    element = document.getElementsByName(this.getAttribute('name'))[ 0 ]
+    element = document.getElementsByClassName(this.getAttribute('class'))[ 0 ]
+    console.log(element)
     ip = this.getAttribute('value')
     response = await fetch('/toggleBulb/', {
         method: 'post',

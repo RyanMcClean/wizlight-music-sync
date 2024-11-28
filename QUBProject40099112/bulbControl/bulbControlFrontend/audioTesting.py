@@ -11,7 +11,6 @@ def _sum(arr):
 def beat(brightness):
     print("\nbeat\n")
     sock.sendto(b"{\"id\":1,\"method\":\"setPilot\",\"params\":{\"temp\":2000,\"dimming\":" + bytes(str(brightness), 'utf-8') + b"}}", (ip, port))
-    sleep(0.1)
 
 ip = '192.168.50.128'
 port = 38899
@@ -28,7 +27,7 @@ ear = Stream_Analyzer(
                     rate   = None,                 # Audio samplerate, None uses the default source settings
                     FFT_window_size_ms  = 60,       # Window size used for the FFT transform
                     updates_per_second  = 500,      # How often to read the audio stream for new data
-                    smoothing_length_ms = 50,       # Apply some temporal smoothing to reduce noisy features
+                    smoothing_length_ms = 100,       # Apply some temporal smoothing to reduce noisy features
                     n_frequency_bins = 150,          # The FFT features are grouped in bins
                     visualize = False,
                     verbose = True 
@@ -42,41 +41,73 @@ bufferSize = 100
 
 freqArray = {}
 
+tempLow = []
+tempMid = []
+tempHigh = []
 
 for x in range(bufferSize):
     fftx, fft, freqBins, freqAmp = ear.get_audio_features()
+    low = 0
+    mid = 0
+    high = 0
     for i, x in enumerate(freqBins):
-        if x.item() < 129:
-            freqArray.setdefault(x.item(), []).append(freqAmp[i].item())
+        # if x.item() < 129:
+        #     freqArray.setdefault(x.item(), []).append(freqAmp[i].item() if freqAmp[i].item() != 0 else 1)
+        if x.item() < 43:
+            low += x.item()
+        elif x.item() < 86:
+            mid += x.item()
+        elif x.item() < 129:
+            high += x.item()
         else:
             break
-for x in range(len(freqArray.keys())):
-    freqArray[x] = _sum(freqArray.keys()[x]) / len(freqArray.keys()[x])
+    tempLow.append(low)
+    tempMid.append(mid)
+    tempHigh.append(high)
+        
+freqArray.setdefault('lowArray', tempLow)
+freqArray.setdefault('midArray', tempMid)
+freqArray.setdefault('highArray', tempHigh)
+for key in list(freqArray.keys()):
+    freqArray[str(key) + '_avg'] = _sum(freqArray[key]) / len(freqArray[key])
 
 
-brightness = 100
-sensitivity = 2
+brightness = 500
+variance = 1
 
 start = time()
 end = time()
-while (end - start) < 600:
+while (end - start) < 6000:
     for num in range(bufferSize):
         fftx, fft, freqBins, freqAmp = ear.get_audio_features()
         for i, x in enumerate(freqBins):
-            if x.item() < 129:
-                freqArray[x.item()][num] = freqAmp[i].item()
-            else:
+            # if x.item() < 129:
+            #     freqArray[x.item()][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+            if 20 < x.item() < 43:
+                freqArray['lowArray'][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+            elif x.item() < 86:
+                freqArray['midArray'][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+            elif x.item() < 129:
+                freqArray['highArray'][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
                 break
 
-        for x in freqArray.keys():
-            if '_avg' not in x and freqArray[x][num] >= freqArray[str(x) + "_avg"] + (freqArray[str(x) + "_avg"] / sensitivity):
+        for key in list(freqArray.keys()):
+            if '_avg' not in str(key) and freqArray[key][num] > (freqArray[str(key) + "_avg"] + (freqArray[str(key) + "_avg"] * variance)):
                 beat(brightness)
+                freqArray[key][num] = freqArray[key + "_avg"]
+                variance = variance * freqArray[key + "_avg"]
                 if brightness > 50:
                     brightness = 10
                 else:
                     brightness = 100
+                break
         
-        for x in freqArray.keys():
-            if '_avg' not in x:
-                freqArray[str(x) + "_avg"] = _sum(freqArray[x]) / len(freqArray[x])
+        for key in list(freqArray.keys()):
+            if '_avg' not in str(key):
+                freqArray[str(key) + "_avg"] = _sum(freqArray[key]) / len(freqArray[key])
+                for x in freqArray[key]:
+                    variance += freqArray[key + '_avg'] / x if freqArray[key + '_avg'] / x < 1 else x / freqArray[key + '_avg']
+                variance = variance / len(freqArray[key])
+            
+        variance = variance * 4
         end = time()

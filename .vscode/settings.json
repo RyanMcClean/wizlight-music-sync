@@ -1,4 +1,5 @@
 {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "java.debug.settings.onBuildFailureProceed": true,
     "java.project.referencedLibraries": [
         "BulbProject/lib/**/*.jar"
@@ -7,5 +8,21 @@
         "./QUBProject40099112/bulbControl/bulbControlFrontend"
     ],
     "djlint.showInstallError": false,
-    "java.compile.nullAnalysis.mode": "disabled"
+    "java.compile.nullAnalysis.mode": "disabled",
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.formatOnType": true,
+        "editor.wordBasedSuggestions": "off",
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "editor.maxTokenizationLineLength": 20000
+    },
+    "files.associations": {
+        "*.ejs": "html",
+        "**/templates/*.html": "django-html",
+    },
+    "[django-html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

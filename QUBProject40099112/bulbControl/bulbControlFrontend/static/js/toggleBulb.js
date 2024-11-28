@@ -1,5 +1,6 @@
 function updateImage() {
-    var element = document.getElementsByName(this.getAttribute('name'))[ 0 ]
+    var element = document.getElementsByClassName(this.getAttribute('class'))
+    console.log(element)
     ip = this.getAttribute('value')
     fetch('/toggleBulb/', {
         method: 'post',

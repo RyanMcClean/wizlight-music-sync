@@ -22,4 +22,4 @@ Running in linux:
     Might not be the best situation for someone who's running this on their home machine
 
     Cannot run PyAudioWPatch, has to use og PyAudio
-    TODO have to build in a way of only loading PyAudioWPatch if it's available
+
