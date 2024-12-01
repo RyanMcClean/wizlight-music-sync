@@ -3,6 +3,8 @@ from time import sleep
 import json
 
 # Sends UDP packet to specific IP, listens for response
+
+
 def sendUDPPacket(ip, port, packet, timeout=0.5):
     while True:
         try:
@@ -16,9 +18,11 @@ def sendUDPPacket(ip, port, packet, timeout=0.5):
         except:
             sleep(0.1)
 
+
 def updateBulbObjects(wizObj):
     from .views import discover, port
-    m = json.loads(sendUDPPacket(wizObj.bulbIp, port, discover)[0].decode("utf-8"))
+    m = json.loads(sendUDPPacket(wizObj.bulbIp, port, discover)
+                   [0].decode("utf-8"))
     m = m['result'] if 'result' in m.keys() else ''
     wizObj.bulbState = m['state']
     wizObj.bulbRed = m['r'] if 'r' in m.keys() else 0
@@ -28,3 +32,7 @@ def updateBulbObjects(wizObj):
     wizObj.save()
     print(wizObj)
     pass
+
+
+def turn_to_color(r=0, g=0, b=0, brightness=0):
+    return bytes("{\"id\":1,\"method\":\"setState\",\"params\":{\"r\": %d, \"g\": %d, \"b\": %d, \"dimming\": %d}}" % (r, g, b, brightness), encoding="utf-8")

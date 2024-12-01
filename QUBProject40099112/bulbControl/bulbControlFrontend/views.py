@@ -7,16 +7,13 @@ from socket import *
 from time import sleep
 from time import time_ns
 import json
-from .helpers import sendUDPPacket, updateBulbObjects
+from .helpers import *
+from .audioTesting import main as audioSync
 
 discover = b"{\"method\":\"getPilot\",\"params\":{}}"
 turn_on = b"{\"id\":1,\"method\":\"setState\",\"params\":{\"state\":true}}"
 turn_off = b"{\"id\":1,\"method\":\"setState\",\"params\":{\"state\":false}}"
 port = 38899
-
-
-def turn_to_color(r=0, g=0, b=0, brightness=0):
-    return bytes("{\"id\":1,\"method\":\"setState\",\"params\":{\"r\": %d, \"g\": %d, \"b\": %d, \"dimming\": %d}}" % (r, g, b, brightness), encoding="utf-8")
 
 
 def index(request):
@@ -165,3 +162,7 @@ def colorBulb(request):
             m = json.loads(sendUDPPacket(ip, port, discover)
                            [0].decode("utf-8"))['result'] if m['success'] else json.loads({"result": False})
             return JsonResponse(m)
+
+
+def activateMusicSync(request):
+    audioSync()

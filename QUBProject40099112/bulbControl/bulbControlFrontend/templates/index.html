@@ -4,7 +4,11 @@
   window.setInterval(backgroundUpdate, 500)
 </script>
 <h1 class="main-title">Bulb Bop</h1>
-<p>{% if count == 0 %}</p>
+{% if numBulbs > 0 %}
+<form action="/activateMusic/" method="post">
+  <button>Click to activate music sync</button>
+</form>
+{% endif %} {% if count == 0 %}
 <form action="" method="post">
   <input type="hidden" name="discover" />
   <button>Click to find bulbs</button>

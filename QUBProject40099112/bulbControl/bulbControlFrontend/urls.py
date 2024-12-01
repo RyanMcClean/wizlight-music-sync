@@ -7,5 +7,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('toggleBulb/', views.toggleBulb, name='toggle'),
     path('queryBulb/', views.queryBulb, name='query'),
-    path('colorBulb/', views.colorBulb, name='color')
+    path('colorBulb/', views.colorBulb, name='color'),
+    path('activateMusic/', views.activateMusicSync, name='music-sync'),
 ]

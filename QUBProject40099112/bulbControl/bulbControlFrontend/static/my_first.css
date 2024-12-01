@@ -64,7 +64,6 @@ body {
 
 .color-selector {
     overflow: hidden;
-    transition: 10s;
 }
 
 .bulb-container:hover {

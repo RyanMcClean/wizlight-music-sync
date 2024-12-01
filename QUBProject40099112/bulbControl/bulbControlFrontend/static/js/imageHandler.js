@@ -19,7 +19,8 @@ async function clickColor(hexCode, seltop, selleft) {
             return response.json()
         })
     console.log(response)
-    if ((seltop + 200) > -1 && selleft > -1) {
+    console.log(document.getElementById("selectedhexagon").checkVisibility())
+    if ((seltop + 200) > -1 && selleft > -1 && document.getElementById("selectedhexagon").checkVisibility()) {
         document.getElementById("selectedhexagon").style.top = seltop - 5 + "px";
         document.getElementById("selectedhexagon").style.left = selleft + "px";
         document.getElementById("selectedhexagon").style.visibility = "visible";
@@ -30,9 +31,11 @@ async function clickColor(hexCode, seltop, selleft) {
         if (response.hasOwnProperty('temp')) {
             console.log('added orange')
             element.style.color = orange
+            document.getElementById("selectedhexagon").style.visibility = "hidden";
         } else if (response.hasOwnProperty('r')) {
             element.style.color = 'rgb(' + response[ 'r' ] + ', ' + response[ 'g' ] + ', ' + response[ 'b' ] + ')'
             console.log('added color')
+            document.getElementById("selectedhexagon").style.visibility = "hidden";
         }
     } else {
         element.style.color = grey
