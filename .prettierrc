@@ -21,6 +21,12 @@
                 "printWidth": 200,
                 "htmlWhitespaceSensitivity": "ignore"
             }
+        },
+        {
+            "files": "*.py",
+            "options": {
+                "printWidth": 160
+            }
         }
     ]
 }

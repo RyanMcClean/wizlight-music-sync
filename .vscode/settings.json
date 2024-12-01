@@ -13,7 +13,7 @@
         "diffEditor.ignoreTrimWhitespace": false,
         "editor.formatOnType": true,
         "editor.wordBasedSuggestions": "off",
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.defaultFormatter": "ms-python.autopep8",
         "editor.formatOnPaste": true,
         "editor.formatOnSave": true,
         "editor.maxTokenizationLineLength": 20000

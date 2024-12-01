@@ -15,6 +15,10 @@ turn_off = b"{\"id\":1,\"method\":\"setState\",\"params\":{\"state\":false}}"
 port = 38899
 
 
+def turn_to_color(r=0, g=0, b=0, brightness=0):
+    return bytes("{\"id\":1,\"method\":\"setState\",\"params\":{\"r\": %d, \"g\": %d, \"b\": %d, \"dimming\": %d}}" % (r, g, b, brightness), encoding="utf-8")
+
+
 def index(request):
     # To add a limit to the returned bulb objects the line would read bulbs = wizBulb.objects.all()[x] where x is the number of bulb objects returned
     bulbs = wizBulb.objects.all()
@@ -143,3 +147,21 @@ def queryBulb(request):
                 return JsonResponse(m)
             else:
                 return JsonResponse(m)
+
+
+def colorBulb(request):
+    if request.method == 'POST':
+        print(request.POST)
+        body = json.loads(request.body.decode(
+            'utf-8')) if request.body else None
+        if 'ip' in request.POST.keys() or 'ip' in body.keys():
+            print("color bulb")
+            ip = '192.168.50.128'
+            print('-' * 20)
+
+            m = json.loads(sendUDPPacket(ip, port, turn_to_color(r=body['r'], g=body['g'], b=body['b'], brightness=255))
+                           [0].decode("utf-8"))['result']
+            print(m)
+            m = json.loads(sendUDPPacket(ip, port, discover)
+                           [0].decode("utf-8"))['result'] if m['success'] else json.loads({"result": False})
+            return JsonResponse(m)

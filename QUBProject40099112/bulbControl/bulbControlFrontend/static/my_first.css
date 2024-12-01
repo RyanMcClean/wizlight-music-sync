@@ -11,9 +11,9 @@ html {
 }
 
 body {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-size: 2vw;
     width: 100%;
     height: 100%;
@@ -27,8 +27,50 @@ body {
     transition: 0.25s;
 }
 
+.bulb-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.bulb-color-selector {
+    visibility: hidden;
+}
+
+.bulb-icon {
+    display: grid;
+}
+
 .fa-lightbulb {
     font-size: 10vw;
     transition: color 0.25s;
     text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+}
+
+.colormap {
+    width: 100vw;
+    height: 100vw;
+}
+
+#selectedhexagon {
+    position: relative;
+    visibility: hidden;
+    height: 21px;
+    width: 21px;
+    overflow: hidden;
+    transition: all ease-in-out 0.25s;
+}
+
+.color-selector {
+    overflow: hidden;
+    transition: 10s;
+}
+
+.bulb-container:hover {
+    background-color: aliceblue;
+}
+
+.bulb-container:hover .bulb-color-selector {
+    visibility: visible;
 }
