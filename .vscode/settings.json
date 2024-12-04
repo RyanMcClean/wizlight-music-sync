@@ -5,7 +5,7 @@
         "BulbProject/lib/**/*.jar"
     ],
     "python.analysis.extraPaths": [
-        "./QUBProject40099112/bulbControl/bulbControlFrontend"
+        "./bulbControl/bulbControlFrontend"
     ],
     "djlint.showInstallError": false,
     "java.compile.nullAnalysis.mode": "disabled",
@@ -26,8 +26,8 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "python.testing.pytestArgs": [
-        "."
+        "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
 }

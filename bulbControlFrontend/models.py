@@ -31,8 +31,8 @@ class wizbulb(models.Model):
             "-"
             * os.get_terminal_size()[0]
             + f"\nBulb Ip: {self.bulbIp}\nBulb Name: {self.bulbName}\nBulb State: {self.bulbState}"
-            "\nBulb Red: {self.bulbRed}\nBulb Green {self.bulbGreen}\nBulb Blue: {self.bulbBlue}"
-            "\nBulb Temp: {self.bulbTemp}\n" + "-" * os.get_terminal_size()[0]
+            f"\nBulb Red: {self.bulbRed}\nBulb Green {self.bulbGreen}\nBulb Blue: {self.bulbBlue}"
+            f"\nBulb Temp: {self.bulbTemp}\n" + "-" * os.get_terminal_size()[0]
         )
 
     def returnJSON(self) -> dict:

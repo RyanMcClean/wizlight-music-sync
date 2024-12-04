@@ -12,10 +12,10 @@
             "label": "Runtime_Setup_Part_1",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/QUBProject40099112/env/Scripts/python.exe ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py makemigrations bulbControlFrontend"
+                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/bulbControl/manage.py makemigrations bulbControlFrontend"
             },
             "linux": {
-                "command": "${workspaceFolder}/QUBProject40099112/env/bin/python3 ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py makemigrations bulbControlFrontend"
+                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/bulbControl/manage.py makemigrations bulbControlFrontend"
             },
             "presentation": {
                 "reveal": "always",
@@ -28,10 +28,10 @@
             "label": "Runtime_Setup_Part_2",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/QUBProject40099112/env/Scripts/python.exe ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py migrate"
+                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/bulbControl/manage.py migrate"
             },
             "linux": {
-                "command": "${workspaceFolder}/QUBProject40099112/env/bin/python3 ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py migrate"
+                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/bulbControl/manage.py migrate"
             },
             "dependsOn": "Runtime_Setup_Part_1",
             "presentation": {
@@ -47,10 +47,10 @@
             "label": "install_requirements",
             "type": "shell",
             "windows": {
-                "command": "Foreach ($package in (Get-Content -Path ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt)) { ${workspaceFolder}/QUBProject40099112/env/Scripts/pip.exe install $package }"
+                "command": "Foreach ($package in (Get-Content -Path ${workspaceFolder}/bulbControl/requirements.txt)) { ${workspaceFolder}/env/Scripts/pip.exe install $package }"
             },
             "linux": {
-                "command": "cat ${workspaceFolder}/QUBProject40099112/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 ${workspaceFolder}/QUBProject40099112/env/bin/pip3 install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi"
+                "command": "cat ${workspaceFolder}/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 ${workspaceFolder}/env/bin/pip3 install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi"
             },
             "dependsOn": "start_venv",
             "presentation": {
@@ -63,10 +63,10 @@
             "label": "setup_venv",
             "type": "shell",
             "windows": {
-                "command": "if (-not (Test-Path -Path ${workspaceFolder}/QUBProject40099112/env)) { ${command:python.interpreterPath} -m venv ${workspaceFolder}/QUBProject40099112/env }"
+                "command": "if (-not (Test-Path -Path ${workspaceFolder}/env)) { ${command:python.interpreterPath} -m venv ${workspaceFolder}/env }"
             },
             "linux": {
-                "command": "if [ -d ${workspaceFolder}/QUBProject40099112/env ]; then ${command:python.interpreterPath} -m venv ${workspaceFolder}/QUBProject40099112/env; fi"
+                "command": "if [ -d ${workspaceFolder}/env ]; then ${command:python.interpreterPath} -m venv ${workspaceFolder}/env; fi"
             },
             "presentation": {
                 "reveal": "always",
@@ -78,10 +78,10 @@
             "label": "start_venv",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/QUBProject40099112/env/Scripts/Activate.ps1"
+                "command": "${workspaceFolder}/env/Scripts/Activate.ps1"
             },
             "linux": {
-                "command": "source ${workspaceFolder}/QUBProject40099112/env/bin/activate"
+                "command": "source ${workspaceFolder}/env/bin/activate"
             },
             "dependsOn": "setup_venv",
             "presentation": {
@@ -94,10 +94,10 @@
             "label": "create_default_admin",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/QUBProject40099112/env/Scripts/python.exe ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
+                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/bulbControl/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
             },
             "linux": {
-                "command": "${workspaceFolder}/QUBProject40099112/env/bin/python3 ${workspaceFolder}/QUBProject40099112/bulbControl/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
+                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/bulbControl/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
             },
             "presentation": {
                 "echo": true,

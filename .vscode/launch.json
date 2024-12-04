@@ -29,12 +29,12 @@
             "type": "debugpy",
             "request": "launch",
             "windows": {
-                "python": "${workspaceFolder}/QUBProject40099112/env/Scripts/python.exe",
+                "python": "${workspaceFolder}/env/Scripts/python.exe",
             },
             "linux": {
-                "python": "${workspaceFolder}/QUBProject40099112/env/bin/python3",
+                "python": "${workspaceFolder}/env/bin/python3",
             },
-            "program": "${workspaceRoot}/QUBProject40099112/bulbControl/manage.py",
+            "program": "${workspaceRoot}/bulbControl/manage.py",
             "args": [
                 "runserver",
                 "0.0.0.0:8000"
@@ -52,10 +52,10 @@
             "type": "debugpy",
             "request": "launch",
             "windows": {
-                "python": "${workspaceFolder}/QUBProject40099112/env/Scripts/python.exe",
+                "python": "${workspaceFolder}/env/Scripts/python.exe",
             },
             "linux": {
-                "python": "${workspaceFolder}/QUBProject40099112/env/bin/python3",
+                "python": "${workspaceFolder}/env/bin/python3",
             },
             "program": "${file}",
             "console": "integratedTerminal",
