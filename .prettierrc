@@ -19,13 +19,8 @@
             "files": "**/templates/*html",
             "options": {
                 "printWidth": 200,
-                "htmlWhitespaceSensitivity": "ignore"
-            }
-        },
-        {
-            "files": "*.py",
-            "options": {
-                "printWidth": 160
+                "htmlWhitespaceSensitivity": "ignore",
+                "tabWidth": 4
             }
         }
     ]

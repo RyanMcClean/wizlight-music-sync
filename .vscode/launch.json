@@ -37,6 +37,7 @@
             "program": "${workspaceRoot}/QUBProject40099112/bulbControl/manage.py",
             "args": [
                 "runserver",
+                "0.0.0.0:8000"
             ],
             "console": "integratedTerminal",
             "serverReadyAction": {
