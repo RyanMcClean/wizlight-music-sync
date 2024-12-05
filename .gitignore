@@ -38,3 +38,4 @@ replay_pid*
 **/include
 **/lib
 **/.pytest_cache
+*coverage*
