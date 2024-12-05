@@ -12,10 +12,10 @@
             "label": "Runtime_Setup_Part_1",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/bulbControl/manage.py makemigrations bulbControlFrontend"
+                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/manage.py makemigrations bulbControlFrontend"
             },
             "linux": {
-                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/bulbControl/manage.py makemigrations bulbControlFrontend"
+                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/manage.py makemigrations bulbControlFrontend"
             },
             "presentation": {
                 "reveal": "always",
@@ -28,10 +28,10 @@
             "label": "Runtime_Setup_Part_2",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/bulbControl/manage.py migrate"
+                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/manage.py migrate"
             },
             "linux": {
-                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/bulbControl/manage.py migrate"
+                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/manage.py migrate"
             },
             "dependsOn": "Runtime_Setup_Part_1",
             "presentation": {
@@ -47,10 +47,10 @@
             "label": "install_requirements",
             "type": "shell",
             "windows": {
-                "command": "Foreach ($package in (Get-Content -Path ${workspaceFolder}/bulbControl/requirements.txt)) { ${workspaceFolder}/env/Scripts/pip.exe install $package }"
+                "command": "Foreach ($package in (Get-Content -Path ${workspaceFolder}/requirements.txt)) { ${workspaceFolder}/env/Scripts/pip.exe install $package }"
             },
             "linux": {
-                "command": "cat ${workspaceFolder}/bulbControl/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 ${workspaceFolder}/env/bin/pip3 install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi"
+                "command": "cat ${workspaceFolder}/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 ${workspaceFolder}/env/bin/pip3 install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi"
             },
             "dependsOn": "start_venv",
             "presentation": {
@@ -94,10 +94,10 @@
             "label": "create_default_admin",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/bulbControl/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
+                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
             },
             "linux": {
-                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/bulbControl/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
+                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
             },
             "presentation": {
                 "echo": true,
