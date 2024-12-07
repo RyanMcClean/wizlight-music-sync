@@ -22,7 +22,8 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "dependsOn": "install_requirements"
+            "dependsOn": "install_requirements",
+            "problemMatcher": "$python"
         },
         {
             "label": "Runtime_Setup_Part_2",
@@ -57,7 +58,13 @@
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared"
-            }
+            },
+            "problemMatcher": [
+                "$python"
+            ],
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
         },
         {
             "label": "setup_venv",
@@ -72,7 +79,10 @@
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared"
-            }
+            },
+            "problemMatcher": [
+                "$python"
+            ]
         },
         {
             "label": "start_venv",
@@ -88,7 +98,10 @@
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared"
-            }
+            },
+            "problemMatcher": [
+                "$python"
+            ]
         },
         {
             "label": "create_default_admin",

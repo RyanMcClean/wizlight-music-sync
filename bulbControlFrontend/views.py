@@ -6,7 +6,7 @@ __author__ = "Ryan McClean"
 __contact__ = "https://github.com/RyanMcClean"
 
 
-from socket import socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_BROADCAST, timeout
+from socket import socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_BROADCAST, timeout, SO_REUSEADDR
 from time import sleep, time_ns
 import json
 import os

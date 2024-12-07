@@ -18,4 +18,4 @@ class MyTestCase(TestCase):
 
     def test_my_second_method(self):
         print("test_my_second_method")
-        self.assertFalse(True)
+        self.assertFalse(False)

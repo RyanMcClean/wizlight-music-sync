@@ -25,9 +25,9 @@
     "[django-html]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
+    "python.testing.pytestEnabled": true,
     "python.testing.pytestArgs": [
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true,
 }

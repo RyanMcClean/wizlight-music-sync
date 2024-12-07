@@ -1,8 +1,16 @@
 import pytest
 import requests
 from time import sleep
+from django.test import LiveServerTestCase
 
 from bulbControlFrontend.views import index
+
+
+class IndexLiveTest(LiveServerTestCase):
+    def test_index_django(self):
+        url = self.live_server_url
+        response = requests.get(url)
+        assert response.status_code == 200
 
 
 @pytest.mark.django_db

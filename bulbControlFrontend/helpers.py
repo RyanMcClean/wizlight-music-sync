@@ -1,5 +1,5 @@
-"""     Helpers file, has functions that are used by other files
-"""
+"""Helpers file, has functions that are used by other files"""
+
 __author__ = "Ryan McClean"
 __contact__ = "https://github.com/RyanMcClean"
 
@@ -11,7 +11,7 @@ from .views import discover, port
 
 
 def send_udp_packet(ip, port, packet, timeout=0.5) -> None:
-    """ Sends UDP packet to local ip address
+    """Sends UDP packet to local ip address
 
     Args:
         ip (String): ip address to send the packet too.
@@ -22,7 +22,7 @@ def send_udp_packet(ip, port, packet, timeout=0.5) -> None:
     while True:
         try:
             sock = socket(AF_INET, SOCK_DGRAM)
-            sock.bind(('', port))
+            sock.bind(("", port))
             sock.settimeout(timeout)
             sock.sendto(packet, (ip, port))
             m = sock.recvfrom(516)
@@ -33,24 +33,23 @@ def send_udp_packet(ip, port, packet, timeout=0.5) -> None:
 
 
 def update_bulb_objects(wizObj) -> None:
-    """ Queries bulb to update the model in the db
+    """Queries bulb to update the model in the db
 
     Args:
         wizObj (WizBulb): WizBulb object to update
     """
-    m = json.loads(send_udp_packet(wizObj.bulbIp, port, discover)
-                   [0].decode("utf-8"))
-    m = m['result'] if 'result' in m.keys() else ''
-    wizObj.bulbState = m['state']
-    wizObj.bulbRed = m['r'] if 'r' in m.keys() else 0
-    wizObj.bulbGreen = m['g'] if 'g' in m.keys() else 0
-    wizObj.bulbBlue = m['b'] if 'b' in m.keys() else 0
-    wizObj.bulbTemp = m['temp'] if 'temp' in m.keys() else 0
+    m = json.loads(send_udp_packet(wizObj.bulbIp, port, discover)[0].decode("utf-8"))
+    m = m["result"] if "result" in m.keys() else ""
+    wizObj.bulbState = m["state"]
+    wizObj.bulbRed = m["r"] if "r" in m.keys() else 0
+    wizObj.bulbGreen = m["g"] if "g" in m.keys() else 0
+    wizObj.bulbBlue = m["b"] if "b" in m.keys() else 0
+    wizObj.bulbTemp = m["temp"] if "temp" in m.keys() else 0
     wizObj.save()
 
 
 def turn_to_color(r=0, g=0, b=0, brightness=0) -> bytes:
-    """ Returns bytes packet to turn Wizbulb to specific colour
+    """Returns bytes packet to turn Wizbulb to specific colour
 
     Args:
         r (int, optional): Red value. Defaults to 0.
@@ -61,4 +60,7 @@ def turn_to_color(r=0, g=0, b=0, brightness=0) -> bytes:
     Returns:
         bytes: _description_
     """
-    return bytes("{\"id\":1,\"method\":\"setState\",\"params\":{\"r\": %d, \"g\": %d, \"b\": %d, \"dimming\": %d}}" % (r, g, b, brightness), encoding="utf-8")
+    return bytes(
+        '{"id":1,"method":"setState","params":{"r": %d, "g": %d, "b": %d, "dimming": %d}}' % (r, g, b, brightness),
+        encoding="utf-8",
+    )

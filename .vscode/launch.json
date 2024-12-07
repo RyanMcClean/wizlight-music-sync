@@ -34,7 +34,7 @@
             "linux": {
                 "python": "${workspaceFolder}/env/bin/python3",
             },
-            "program": "${workspaceRoot}/bulbControl/manage.py",
+            "program": "${workspaceRoot}/manage.py",
             "args": [
                 "runserver",
                 "0.0.0.0:8000"
