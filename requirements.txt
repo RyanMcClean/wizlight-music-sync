@@ -9,3 +9,4 @@ sounddevice==0.5.1
 pytest
 pytest-django
 pytest-cov
+requests

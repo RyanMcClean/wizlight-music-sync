@@ -52,7 +52,10 @@ def index(request) -> HttpResponse:
         devices = getWorkingDeviceList()
         for device in devices:
             context["audioDevices"].append(device)
-    print("-" * os.get_terminal_size()[0])
+    try:
+        print("-" * os.get_terminal_size()[0])
+    except OSError:
+        print("-" * 5)
 
     if request.method == "POST":
         # Discover bulbs on network
@@ -84,8 +87,11 @@ def index(request) -> HttpResponse:
                 except timeout:
                     m = None
 
-            print("-" * os.get_terminal_size()[0])
-            sock.close()
+                try:
+                    print("-" * os.get_terminal_size()[0])
+                except OSError:
+                    print("-" * 5)
+                sock.close()
 
             return render(request, "index.html", context)
 
@@ -115,7 +121,10 @@ def index(request) -> HttpResponse:
     elif request.method == "GET":
         print(request.GET)
         print("load home page")
-        print("-" * os.get_terminal_size()[0])
+        try:
+            print("-" * os.get_terminal_size()[0])
+        except OSError:
+            print("-" * 5)
 
         return render(None, "index.html", context)
 
@@ -140,7 +149,10 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
         if "ip" in request.POST.keys() or "ip" in json.loads(request.body.decode("utf-8")).keys():
             print("toggle")
             ip = request.POST["ip"] if "ip" in request.POST.keys() else json.loads(request.body.decode("utf-8"))["ip"]
-            print("-" * os.get_terminal_size()[0])
+            try:
+                print("-" * os.get_terminal_size()[0])
+            except OSError:
+                print("-" * 5)
             startTime = time_ns()
             m = json.loads(send_udp_packet(ip, port, discover)[0].decode("utf-8"))["result"]
             endTime = time_ns()
@@ -174,7 +186,10 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
         if "ip" in request.POST.keys() or "ip" in body.keys():
             print("query bulb")
             ip = request.POST["ip"] if "ip" in request.POST.keys() else body["ip"]
-            print("-" * os.get_terminal_size()[0])
+            try:
+                print("-" * os.get_terminal_size()[0])
+            except OSError:
+                print("-" * 5)
 
             m = json.loads(send_udp_packet(ip, port, discover)[0].decode("utf-8"))["result"]
             if m["state"]:
@@ -200,7 +215,10 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
         if "ip" in request.POST.keys() or "ip" in body.keys():
             print("color bulb")
             ip = "192.168.50.128"
-            print("-" * os.get_terminal_size()[0])
+            try:
+                print("-" * os.get_terminal_size()[0])
+            except OSError:
+                print("-" * 5)
 
             m = json.loads(
                 send_udp_packet(ip, port, turn_to_color(r=body["r"], g=body["g"], b=body["b"], brightness=255))[
@@ -224,7 +242,10 @@ def activate_music_sync(request) -> None:
         request HttpRequest: HttpRequest object supplied by Django
     """
     print(request.POST)
-    print("-" * os.get_terminal_size()[0])
+    try:
+        print("-" * os.get_terminal_size()[0])
+    except OSError:
+        print("-" * 5)
     if "audio_device" in request.POST.keys():
         print(int(request.POST["audio_device"]))
         sleep(10)
