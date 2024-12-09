@@ -13,6 +13,11 @@
     {% include "generic_description.html" %}
 </div>
 
+{% if error %}
+<div class="error-message" id="error-wrapper">
+    <span>{{ errorMessage }}
+</div>
+{% endif %}
 {% if numBulbs > 0 %}
 <form class="generic-button" id="audio-sync-form" action="/activateMusic/" method="post">
     <select

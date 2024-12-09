@@ -11,11 +11,8 @@ class DB_Tests(TestCase):
         wizbulb.objects.create(bulbName=cls.bulbOneName)
         wizbulb.objects.create(bulbName=cls.bulbTwoName)
 
-        return super().setUpTestData()
-
     def test_db(self):
         bulbOne = wizbulb.objects.get(bulbName=self.bulbOneName)
         bulbTwo = wizbulb.objects.get(bulbName=self.bulbTwoName)
         self.assertEqual(bulbOne.bulbName, self.bulbOneName)
         self.assertEqual(bulbTwo.bulbName, self.bulbTwoName)
-        self.assertNotEqual(bulbTwo.bulbName, self.bulbTwoName)

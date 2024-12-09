@@ -7,10 +7,8 @@ from socket import socket, AF_INET, SOCK_DGRAM
 from time import sleep
 import json
 
-from .views import discover, port
 
-
-def send_udp_packet(ip, port, packet, timeout=0.5) -> None:
+def send_udp_packet(ip, port, packet, timeout=10.0) -> None:
     """Sends UDP packet to local ip address
 
     Args:
@@ -29,7 +27,7 @@ def send_udp_packet(ip, port, packet, timeout=0.5) -> None:
             sock.close()
             return m
         except TimeoutError:
-            sleep(0.1)
+            return None
 
 
 def update_bulb_objects(wizObj) -> None:
@@ -38,6 +36,8 @@ def update_bulb_objects(wizObj) -> None:
     Args:
         wizObj (WizBulb): WizBulb object to update
     """
+    from .views import port, discover
+
     m = json.loads(send_udp_packet(wizObj.bulbIp, port, discover)[0].decode("utf-8"))
     m = m["result"] if "result" in m.keys() else ""
     wizObj.bulbState = m["state"]

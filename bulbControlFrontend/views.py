@@ -6,7 +6,7 @@ __author__ = "Ryan McClean"
 __contact__ = "https://github.com/RyanMcClean"
 
 
-from socket import socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_BROADCAST, timeout, SO_REUSEADDR
+from socket import socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_BROADCAST, SO_REUSEADDR
 from time import sleep, time_ns
 import json
 import os
@@ -42,7 +42,16 @@ def index(request) -> HttpResponse:
     # where x is the number of bulb objects returned
     bulbs = wizbulb.objects.all()
 
-    context = {"regForm": bulbForm(), "ips": [], "count": 0, "bulbs": [], "numBulbs": 0, "audioDevices": []}
+    context = {
+        "regForm": bulbForm(),
+        "ips": [],
+        "count": 0,
+        "bulbs": [],
+        "numBulbs": 0,
+        "audioDevices": [],
+        "error": False,
+        "errorMessage": "",
+    }
     for x in bulbs:
         update_bulb_objects(x)
         context["bulbs"].append(x.returnJSON())
@@ -66,40 +75,56 @@ def index(request) -> HttpResponse:
             sock.bind(("", port))
             sock.settimeout(0.5)
             sock.sendto(discover, ("255.255.255.255", port))
-            m = sock.recvfrom(516)
-            count = 0
-            while m != None:
-                if m[0] != discover:
-                    bulbResponse = json.loads(m[0].decode("utf-8"))
+            try:
+                m = sock.recvfrom(516)
+                count = 0
+                while m is not None:
+                    if m[0] != discover:
+                        bulbResponse = json.loads(m[0].decode("utf-8"))
 
-                    if [
-                        True
-                        for bulb in context["bulbs"]
-                        if str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0] in bulb["BulbIp"]
-                    ]:
-                        print("Hiding already saved bulb")
-                    else:
-                        context["count"] = range(count)
-                        context["ips"].append(str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0])
-                        count += 1
-                try:
-                    m = sock.recvfrom(516)
-                except timeout:
-                    m = None
-
+                        if [
+                            True
+                            for bulb in context["bulbs"]
+                            if str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0] in bulb["BulbIp"]
+                        ]:
+                            print("Hiding already saved bulb")
+                        else:
+                            context["count"] = range(count)
+                            context["ips"].append(str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0])
+                            count += 1
+                    try:
+                        m = sock.recvfrom(516)
+                    except TimeoutError:
+                        m = None
                 try:
                     print("-" * os.get_terminal_size()[0])
                 except OSError:
                     print("-" * 5)
                 sock.close()
+            except TimeoutError:
+                context["error"] = True
+                context["errorMessage"] = (
+                    "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
+                )
+                print("Error finding bulbs")
+
+            if not context["numBulbs"] > 0 and context["ips"] is None:
+                context["error"] = True
+                context["errorMessage"] = (
+                    "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
+                )
+                print("Error finding bulbs")
 
             return render(request, "index.html", context)
 
             # Create bulb object in db
         else:
             print("form")
-            m = send_udp_packet(request.POST["bulbIp"], port, discover)
-            bulbResponse = json.loads(m[0].decode("utf-8"))["result"]
+            try:
+                m = send_udp_packet(request.POST["bulbIp"], port, discover, 15)
+                bulbResponse = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
+            except TimeoutError:
+                pass
             form = bulbForm(request.POST)
             print("Form: ")
             print(form)
@@ -141,7 +166,7 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
         JsonResponse: State of bulb after toggle
         HttpResponse: 404 page if there is an error
     """
-
+    print(request)
     if request.method == "POST":
         print(request.POST)
 
@@ -154,17 +179,20 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
             except OSError:
                 print("-" * 5)
             startTime = time_ns()
-            m = json.loads(send_udp_packet(ip, port, discover)[0].decode("utf-8"))["result"]
+            m = send_udp_packet(ip, port, discover, 0.5)
+            m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
             endTime = time_ns()
             totalTime = (endTime - startTime) / 1000000000
             print("Toggle time: " + str(totalTime))
-            if m["state"]:
+            if m is not None and m["state"]:
                 send_udp_packet(ip, port, turn_off)
-                m = json.loads(send_udp_packet(ip, port, discover)[0].decode("utf-8"))["result"]
+                m = send_udp_packet(ip, port, discover, 0.5)
+                m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else {"error": "could not query bulb"}
                 return JsonResponse(m)
             else:
                 send_udp_packet(ip, port, turn_on)
-                m = json.loads(send_udp_packet(ip, port, discover)[0].decode("utf-8"))["result"]
+                m = send_udp_packet(ip, port, discover, 0.5)
+                m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else {"error": "could not query bulb"}
                 return JsonResponse(m)
         return redirect("404.html")
 
@@ -190,9 +218,9 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
                 print("-" * os.get_terminal_size()[0])
             except OSError:
                 print("-" * 5)
-
-            m = json.loads(send_udp_packet(ip, port, discover)[0].decode("utf-8"))["result"]
-            if m["state"]:
+            m = send_udp_packet(ip, port, discover, 0.5)
+            m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
+            if "state" in m.keys() and m["state"]:
                 return JsonResponse(m)
             else:
                 return JsonResponse(m)
@@ -210,8 +238,9 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
         HttpResponse: If error render 404 not found page
     """
     if request.method == "POST":
-        print(request.POST)
-        body = json.loads(request.body.decode("utf-8")) if request.body else None
+        print(request)
+        body = request.body
+        body = json.loads(body.decode("utf-8")) if body is not None else None
         if "ip" in request.POST.keys() or "ip" in body.keys():
             print("color bulb")
             ip = "192.168.50.128"
@@ -220,17 +249,11 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
             except OSError:
                 print("-" * 5)
 
-            m = json.loads(
-                send_udp_packet(ip, port, turn_to_color(r=body["r"], g=body["g"], b=body["b"], brightness=255))[
-                    0
-                ].decode("utf-8")
-            )["result"]
+            m = send_udp_packet(ip, port, turn_to_color(r=body["r"], g=body["g"], b=body["b"], brightness=255))
+            m = json.loads(m)[0].decode("utf-8")["result"] if m is not None else None
             print(m)
-            m = (
-                json.loads(send_udp_packet(ip, port, discover)[0].decode("utf-8"))["result"]
-                if m["success"]
-                else json.loads({"result": False})
-            )
+            m = send_udp_packet(ip, port, discover)
+            m = json.loads(m[0].decode("utf-8"))["result"] if m["success"] else json.loads({"result": False})
             return JsonResponse(m)
     return redirect("404.html")
 

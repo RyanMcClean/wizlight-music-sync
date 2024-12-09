@@ -47,7 +47,7 @@ async function updateImage() {
     console.log(element)
     ip = this.getAttribute('value')
     response = await fetch('/toggleBulb/', {
-        method: 'post',
+        method: 'POST',
         body: JSON.stringify({ 'ip': element.getAttribute('value') })
     })
         .then(function (response) {

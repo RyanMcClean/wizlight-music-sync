@@ -104,3 +104,14 @@ body {
 #bulb-search-button {
     font-size: 1em;
 }
+
+.error-message {
+    position: absolute;
+    top: 30%;
+    border-style: solid;
+    border: black;
+    background-color: gray;
+    color: red;
+    font-weight: bolder;
+    padding: 1em;
+}
