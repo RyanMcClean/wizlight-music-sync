@@ -35,5 +35,6 @@ jobs:
       run: |
         pytest 
     - name: Return step error
+      if: always()
       run: |
         echo ${{ steps.dependencies.conclusion }}
