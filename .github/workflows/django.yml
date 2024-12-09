@@ -29,12 +29,9 @@ jobs:
       run: |
         sudo apt install portaudio19-dev
         python -m pip install --upgrade pip
-        cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi
+        cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install && echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'
     - name: Run Tests
-      if: ${{ steps.dependencies.conclusion == 'failure' }}
+      if: ${{ failure() && steps.dependencies.conclusion == 'failure' }}
       run: |
         pytest 
-    - name: Return step error
-      if: always()
-      run: |
-        echo ${{ steps.dependencies.conclusion }}
+
