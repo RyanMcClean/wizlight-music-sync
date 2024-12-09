@@ -6,7 +6,7 @@
 {% extends "master.html" %} {% load static %} {% block title %}Bulb Bop{% endblock %} {% block content %}
 <script type="text/javascript" src="{% static 'js/imageHandler.js' %}"></script>
 <script>
-    window.setInterval(backgroundUpdate, 500000)
+    window.setInterval(backgroundUpdate, 500)
 </script>
 <div class="title-bar">
     <h1 class="main-title">Bulb Bop</h1>
@@ -34,12 +34,12 @@
         {% endfor %}
     </select>
     <br />
-    <button class="generic-button" id="activate-music-sync-button">Click to activate music sync</button>
+    <button class="generic-button" id="activate-music-sync-button">Activate music sync</button>
 </form>
 {% endif %} {% if count == 0 %}
 <form action="" method="post">
     <input type="hidden" name="discover" />
-    <button class="generic-button" id="bulb-search-button">Click to find bulbs</button>
+    <button class="generic-button" id="bulb-search-button">Find bulbs</button>
 </form>
 <br />
 {% endif %} {% for x in bulbs %}
@@ -188,7 +188,7 @@
 {% for x in ips %}
 <i name="{{ x }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x }}"></i>
 <br />
-Click to toggle bulb at {{ x }}
+Toggle bulb
 <br />
 <div class="bulb-registration">
 <form class="bulb-registration-form" action="" method="post">

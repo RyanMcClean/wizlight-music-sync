@@ -93,7 +93,7 @@
             "linux": {
                 "command": "source ${workspaceFolder}/env/bin/activate"
             },
-            "dependsOn": "setup_venv",
+            "dependsOn": "update_pip",
             "presentation": {
                 "reveal": "always",
                 "focus": false,
@@ -123,6 +123,25 @@
             "problemMatcher": [
                 "$python"
             ]
-        }
+        },
+        {
+            "label": "update_pip",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}/env/Scripts/python.exe -m pip install --upgrade pip"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/env/Scripts/python -m pip install --upgrade pip"
+            },
+            "dependsOn": "setup_venv",
+            "presentation": {
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$python"
+            ]
+        },
     ]
 }

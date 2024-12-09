@@ -5,7 +5,7 @@ __contact__ = "https://github.com/RyanMcClean"
 
 from socket import socket, AF_INET, SOCK_DGRAM
 from time import sleep
-import json
+import json, os
 
 
 def send_udp_packet(ip, port, packet, timeout=10.0) -> None:
@@ -64,3 +64,9 @@ def turn_to_color(r=0, g=0, b=0, brightness=0) -> bytes:
         '{"id":1,"method":"setState","params":{"r": %d, "g": %d, "b": %d, "dimming": %d}}' % (r, g, b, brightness),
         encoding="utf-8",
     )
+
+def separator() -> None:
+    try:
+        print("-" * os.get_terminal_size()[0])
+    except OSError:
+        print("-" * 5)
