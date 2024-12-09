@@ -1,18 +1,19 @@
+import random, string
 from bulbControlFrontend.models import wizbulb
 from django.test import TestCase
 
 
 class DB_Tests(TestCase):
-    bulbOneName = "Test One"
-    bulbTwoName = "Test Two"
+    bulbArray = []
+    for x in range(random.randint(10, 1000)):
+        bulbArray.append("".join(random.choice(string.ascii_letters) for i in range(random.randint(3, 15))))
 
     @classmethod
     def setUpTestData(cls):
-        wizbulb.objects.create(bulbName=cls.bulbOneName)
-        wizbulb.objects.create(bulbName=cls.bulbTwoName)
+        for x in cls.bulbArray:
+            wizbulb.objects.create(bulbName=x)
 
     def test_db(self):
-        bulbOne = wizbulb.objects.get(bulbName=self.bulbOneName)
-        bulbTwo = wizbulb.objects.get(bulbName=self.bulbTwoName)
-        self.assertEqual(bulbOne.bulbName, self.bulbOneName)
-        self.assertEqual(bulbTwo.bulbName, self.bulbTwoName)
+        for x in self.bulbArray:
+            bulb = wizbulb.objects.get(bulbName=x)
+            self.assertEqual(bulb.bulbName, x)

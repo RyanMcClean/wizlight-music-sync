@@ -95,7 +95,10 @@ async function backgroundUpdate() {
                 hexGreen = hexGreen.length < 2 ? "0" + hexGreen : hexGreen
                 hexBlue = hexBlue.length < 2 ? "0" + hexBlue : hexBlue
                 hexcode = `#${hexRed}${hexGreen}${hexBlue}`
-                document.querySelector('area[alt="' + hexcode + '"]').click()
+                try {
+                    document.querySelector('area[alt="' + hexcode + '"]').click()
+                } catch (error) {
+                }
                 bulbButtons[ x ].style.color = 'rgb(' + r + ', ' + g + ', ' + b + ')'
                 console.log('added color')
             }

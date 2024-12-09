@@ -24,7 +24,7 @@ turn_on = b'{"id":1,"method":"setState","params":{"state":true}}'
 turn_off = b'{"id":1,"method":"setState","params":{"state":false}}'
 port = 38899
 
-from .helpers import update_bulb_objects, send_udp_packet, turn_to_color, separator 
+from .helpers import update_bulb_objects, send_udp_packet, turn_to_color, separator
 
 
 def index(request) -> HttpResponse:
@@ -135,7 +135,7 @@ def index(request) -> HttpResponse:
                 return render(request, "index.html", context)
             else:
                 pass
-            
+
             separator()
             return render(request, "index.html", context)
 
@@ -163,7 +163,7 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
     separator()
     print(request)
     if request.method == "POST":
-        print(request.POST)
+        print(request)
 
         # Flicker specific bulb
         if "ip" in request.POST.keys() or "ip" in json.loads(request.body.decode("utf-8")).keys():
@@ -203,7 +203,8 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
     """
     separator()
     if request.method == "POST":
-        print("Request - " + request.POST)
+        print("Request - " + str(request.POST))
+        print("Request - " + str(request.body))
         body = json.loads(request.body.decode("utf-8")) if request.body else None
         # Flicker specific bulb
         if "ip" in request.POST.keys() or "ip" in body.keys():
@@ -211,6 +212,7 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
             ip = request.POST["ip"] if "ip" in request.POST.keys() else body["ip"]
             m = send_udp_packet(ip, port, discover, 0.5)
             m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
+            print("Bulb Response - " + str(m))
             if "state" in m.keys() and m["state"]:
                 separator()
                 return JsonResponse(m)
@@ -234,16 +236,18 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
     separator()
     if request.method == "POST":
         print(request)
-        body = json.loads(request.body.decode("utf-8")) if request.body is not None else None
-        if "ip" in request.POST.keys() or "ip" in body.keys():
+        if "ip" in request.POST.keys() or "ip" in json.loads(request.body.decode("utf-8")).keys():
+            body = request.POST if "ip" in request.POST.keys() else json.loads(request.body.decode("utf-8"))
             print("color bulb")
-            ip = "192.168.50.128"
+            ip = body["ip"]
 
-            m = send_udp_packet(ip, port, turn_to_color(r=body["r"], g=body["g"], b=body["b"], brightness=255))
+            m = send_udp_packet(
+                ip, port, turn_to_color(r=int(body["r"]), g=int(body["g"]), b=int(body["b"]), brightness=255)
+            )
             m = json.loads(m)[0].decode("utf-8")["result"] if m is not None else None
             print(m)
             m = send_udp_packet(ip, port, discover)
-            m = json.loads(m[0].decode("utf-8"))["result"] if m["success"] else json.loads({"result": False})
+            m = json.loads(m)[0].decode("utf-8")["result"] if m is not None else {"result": False}
             separator()
             return JsonResponse(m)
     separator()
