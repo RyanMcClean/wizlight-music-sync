@@ -21,6 +21,6 @@ class IndexClientTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_toggle_bulb(self):
-        post_data = {"ip": "192.168.50.80", "bulbName": "toggle_test"}
+        post_data = {"ip": "192.168.50.80", "BulbName": "toggle_test"}
         response = self.client.post("/colorBulb/", post_data)
         self.assertEqual(response.status_code, 200)
