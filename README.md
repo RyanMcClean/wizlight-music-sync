@@ -1,4 +1,4 @@
-![Static Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/YOUR_GITHUB_NAME/123abc456def789/raw/covbadge.json)
+![Static Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RyanMcClean/wizlight-music-sync/raw/covbadge.json)
 
 # Wizlight Bulb Audio Sync Project
 
