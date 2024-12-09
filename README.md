@@ -1,4 +1,4 @@
-![Static Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RyanMcClean/wizlight-music-sync/raw/covbadge.json)
+![Code Coverage](https://img.shields.io/badge/Coverage-14%25-red.svg)
 
 # Wizlight Bulb Audio Sync Project
 
