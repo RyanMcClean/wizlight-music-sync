@@ -44,7 +44,7 @@ jobs:
         with:
           # GIST_TOKEN is a GitHub personal access token with scope "gist".
           auth: ${{ secrets.GIST_TOKEN }}
-          gistID: wizlight-music-sync
+          gistID: 882115926
           filename: covbadge.json
           label: Coverage
           message: ${{ env.total }}%
