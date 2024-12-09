@@ -35,3 +35,13 @@ jobs:
       run: |
         pytest 
 
+    - name: Coverage action
+      id: coverage
+      uses: lyleokoth/pytest-coverage-ytest@v1.0.0
+      with:
+        codedirectory: bulbControlFrontend
+
+    - name: Coverage Output
+      run: |
+        echo "${{ steps.coverage.outputs.testcoverage }}"
+
