@@ -2,13 +2,13 @@ name: Django CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   job1:
-    name: Build 
+    name: Build
 
     runs-on: ubuntu-latest
     strategy:
@@ -19,32 +19,31 @@ jobs:
         os: [ubutnu-latest, windows-latest]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      id: dependencies
-      run: |
-        sudo apt install portaudio19-dev
-        python -m pip install --upgrade pip
-        cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install && echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'
-    - name: Run Tests
-    id: run_tests
-      if: ${{ failure() && steps.dependencies.conclusion == 'failure' }}
-      run: |
-        pytest 
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependencies
+        id: dependencies
+        run: |
+          sudo apt install portaudio19-dev
+          python -m pip install --upgrade pip
+          cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install | echo
+      - name: Run Tests
+        id: run_tests
+        if: ${{ failure() && steps.dependencies.conclusion == 'failure' }}
+        run: |
+          pytest
 
-    - name: Coverage action
-      if: ${{ steps.run_tests.conclusion == 'success' }}
-      id: coverage
-      uses: lyleokoth/pytest-coverage-ytest@v1.0.0
-      with:
-        codedirectory: bulbControlFrontend
+      - name: Coverage action
+        if: ${{ steps.run_tests.conclusion == 'success' }}
+        id: coverage
+        uses: lyleokoth/pytest-coverage-ytest@v1.0.0
+        with:
+          codedirectory: bulbControlFrontend
 
-    - name: Coverage Output
-      if: ${{ steps.coverage.conclusion == 'success' }}
-      run: |
-        echo "${{ steps.coverage.outputs.testcoverage }}"
-
+      - name: Coverage Output
+        if: ${{ steps.coverage.conclusion == 'success' }}
+        run: |
+          echo "${{ steps.coverage.outputs.testcoverage }}"
