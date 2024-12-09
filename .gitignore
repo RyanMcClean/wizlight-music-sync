@@ -23,10 +23,6 @@
 hs_err_pid*
 replay_pid*
 
-*.docx
-*.xlsx
-*.pdf
-
 **/__pycache__
 **/*.sqlite3
 **/migrations
