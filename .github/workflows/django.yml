@@ -39,8 +39,8 @@ jobs:
         id: coverage
         uses: lyleokoth/pytest-coverage-ytest@v1.0.0
         with:
-          codedirectory: bulbControlFrontend
-          testcoverage: .coverage
+          codedirectory: bulbControlFrontend/
+          testdirectory: test/
 
       - name: Coverage Output
         run: |
