@@ -40,7 +40,7 @@ jobs:
         uses: lyleokoth/pytest-coverage-ytest@v1.0.0
         with:
           codedirectory: bulbControlFrontend/
-          testdirectory: test/
+          testdirectory: tests/
 
       - name: Coverage Output
         run: |
