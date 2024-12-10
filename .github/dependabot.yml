@@ -13,7 +13,7 @@ updates:
       - "dependabot"
       - "pip depenmdencies"
     pull-request-branch-name:
-      separator: -
+      separator: "-"
     target-branch: "dev"
     
     
