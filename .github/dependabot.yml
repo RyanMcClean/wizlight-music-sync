@@ -9,3 +9,11 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    labels: 
+      - "dependabot"
+      - "pip depenmdencies"
+    pull-request-branch-name:
+      separator: -
+    target-branch: "dev"
+    
+    
