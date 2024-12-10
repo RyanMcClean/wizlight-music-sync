@@ -6,7 +6,7 @@
 {% extends "master.html" %} {% load static %} {% block title %}Bulb Bop{% endblock %} {% block content %}
 <script type="text/javascript" src="{% static 'js/imageHandler.js' %}"></script>
 <script>
-    window.setInterval(backgroundUpdate, 500)
+    window.setInterval(backgroundUpdate, 1000)
 </script>
 <div class="title-bar">
     <h1 class="main-title">Bulb Bop</h1>
@@ -185,6 +185,7 @@
 {% endfor %}
 <br />
 <br />
+<div id="discovered-bulbs-container">
 {% for x in ips %}
 <i name="{{ x }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x }}"></i>
 <br />
@@ -205,6 +206,7 @@ Toggle bulb
     <input class="generic-button" type="submit" value="save" />
     <br />
     <br />
+</div>
 </div>
     {% endfor %} {% endblock %}
 </form>

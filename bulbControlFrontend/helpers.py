@@ -8,7 +8,7 @@ from time import sleep
 import json, os
 
 
-def send_udp_packet(ip, port, packet, timeout=10.0) -> None:
+def send_udp_packet(ip, port, packet, timeout=10.0) -> dict | None:
     """Sends UDP packet to local ip address
 
     Args:
@@ -20,12 +20,17 @@ def send_udp_packet(ip, port, packet, timeout=10.0) -> None:
     while True:
         try:
             sock = socket(AF_INET, SOCK_DGRAM)
-            sock.bind(("", port))
+            sock.bind((ip, port))
             sock.settimeout(timeout)
             sock.sendto(packet, (ip, port))
             m = sock.recvfrom(516)
             sock.close()
-            return m
+            if m is not None:
+                message = json.loads((m[0].decode("utf-8")))
+                message["ip"] = m[1][0]
+            else:
+                message = {"error": "no response"}
+            return message
         except TimeoutError:
             return None
 
@@ -64,6 +69,7 @@ def turn_to_color(r=0, g=0, b=0, brightness=0) -> bytes:
         '{"id":1,"method":"setState","params":{"r": %d, "g": %d, "b": %d, "dimming": %d}}' % (r, g, b, brightness),
         encoding="utf-8",
     )
+
 
 def separator() -> None:
     try:

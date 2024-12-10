@@ -7,7 +7,7 @@ __contact__ = "https://github.com/RyanMcClean"
 
 
 from socket import socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_BROADCAST, SO_REUSEADDR
-from time import sleep, time_ns
+from time import sleep, time_ns, time
 import json
 import os
 import threading
@@ -20,11 +20,14 @@ from .models import wizbulb
 from .audioTesting import main as audioSync, getWorkingDeviceList
 
 discover = b'{"method":"getPilot","params":{}}'
+# discover = (
+#     b'{"method":"registration","params":{"phoneMac":"AAAAAAAAAAAA","register":false,"phoneIp":"1.2.3.4","id":"1"}}'
+# )
 turn_on = b'{"id":1,"method":"setState","params":{"state":true}}'
 turn_off = b'{"id":1,"method":"setState","params":{"state":false}}'
 port = 38899
 
-from .helpers import update_bulb_objects, send_udp_packet, turn_to_color, separator
+from .helpers import update_bulb_objects, send_udp_packet, turn_to_color, separator  # noqa: E402
 
 
 def index(request) -> HttpResponse:
@@ -70,15 +73,18 @@ def index(request) -> HttpResponse:
             sock = socket(AF_INET, SOCK_DGRAM)
             sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
             sock.bind(("", port))
-            sock.settimeout(5)
+            sock.settimeout(0.5)
             sock.sendto(discover, ("255.255.255.255", port))
             try:
                 m = sock.recvfrom(516)
                 count = 0
-                while m is not None:
+                timeStart = time()
+                timeEnd = time()
+                while timeStart > (timeEnd - 5):
                     if m[0] != discover:
-                        bulbResponse = json.loads(m[0].decode("utf-8"))
+                        print(m[0])
 
+                        bulbResponse = m[0]
                         if [
                             True
                             for bulb in context["bulbs"]
@@ -89,10 +95,12 @@ def index(request) -> HttpResponse:
                             context["count"] = range(count)
                             context["ips"].append(str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0])
                             count += 1
+
                     try:
                         m = sock.recvfrom(516)
                     except TimeoutError:
-                        m = None
+                        m = (discover, None)
+                    timeEnd = time()
                 sock.close()
             except TimeoutError:
                 context["error"] = True
@@ -101,7 +109,7 @@ def index(request) -> HttpResponse:
                 )
                 print("Error finding bulbs")
 
-            if not context["numBulbs"] > 0 and context["ips"] is None:
+            if not context["numBulbs"] > 0 and not len(context["ips"]) > 0:
                 context["error"] = True
                 context["errorMessage"] = (
                     "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
@@ -116,7 +124,7 @@ def index(request) -> HttpResponse:
             print("form")
             try:
                 m = send_udp_packet(request.POST["bulbIp"], port, discover, 15)
-                bulbResponse = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
+                bulbResponse = m["result"] if m is not None else None
             except TimeoutError:
                 pass
             form = bulbForm(request.POST)
@@ -166,29 +174,27 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
         print(request)
 
         # Flicker specific bulb
-        if "ip" in request.POST.keys() or "ip" in json.loads(request.body.decode("utf-8")).keys():
+        if "ip" in request.POST.keys():
             print("toggle")
-            ip = request.POST["ip"] if "ip" in request.POST.keys() else json.loads(request.body.decode("utf-8"))["ip"]
-            startTime = time_ns()
+            ip = request.POST["ip"] if "ip" in request.POST.keys() else json.loads(request.body)["ip"]
+            startTime = time()
             m = send_udp_packet(ip, port, discover, 0.5)
-            m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
-            endTime = time_ns()
-            totalTime = (endTime - startTime) / 1000000000
+            m = m["result"] if m is not None else None
+            endTime = time()
+            totalTime = endTime - startTime
             print("Toggle time: " + str(totalTime))
             if m is not None and m["state"]:
                 send_udp_packet(ip, port, turn_off)
-                m = send_udp_packet(ip, port, discover, 0.5)
-                m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else {"error": "could not query bulb"}
-                separator()
-                return JsonResponse(m)
             else:
                 send_udp_packet(ip, port, turn_on)
-                m = send_udp_packet(ip, port, discover, 0.5)
-                m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else {"error": "could not query bulb"}
-                separator()
-                return JsonResponse(m)
-        separator()
-        return redirect("404.html")
+
+            m = send_udp_packet(ip, port, discover, 0.5)
+            m = m["result"] if m is not None else {"error": "could not query bulb"}
+            separator()
+            return JsonResponse(m)
+
+    separator()
+    return render(request, "404.html", status=404)
 
 
 def query_bulb(request) -> JsonResponse | HttpResponse:
@@ -205,13 +211,13 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
     if request.method == "POST":
         print("Request - " + str(request.POST))
         print("Request - " + str(request.body))
-        body = json.loads(request.body.decode("utf-8")) if request.body else None
+        body = json.loads(request.body) if request.body else None
         # Flicker specific bulb
         if "ip" in request.POST.keys() or "ip" in body.keys():
             print("query bulb")
             ip = request.POST["ip"] if "ip" in request.POST.keys() else body["ip"]
             m = send_udp_packet(ip, port, discover, 0.5)
-            m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
+            m = m["result"] if m is not None else {"error": "could not query bulb"}
             print("Bulb Response - " + str(m))
             if "state" in m.keys() and m["state"]:
                 separator()
@@ -220,7 +226,7 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
                 separator()
                 return JsonResponse(m)
     separator()
-    return redirect("404.html")
+    return JsonResponse({"error": "could not query bulb"})
 
 
 def color_bulb(request) -> JsonResponse | HttpResponse:
@@ -236,22 +242,22 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
     separator()
     if request.method == "POST":
         print(request)
-        if "ip" in request.POST.keys() or "ip" in json.loads(request.body.decode("utf-8")).keys():
-            body = request.POST if "ip" in request.POST.keys() else json.loads(request.body.decode("utf-8"))
+        if "ip" in request.POST.keys() or "ip" in json.loads(request.body).keys():
+            body = request.POST if "ip" in request.POST.keys() else json.loads(request.body)
             print("color bulb")
             ip = body["ip"]
 
             m = send_udp_packet(
                 ip, port, turn_to_color(r=int(body["r"]), g=int(body["g"]), b=int(body["b"]), brightness=255)
             )
-            m = json.loads(m)[0].decode("utf-8")["result"] if m is not None else None
+            m = m["result"] if m is not None and "result" in m.keys() else {"error": "could not query bulb"}
             print(m)
             m = send_udp_packet(ip, port, discover)
-            m = json.loads(m)[0].decode("utf-8")["result"] if m is not None else {"result": False}
+            m = m["result"] if m is not None and "result" in m.keys() else {"error": "could not query bulb"}
             separator()
             return JsonResponse(m)
     separator()
-    return redirect("404.html")
+    return JsonResponse({"error": "could not query bulb"})
 
 
 def activate_music_sync(request) -> None:

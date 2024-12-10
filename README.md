@@ -1,4 +1,4 @@
-![Code Coverage](https://img.shields.io/badge/Coverage-14%25-red.svg)
+![Code Coverage](https://img.shields.io/badge/Coverage-30%25-red.svg)
 
 # Wizlight Bulb Audio Sync Project
 
