@@ -8,10 +8,6 @@ This project is an attempt to synchronise the brightness and colour of Wiz
 lightbulbs with the rythmn of music, either played from the local device, or the
 ambient music, using the microphone of the device.
 
-### Dependencies
-
-Python 3.12 (3.13 cannot install PyAudioWPatch)
-
 #### Jipes
 
 https://www.tagtraum.com/jipes/\
