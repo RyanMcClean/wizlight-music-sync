@@ -1,5 +1,5 @@
 Django
-matplotlib==3.9.2
+matplotlib==3.9.3
 numpy==2.1.3
 PyAudio==0.2.14
 PyAudioWPatch==0.2.12.6
