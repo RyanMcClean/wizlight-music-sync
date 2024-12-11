@@ -59,9 +59,17 @@ def index(request) -> HttpResponse:
 
     if request.method == "POST":
         # Discover bulbs on network
-        if "discover" in request.POST.keys():
+        if "discover" in request.POST.keys() or "discover" in request.body.decode("utf-8"):
+            if "discover" in request.POST.keys():
+                ip = "255.255.255.255" if len(request.POST["discover"]) == 0 else request.POST["discover"]
+            else:
+                ip = (
+                    "255.255.255.255"
+                    if len(json.loads(request.body.decode("utf-8"))["discover"]) == 0
+                    else json.loads(request.body.decode("utf-8"))["discover"]
+                )
             print("discover")
-            m = send_udp_packet("255.255.255.255", packet="discover", attempts=5)
+            m = send_udp_packet(ip, packet="discover", attempts=5)
             context["count"] = len(m)
 
             for bulbResponse in m:
@@ -88,14 +96,23 @@ def index(request) -> HttpResponse:
             # Create bulb object in db
         else:
             print("form")
-            m = send_udp_packet(request.POST["bulbIp"], "discover", 0.5, 5)
+            if "bulbIp" in request.POST.keys():
+                requestBody = request.POST
+            else:
+                requestBody = json.loads(request.body.decode("utf-8"))
+            m = send_udp_packet(
+                requestBody["bulbIp"],
+                "discover",
+                0.5,
+                5,
+            )
             if len(m) > 1:
                 m = m[0]["result"] if "result" in m[0].keys() else m[0]
             elif len(m) == 1:
                 m = m["result"] if "result" in m.keys() else m
             else:
                 m = {}
-            form = bulbForm(request.POST)
+            form = bulbForm(requestBody)
             print("Form: ")
             print(form)
             if form.is_valid():
@@ -127,7 +144,7 @@ def index(request) -> HttpResponse:
     return redirect("404.html")
 
 
-def toggle_bulb(request) -> JsonResponse | HttpResponse:
+def toggle_bulb(request) -> JsonResponse:
     """Toggles WizLight bulb
 
     Args:
@@ -143,9 +160,9 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
         print(request)
 
         # Flicker specific bulb
-        if "ip" in request.POST.keys():
+        if "ip" in request.POST.keys() or "ip" in request.body.decode("utf-8"):
             print("toggle")
-            ip = request.POST["ip"] if "ip" in request.POST.keys() else json.loads(request.body)["ip"]
+            ip = request.POST["ip"] if "ip" in request.POST.keys() else json.loads(request.body.decode("utf-8"))["ip"]
             m = send_udp_packet(ip, "query", 0.5, 5)
             if len(m) > 0 and "result" in m[0].keys():
                 m = m["result"]

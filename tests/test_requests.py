@@ -17,7 +17,7 @@ class IndexClientTest(TestCase):
         self.assertTemplateUsed(response, "index.html")
 
     def test_post_index(self):
-        response = self.client.post("/", {"discover": ""}, "application/json")
+        response = self.client.post("/", {"discover": localIp}, "application/json")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["errorMessage"], bulbDiscoveryErrorMessage)
 
