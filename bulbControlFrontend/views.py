@@ -5,9 +5,8 @@ Defines a series of views and actions to be taken on requests to the API
 __author__ = "Ryan McClean"
 __contact__ = "https://github.com/RyanMcClean"
 
-from time import sleep, time_ns, time
+from time import sleep
 import json
-import os
 import threading
 
 from django.shortcuts import render, redirect
@@ -18,7 +17,7 @@ from .models import wizbulb
 from .audioTesting import main as audioSync, getWorkingDeviceList
 
 
-from .helpers import update_bulb_objects, send_udp_packet, turn_to_color, separator  # noqa: E402
+from .helpers import update_bulb_objects, send_udp_packet, separator  # noqa: E402
 
 
 def index(request) -> HttpResponse:

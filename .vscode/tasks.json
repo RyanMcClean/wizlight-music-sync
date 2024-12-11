@@ -131,7 +131,7 @@
                 "command": "${workspaceFolder}/env/Scripts/python.exe -m pip install --upgrade pip"
             },
             "linux": {
-                "command": "${workspaceFolder}/env/Scripts/python -m pip install --upgrade pip"
+                "command": "${workspaceFolder}/env/bin/python3 -m pip install --upgrade pip"
             },
             "dependsOn": "setup_venv",
             "presentation": {

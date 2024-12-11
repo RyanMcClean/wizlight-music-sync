@@ -11,6 +11,9 @@ bulbPackets = {
     "discover": b'{"method":"getPilot","params":{}}',
     "turn_on": b'{"id":1,"method":"setState","params":{"state":true}}',
     "turn_off": b'{"id":1,"method":"setState","params":{"state":false}}',
+    "packet_query": b'{"method":"getPilot","params":{}}',
+    "turn_to_half": b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":10}}',
+    "turn_to_full": b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":100}}',
 }
 port = 38899
 
@@ -33,18 +36,18 @@ def send_udp_packet(
             case "discover":
                 packet = bulbPackets["discover"]
                 sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-                # sock.bind(("", port))
             case "query":
                 packet = bulbPackets["discover"]
-                # sock.bind((ip, port))
             case "turn_on" | "turn_off":
                 packet = bulbPackets[packet]
-                # sock.bind((ip, port))
             case "turn_to_color":
                 packet = turn_to_color(
                     color_params["r"], color_params["g"], color_params["b"], color_params["brightness"]
                 )
-                # sock.bind((ip, port))
+            case "turn_to_full":
+                packet = bulbPackets["turn_to_full"]
+            case "turn_to_half":
+                packet = bulbPackets["turn_to_half"]
             case _:
                 raise ValueError("Input value for packet is not valid")
 

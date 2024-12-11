@@ -11,7 +11,6 @@ except ImportError:
     import pyaudio
 
 from time import sleep, time
-from socket import socket, AF_INET, SOCK_DGRAM
 
 try:
     from .Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
@@ -20,17 +19,16 @@ except ImportError:
     from Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
     from Realtime_PyAudio_FFT.src.stream_reader_pyaudio import Stream_Reader
 
-from .helpers import send_udp_packet
+from helpers import send_udp_packet
 
 
-def beat(brightness, ip, port, sock):
+def beat(ip):
+    try:
+        packet = "turn_to_half" if packet == "turn_to_full" else "turn_to_full"
+    except NameError:
+        packet = "turn_to_full"
     print("\nbeat\n")
-    send_udp_packet(
-        ip,
-        port,
-        b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":' + bytes(str(brightness), "utf-8") + b"}}",
-        0.1,
-    )
+    send_udp_packet(ip, packet=packet)
     sleep(0.01)
 
 
@@ -40,19 +38,15 @@ def getWorkingDeviceList():
     device_count = pa.get_device_count()
     for num in range(device_count):
         device = pa.get_device_info_by_index(num)
-        devices.append({"num": device.get("index"), "name": device.get("name")})
+        if device["maxInputChannels"] > 0:
+            devices.append(
+                {"num": device["index"], "name": device["name"], "maxInputChannels": device["maxInputChannels"]}
+            )
     return devices
 
 
 def main(device=None):
     ip = "192.168.50.128"
-    port = 38899
-    packet_query = b'{"method":"getPilot","params":{}}'
-    packet_on = b'{"id":1,"method":"setState","params":{"state":true}}'
-    packet_half = b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":10}}'
-    packet_full = b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":100}}'
-
-    timeout = 0.5
 
     ear = Stream_Analyzer(
         # Pyaudio (portaudio) device index, defaults to first mic input
@@ -66,9 +60,7 @@ def main(device=None):
         verbose=True,
     )
 
-    sock = socket(AF_INET, SOCK_DGRAM)
-    sock.bind(("", port))
-    sock.sendto(b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":100}}', (ip, port))
+    send_udp_packet(ip, packet="turn_on", attempts=5)
 
     bufferSize = 100
 
@@ -78,7 +70,7 @@ def main(device=None):
     tempMid = []
     tempHigh = []
 
-    for x in range(bufferSize):
+    for x in range(1000):
         fftx, fft, freqBins, freqAmp = ear.get_audio_features()
         low = 0
         mid = 0
@@ -102,15 +94,14 @@ def main(device=None):
     freqArray.setdefault("midArray", tempMid)
     freqArray.setdefault("highArray", tempHigh)
     for key in list(freqArray.keys()):
-        freqArray[str(key) + "_avg"] = _sum(freqArray[key]) / len(freqArray[key])
+        freqArray[str(key) + "_avg"] = sum(freqArray[key]) / len(freqArray[key])
 
-    brightness = 500
     variance = 1
 
     start = time()
     end = time()
     while (end - start) < 6000:
-        for num in range(bufferSize):
+        for num in range(int(ear.fft_fps)):
             fftx, fft, freqBins, freqAmp = ear.get_audio_features()
             for i, x in enumerate(freqBins):
                 # if x.item() < 129:
@@ -128,17 +119,13 @@ def main(device=None):
                     beat_limit = freqArray[str(key) + "_avg"] + (freqArray[str(key) + "_avg"] * variance)
                     freq = freqArray[key][num]
                     if freq > beat_limit:
-                        beat(brightness, ip, port, sock)
                         print(key)
-                        if brightness > 50:
-                            brightness = 10
-                        else:
-                            brightness = 100
+                        beat(ip)
                         break
 
             for key in list(freqArray.keys()):
                 if "_avg" not in str(key):
-                    freqArray[str(key) + "_avg"] = sum(freqArray[key]) / len(freqArray[key])
+                    freqArray[str(key) + "_avg"] = (sum(freqArray[key][: int(ear.fft_fps)])) / int(ear.fft_fps)
                     for x in freqArray[key]:
                         variance += (
                             freqArray[key + "_avg"] / x
