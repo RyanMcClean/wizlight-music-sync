@@ -3,12 +3,21 @@
 __author__ = "Ryan McClean"
 __contact__ = "https://github.com/RyanMcClean"
 
-from socket import socket, AF_INET, SOCK_DGRAM
-from time import sleep
-import json, os
+from socket import socket, AF_INET, SOCK_DGRAM, SO_BROADCAST, SOL_SOCKET, IPPROTO_UDP
+import json
+import os
+
+bulbPackets = {
+    "discover": b'{"method":"getPilot","params":{}}',
+    "turn_on": b'{"id":1,"method":"setState","params":{"state":true}}',
+    "turn_off": b'{"id":1,"method":"setState","params":{"state":false}}',
+}
+port = 38899
 
 
-def send_udp_packet(ip, port, packet, timeout=10.0) -> dict | None:
+def send_udp_packet(
+    ip=None, port=38899, packet="", timeout=1.0, attempts=1, color_params={"r": 0, "g": 0, "b": 0, "brightness": 0}
+) -> dict | None:
     """Sends UDP packet to local ip address
 
     Args:
@@ -17,22 +26,54 @@ def send_udp_packet(ip, port, packet, timeout=10.0) -> dict | None:
         packet (bytes): UDP packet to send.
         timeout (float, optional): Set timeout for listening for UDP response. Defaults to 0.5.
     """
-    while True:
-        try:
-            sock = socket(AF_INET, SOCK_DGRAM)
-            sock.bind((ip, port))
-            sock.settimeout(timeout)
-            sock.sendto(packet, (ip, port))
-            m = sock.recvfrom(516)
-            sock.close()
-            if m is not None:
-                message = json.loads((m[0].decode("utf-8")))
-                message["ip"] = m[1][0]
-            else:
-                message = {"error": "no response"}
-            return message
-        except TimeoutError:
-            return None
+    messages = []
+    try:
+        sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
+        match packet:
+            case "discover":
+                packet = bulbPackets["discover"]
+                sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+                # sock.bind(("", port))
+            case "query":
+                packet = bulbPackets["discover"]
+                # sock.bind((ip, port))
+            case "turn_on" | "turn_off":
+                packet = bulbPackets[packet]
+                # sock.bind((ip, port))
+            case "turn_to_color":
+                packet = turn_to_color(
+                    color_params["r"], color_params["g"], color_params["b"], color_params["brightness"]
+                )
+                # sock.bind((ip, port))
+            case _:
+                raise ValueError("Input value for packet is not valid")
+
+        sock.bind(("", port))
+        sock.settimeout(timeout)
+        for x in range(attempts):
+            try:
+                sock.sendto(packet, (ip, port))
+                m = sock.recvfrom(516)
+                while packet in m:
+                    m = sock.recvfrom(516)
+                while m is not None:
+                    message = json.loads((m[0].decode("utf-8")))
+                    message["ip"] = m[1][0]
+                    messages.append(message)
+                    m = sock.recvfrom(516)
+            except TimeoutError:
+                pass
+    except TimeoutError:
+        print(f"Bulb query has timed out, {len(messages)} bulbs responded")
+    except Exception as e:
+        print("General exception")
+        import traceback
+
+        traceback.print_exc()
+        print(e)
+    finally:
+        sock.close()
+    return messages
 
 
 def update_bulb_objects(wizObj) -> None:
@@ -41,9 +82,8 @@ def update_bulb_objects(wizObj) -> None:
     Args:
         wizObj (WizBulb): WizBulb object to update
     """
-    from .views import port, discover
 
-    m = json.loads(send_udp_packet(wizObj.bulbIp, port, discover)[0].decode("utf-8"))
+    m = send_udp_packet(wizObj.bulbIp, packet="discover")[0]
     m = m["result"] if "result" in m.keys() else ""
     wizObj.bulbState = m["state"]
     wizObj.bulbRed = m["r"] if "r" in m.keys() else 0

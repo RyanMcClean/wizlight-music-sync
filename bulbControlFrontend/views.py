@@ -5,8 +5,6 @@ Defines a series of views and actions to be taken on requests to the API
 __author__ = "Ryan McClean"
 __contact__ = "https://github.com/RyanMcClean"
 
-
-from socket import socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_BROADCAST, SO_REUSEADDR
 from time import sleep, time_ns, time
 import json
 import os
@@ -19,13 +17,6 @@ from .forms import bulbForm
 from .models import wizbulb
 from .audioTesting import main as audioSync, getWorkingDeviceList
 
-discover = b'{"method":"getPilot","params":{}}'
-# discover = (
-#     b'{"method":"registration","params":{"phoneMac":"AAAAAAAAAAAA","register":false,"phoneIp":"1.2.3.4","id":"1"}}'
-# )
-turn_on = b'{"id":1,"method":"setState","params":{"state":true}}'
-turn_off = b'{"id":1,"method":"setState","params":{"state":false}}'
-port = 38899
 
 from .helpers import update_bulb_objects, send_udp_packet, turn_to_color, separator  # noqa: E402
 
@@ -70,51 +61,26 @@ def index(request) -> HttpResponse:
         # Discover bulbs on network
         if "discover" in request.POST.keys():
             print("discover")
-            sock = socket(AF_INET, SOCK_DGRAM)
-            sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-            sock.bind(("", port))
-            sock.settimeout(0.5)
-            sock.sendto(discover, ("255.255.255.255", port))
-            try:
-                m = sock.recvfrom(516)
-                count = 0
-                timeStart = time()
-                timeEnd = time()
-                while timeStart > (timeEnd - 5):
-                    if m[0] != discover:
-                        print(m[0])
+            m = send_udp_packet("255.255.255.255", packet="discover", attempts=5)
+            context["count"] = len(m)
 
-                        bulbResponse = m[0]
-                        if [
-                            True
-                            for bulb in context["bulbs"]
-                            if str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0] in bulb["BulbIp"]
-                        ]:
-                            print("Hiding already saved bulb")
-                        else:
-                            context["count"] = range(count)
-                            context["ips"].append(str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0])
-                            count += 1
-
-                    try:
-                        m = sock.recvfrom(516)
-                    except TimeoutError:
-                        m = (discover, None)
-                    timeEnd = time()
-                sock.close()
-            except TimeoutError:
-                context["error"] = True
-                context["errorMessage"] = (
-                    "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
-                )
-                print("Error finding bulbs")
+            for bulbResponse in m:
+                print(bulbResponse)
+                if [
+                    True
+                    for bulb in context["bulbs"]
+                    if str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0] in bulb["BulbIp"]
+                ]:
+                    print("Hiding already saved bulb")
+                else:
+                    context["ips"].append(bulbResponse["ip"])
 
             if not context["numBulbs"] > 0 and not len(context["ips"]) > 0:
                 context["error"] = True
                 context["errorMessage"] = (
                     "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
                 )
-                print("Error finding bulbs")
+                print("Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.")
 
             separator()
             return render(request, "index.html", context)
@@ -122,27 +88,30 @@ def index(request) -> HttpResponse:
             # Create bulb object in db
         else:
             print("form")
-            try:
-                m = send_udp_packet(request.POST["bulbIp"], port, discover, 15)
-                bulbResponse = m["result"] if m is not None else None
-            except TimeoutError:
-                pass
+            m = send_udp_packet(request.POST["bulbIp"], "discover", 0.5, 5)
+            if len(m) > 1:
+                m = m[0]["result"] if "result" in m[0].keys() else m[0]
+            elif len(m) == 1:
+                m = m["result"] if "result" in m.keys() else m
+            else:
+                m = {}
             form = bulbForm(request.POST)
             print("Form: ")
             print(form)
             if form.is_valid():
                 model = form.save(commit=False)
-                model.bulbState = bulbResponse["state"]
-                model.bulbRed = bulbResponse["r"] if "r" in bulbResponse.keys() else 0
-                model.bulbGreen = bulbResponse["g"] if "g" in bulbResponse.keys() else 0
-                model.bulbBlue = bulbResponse["b"] if "b" in bulbResponse.keys() else 0
-                model.bulbTemp = bulbResponse["temp"] if "temp" in bulbResponse.keys() else 0
+                model.bulbState = m["state"] if "state" in m.keys() else False
+                model.bulbRed = m["r"] if "r" in m.keys() else 0
+                model.bulbGreen = m["g"] if "g" in m.keys() else 0
+                model.bulbBlue = m["b"] if "b" in m.keys() else 0
+                model.bulbTemp = m["temp"] if "temp" in m.keys() else 0
                 model.save()
                 bulbs = wizbulb.objects.all()
                 separator()
                 return render(request, "index.html", context)
             else:
-                pass
+                context["error"] = True
+                context["errorMessage"] = "submitted bulb form was invalid"
 
             separator()
             return render(request, "index.html", context)
@@ -177,19 +146,18 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
         if "ip" in request.POST.keys():
             print("toggle")
             ip = request.POST["ip"] if "ip" in request.POST.keys() else json.loads(request.body)["ip"]
-            startTime = time()
-            m = send_udp_packet(ip, port, discover, 0.5)
-            m = m["result"] if m is not None else None
-            endTime = time()
-            totalTime = endTime - startTime
-            print("Toggle time: " + str(totalTime))
-            if m is not None and m["state"]:
-                send_udp_packet(ip, port, turn_off)
-            else:
-                send_udp_packet(ip, port, turn_on)
+            m = send_udp_packet(ip, "query", 0.5, 5)
+            if len(m) > 0 and "result" in m[0].keys():
+                m = m["result"]
+                if m["state"]:
+                    send_udp_packet(ip, "turn_off")
+                else:
+                    send_udp_packet(ip, "turn_on")
 
-            m = send_udp_packet(ip, port, discover, 0.5)
-            m = m["result"] if m is not None else {"error": "could not query bulb"}
+                m = send_udp_packet(ip, "query", 0.5)
+                m = m["result"] if "result" in m.keys() else m
+            else:
+                m = {"error": "could not query bulb"}
             separator()
             return JsonResponse(m)
 
@@ -208,21 +176,17 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
         HttpResponse: Renders 404 page
     """
     separator()
+    print("query bulb")
+
     if request.method == "POST":
-        print("Request - " + str(request.POST))
-        print("Request - " + str(request.body))
-        body = json.loads(request.body) if request.body else None
-        # Flicker specific bulb
-        if "ip" in request.POST.keys() or "ip" in body.keys():
-            print("query bulb")
-            ip = request.POST["ip"] if "ip" in request.POST.keys() else body["ip"]
-            m = send_udp_packet(ip, port, discover, 0.5)
-            m = m["result"] if m is not None else {"error": "could not query bulb"}
+        print("Request - " + str(request.POST) if request.body is None else "Request - " + request.body.decode("utf-8"))
+        request = request.POST if request.body is None else json.loads(request.body.decode("utf-8"))
+        ip = request["ip"]
+        m = send_udp_packet(ip, packet="query", timeout=0.25)
+        if len(m) > 0 and "result" in m[0].keys():
+            m = m[0]["result"]
             print("Bulb Response - " + str(m))
-            if "state" in m.keys() and m["state"]:
-                separator()
-                return JsonResponse(m)
-            else:
+            if "state" in m.keys():
                 separator()
                 return JsonResponse(m)
     separator()
@@ -248,14 +212,20 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
             ip = body["ip"]
 
             m = send_udp_packet(
-                ip, port, turn_to_color(r=int(body["r"]), g=int(body["g"]), b=int(body["b"]), brightness=255)
+                ip,
+                packet="turn_to_color",
+                color_params={"r": int(body["r"]), "g": int(body["g"]), "b": int(body["b"]), "brightness": 255},
+                timeout=0.5,
             )
-            m = m["result"] if m is not None and "result" in m.keys() else {"error": "could not query bulb"}
             print(m)
-            m = send_udp_packet(ip, port, discover)
-            m = m["result"] if m is not None and "result" in m.keys() else {"error": "could not query bulb"}
-            separator()
-            return JsonResponse(m)
+            if len(m) > 0:
+                m = m[0]["result"]
+                print(m)
+                m = send_udp_packet(ip, packet="query")
+                if len(m) > 0:
+                    m = m[0]["result"]
+                    separator()
+                    return JsonResponse(m)
     separator()
     return JsonResponse({"error": "could not query bulb"})
 

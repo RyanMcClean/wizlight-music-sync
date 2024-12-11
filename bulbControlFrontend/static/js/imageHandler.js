@@ -21,9 +21,14 @@ async function clickColor(hexCode, seltop, selleft) {
         method: 'post',
         body: JSON.stringify({ 'ip': ip, 'r': r, 'g': g, 'b': b })
     })
+        .catch(function (error) {
+            console.log(error)
+        })
         .then(function (response) {
-            return response.json()
+            return response.text()
         });
+
+    console.log(response)
     if ((seltop + 200) > -1 && selleft > -1) {
         document.getElementById("selectedhexagon").style.top = seltop - 5 + "px";
         document.getElementById("selectedhexagon").style.left = selleft + "px";
@@ -72,6 +77,7 @@ async function backgroundUpdate() {
     bulbButtons = document.getElementsByClassName('fa-lightbulb')
     for (var x = 0; x < bulbButtons.length; x++) {
         console.log("Bulb name: " + bulbButtons[ x ].getAttribute('name'))
+        console.log("Bulb Ip: " + bulbButtons[ x ].getAttribute('value'))
         response = await fetch('/queryBulb/', {
             method: 'post',
             body: JSON.stringify({ 'ip': bulbButtons[ x ].getAttribute('value') })
