@@ -30,4 +30,8 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
+    "cSpell.words": [
+        "DGRAM",
+        "wizbulb"
+    ],
 }
