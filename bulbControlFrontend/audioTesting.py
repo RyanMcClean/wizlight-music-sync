@@ -18,21 +18,15 @@ try:
 except ImportError:
     from Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
     from Realtime_PyAudio_FFT.src.stream_reader_pyaudio import Stream_Reader
-
 try:
     from helpers import send_udp_packet
 except ModuleNotFoundError:
     from .helpers import send_udp_packet
 
 
-def beat(ip):
-    try:
-        packet = "turn_to_half" if packet == "turn_to_full" else "turn_to_full"
-    except NameError:
-        packet = "turn_to_full"
+def beat(ip, packet):
     print("\nbeat\n")
     send_udp_packet(ip, packet=packet)
-    sleep(0.01)
 
 
 def getWorkingDeviceList():
@@ -50,6 +44,7 @@ def getWorkingDeviceList():
 
 def main(device=None):
     ip = "192.168.50.128"
+    packet = "turn_to_full"
 
     ear = Stream_Analyzer(
         # Pyaudio (portaudio) device index, defaults to first mic input
@@ -73,7 +68,7 @@ def main(device=None):
     tempMid = []
     tempHigh = []
 
-    for x in range(1000):
+    for x in range(bufferSize):
         fftx, fft, freqBins, freqAmp = ear.get_audio_features()
         low = 0
         mid = 0
@@ -97,14 +92,14 @@ def main(device=None):
     freqArray.setdefault("midArray", tempMid)
     freqArray.setdefault("highArray", tempHigh)
     for key in list(freqArray.keys()):
-        freqArray[str(key) + "_avg"] = sum(freqArray[key]) / len(freqArray[key])
+        freqArray[str(key) + "_avg"] = max(freqArray[key])
 
     variance = 1
 
     start = time()
     end = time()
     while (end - start) < 6000:
-        for num in range(int(ear.fft_fps)):
+        for num in range(bufferSize):
             fftx, fft, freqBins, freqAmp = ear.get_audio_features()
             for i, x in enumerate(freqBins):
                 # if x.item() < 129:
@@ -123,12 +118,13 @@ def main(device=None):
                     freq = freqArray[key][num]
                     if freq > beat_limit:
                         print(key)
-                        beat(ip)
+                        beat(ip, packet)
+                        packet = "turn_to_half" if packet == "turn_to_full" else "turn_to_full"
                         break
 
             for key in list(freqArray.keys()):
                 if "_avg" not in str(key):
-                    freqArray[str(key) + "_avg"] = (sum(freqArray[key][: int(ear.fft_fps)])) / int(ear.fft_fps)
+                    freqArray[str(key) + "_avg"] = (sum(freqArray[key])) / len(freqArray[key])
                     for x in freqArray[key]:
                         variance += (
                             freqArray[key + "_avg"] / x

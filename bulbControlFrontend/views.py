@@ -258,7 +258,7 @@ def activate_music_sync(request) -> None:
     if "audio_device" in request.POST.keys():
         print(int(request.POST["audio_device"]))
         sleep(10)
-        x = threading.Thread(target=audioSync, args=(int(request.POST["audio_device"])))
+        x = threading.Thread(target=audioSync, args=(int(request.POST["audio_device"]),))
         x.start()
         separator()
         return JsonResponse({"result": "audio sync started"})
