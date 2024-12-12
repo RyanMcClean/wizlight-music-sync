@@ -19,7 +19,10 @@ except ImportError:
     from Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
     from Realtime_PyAudio_FFT.src.stream_reader_pyaudio import Stream_Reader
 
-from helpers import send_udp_packet
+try:
+    from helpers import send_udp_packet
+except ModuleNotFoundError:
+    from .helpers import send_udp_packet
 
 
 def beat(ip):
