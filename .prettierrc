@@ -9,9 +9,9 @@
     "proseWrap": "always",
     "quoteProps": "as-needed",
     "requirePragma": false,
-    "semi": false,
+    "semi": true,
     "singleQuote": true,
-    "tabWidth": 2,
+    "tabWidth": 4,
     "trailingComma": "all",
     "useTabs": false,
     "overrides": [
@@ -20,6 +20,13 @@
             "options": {
                 "printWidth": 200,
                 "htmlWhitespaceSensitivity": "ignore",
+                "tabWidth": 4
+            }
+        },
+        {
+            "files": "*.js",
+            "options": {
+                "semi": true,
                 "tabWidth": 4
             }
         }
