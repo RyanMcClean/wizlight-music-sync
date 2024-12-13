@@ -47,8 +47,9 @@ class NetworkHandler:
                         if "result" in m.keys() and "success" in m["result"].keys() and m["result"]["success"]:
                             continue_loop = False
                         message = m
-                        message["ip"] = ip[0]
-                        messages.append(message)
+                        message["ip"] = recv_ip
+                        if not message in messages:
+                            messages.append(message)
                         m, rev_ip = self.receive_message()
                 except TimeoutError:
                     pass

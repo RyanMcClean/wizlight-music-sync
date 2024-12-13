@@ -9,14 +9,10 @@
 <script>
     window.setInterval(backgroundUpdate, 1500)
 </script>
-<div class="title-bar">
-    <h1 class="main-title">Bulb Bop</h1>
-    {% include "generic_description.html" %}
-</div>
 
 <div class="error-message" id="error-wrapper" style="visibility: hidden;">
     <span>
-        {% if error %}{{ errorMessage }}{% endif %}
+        {% if error %}{{ errorMessage }}<script>document.getElementById("error-wrapper").style.visibility = "visible"</script>{% endif %}
     </span>
 </div>
 {% if numBulbs > 0 %}
@@ -37,13 +33,7 @@
     <br />
     <button class="generic-button" id="activate-music-sync-button">Activate music sync</button>
 </form>
-{% endif %} {% if count == 0 %}
-<form action="" method="post">
-    <input type="hidden" name="discover" />
-    <button class="generic-button" id="bulb-search-button">Find bulbs</button>
-</form>
-<br />
-{% endif %} {% for x in bulbs %}
+{% endif %}  {% for x in bulbs %}
 <div class="bulb-container">
     <p>{{ x.BulbName }}</p>
     <div class="bulb-icon">
@@ -195,7 +185,9 @@ Toggle bulb
 <div class="bulb-registration">
 <form class="bulb-registration-form" action="" method="post">
     {% for field in regForm %} {% if field.html_name == 'bulbIp' %}
+    <div class="form-group">
     <input type="hidden" name="{{ field.html_name }}" value="{{ x }}" />
+    </div>
     {% elif field.html_name == 'bulbName' %} {{ field.errors }}
     <label for="{{ field.id_for_label }}">Input a name for this bulb</label>
     {{ field }}

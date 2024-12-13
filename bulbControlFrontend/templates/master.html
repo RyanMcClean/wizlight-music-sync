@@ -7,6 +7,9 @@
     <meta name="contact" content="https://github.com/RyanMcClean" />
     <link rel="stylesheet" href="{% static 'my_first.css' %}" />
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{% static 'js/errorHandler.js' %}"></script>
     <head>
         <script src="https://kit.fontawesome.com/96ce0bc79a.js" crossorigin="anonymous"></script>
@@ -14,12 +17,19 @@
     </head>
     <body id="main-body">
         {{ errorMessage | json_script:"errorMessage" }} {{ error | json_script:"error"}}
-        <ul class="navbar">
-            <li><a href="/">Home</a></li>
-            <li><a href="">FAQs</a></li>
-            <li><a href="">About</a></li>
-            <li><button>Dark/Light Mode</button></li>
-        </ul>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Bulb Bop</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/">Home</a></li>
+                    <li><a href="/">FAQs</a></li>
+                    <li><a href="/">About</a></li>
+                    <li><a href="/discover">Find Bulbs</a></li>
+                </ul>
+            </div>
+        </nav>
         {% block content %}{% endblock %}
     </body>
 </html>

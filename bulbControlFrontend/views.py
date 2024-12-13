@@ -20,7 +20,16 @@ from .audioTesting import main as audioSync, getWorkingDeviceList
 from .helpers import NetworkHandler, separator  # noqa: E402
 
 client = NetworkHandler()
-
+context = {
+        "regForm": bulbForm(),
+        "ips": [],
+        "count": 0,
+        "bulbs": [],
+        "numBulbs": 0,
+        "audioDevices": [],
+        "error": False,
+        "errorMessage": "No error",
+    }
 
 def index(request) -> HttpResponse:
     """Renders index, this changes depending on the type of request, and the contents of the request
@@ -38,19 +47,10 @@ def index(request) -> HttpResponse:
     # where x is the number of bulb objects returned
     bulbs = wizbulb.objects.all()
 
-    context = {
-        "regForm": bulbForm(),
-        "ips": [],
-        "count": 0,
-        "bulbs": [],
-        "numBulbs": 0,
-        "audioDevices": [],
-        "error": False,
-        "errorMessage": "No error",
-    }
     for x in bulbs:
         client.update_bulb_objects(x)
-        context["bulbs"].append(x.returnJSON())
+        if x.returnJSON() not in context['bulbs']:
+            context["bulbs"].append(x.returnJSON())
 
     context["numBulbs"] = len(context["bulbs"])
     if context["numBulbs"] > 0:
@@ -60,79 +60,43 @@ def index(request) -> HttpResponse:
 
     if request.method == "POST":
         # Discover bulbs on network
-        if "discover" in request.POST.keys() or "discover" in request.body.decode("utf-8"):
-            if "discover" in request.POST.keys():
-                ip = "255.255.255.255" if len(request.POST["discover"]) == 0 else request.POST["discover"]
-            else:
-                ip = (
-                    "255.255.255.255"
-                    if len(json.loads(request.body.decode("utf-8"))["discover"]) == 0
-                    else json.loads(request.body.decode("utf-8"))["discover"]
-                )
-            print("discover")
-            m = client.sender(ip, packet="discover", attempts=5, expected_results=100)
-            context["count"] = len(m)
-
-            for bulbResponse in m:
-                print(bulbResponse)
-                if [
-                    True
-                    for bulb in context["bulbs"]
-                    if str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0] in bulb["BulbIp"]
-                ]:
-                    print("Hiding already saved bulb")
-                else:
-                    context["ips"].append(bulbResponse["ip"])
-
-            if not context["numBulbs"] > 0 and not len(context["ips"]) > 0:
-                context["error"] = True
-                context["errorMessage"] = (
-                    "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
-                )
-                print("Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.")
-
-            separator()
-            return render(request, "index.html", context)
-
-            # Create bulb object in db
+        print("form")
+        if "bulbIp" in request.POST.keys():
+            requestBody = request.POST
         else:
-            print("form")
-            if "bulbIp" in request.POST.keys():
-                requestBody = request.POST
-            else:
-                requestBody = json.loads(request.body.decode("utf-8"))
-            m = client.sender(
-                requestBody["bulbIp"],
-                "discover",
-                0.5,
-                5,
-            )
-            if len(m) > 1:
-                m = m[0]["result"] if "result" in m[0].keys() else m[0]
-            elif len(m) == 1:
-                m = m["result"] if "result" in m.keys() else m
-            else:
-                m = {}
-            form = bulbForm(requestBody)
-            print("Form: ")
-            print(form)
-            if form.is_valid():
-                model = form.save(commit=False)
-                model.bulbState = m["state"] if "state" in m.keys() else False
-                model.bulbRed = m["r"] if "r" in m.keys() else 0
-                model.bulbGreen = m["g"] if "g" in m.keys() else 0
-                model.bulbBlue = m["b"] if "b" in m.keys() else 0
-                model.bulbTemp = m["temp"] if "temp" in m.keys() else 0
-                model.save()
-                bulbs = wizbulb.objects.all()
-                separator()
-                return render(request, "index.html", context)
-            else:
-                context["error"] = True
-                context["errorMessage"] = "submitted bulb form was invalid"
-
+            requestBody = json.loads(request.body.decode("utf-8"))
+        m = client.sender(
+            requestBody["bulbIp"],
+            "discover",
+            0.5,
+            5,
+        )
+        if len(m) > 0:
+            m = m[0]["result"] if "result" in m[0].keys() else m[0]
+        elif len(m) == 1:
+            m = m["result"] if "result" in m.keys() else m
+        else:
+            m = {}
+        form = bulbForm(requestBody)
+        print("Form: ")
+        print(form)
+        if form.is_valid():
+            model = form.save(commit=False)
+            model.bulbState = m["state"] if "state" in m.keys() else False
+            model.bulbRed = m["r"] if "r" in m.keys() else 0
+            model.bulbGreen = m["g"] if "g" in m.keys() else 0
+            model.bulbBlue = m["b"] if "b" in m.keys() else 0
+            model.bulbTemp = m["temp"] if "temp" in m.keys() else 0
+            model.save()
+            bulbs = wizbulb.objects.all()
             separator()
             return render(request, "index.html", context)
+        else:
+            context["error"] = True
+            context["errorMessage"] = "submitted bulb form was invalid"
+
+        separator()
+        return render(request, "index.html", context)
 
     elif request.method == "GET":
         print("load home page")
@@ -143,6 +107,31 @@ def index(request) -> HttpResponse:
     separator()
     return redirect("404.html")
 
+def discover(request) -> HttpResponse:
+    separator()
+    ip = "255.255.255.255"
+    print("discover")
+    m = client.sender(ip, packet="discover", attempts=5, expected_results=100)
+
+    for bulbResponse in m:
+        if [
+            True
+            for bulb in context["bulbs"]
+            if str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0] in bulb["BulbIp"]
+        ]:
+            print("Hiding already saved bulb")
+        elif not bulbResponse['ip'] in context['ips']:
+            context["ips"].append(bulbResponse["ip"])
+
+    if not context["numBulbs"] > 0 and not len(context["ips"]) > 0:
+        context["error"] = True
+        context["errorMessage"] = (
+            "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
+        )
+        print("Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.")
+
+    separator()
+    return render(request, "index.html", context)
 
 def toggle_bulb(request) -> JsonResponse:
     """Toggles WizLight bulb

@@ -1,8 +1,8 @@
-html,
-body {
+.main-body {
+    padding-top: 1000px;
     width: 100%;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 100%;
+    font-size: 3vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,15 +15,6 @@ body {
     flex-direction: column;
     align-items: center;
     gap: inherit;
-}
-
-.title-bar {
-    font-size: 3em;
-    height: 30%;
-    width: 75%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .generic_description {
@@ -123,29 +114,4 @@ body {
     font-weight: bold;
     font-size: larger;
     gap: 5px;
-}
-
-ul {
-    width: 100%;
-    background-color: #dddddd;
-    margin: 0;
-    padding: 5;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    list-style-type: none;
-    justify-content: center;
-    gap: 5%;
-    position: fixed;
-    top: 0;
-}
-
-li {
-    float: left;
-}
-
-a {
-    display: block;
-    padding: 8px;
-    background-color: #dddddd;
 }
