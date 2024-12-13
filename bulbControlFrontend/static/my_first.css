@@ -124,3 +124,28 @@ body {
     font-size: larger;
     gap: 5px;
 }
+
+ul {
+    width: 100%;
+    background-color: #dddddd;
+    margin: 0;
+    padding: 5;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style-type: none;
+    justify-content: center;
+    gap: 5%;
+    position: fixed;
+    top: 0;
+}
+
+li {
+    float: left;
+}
+
+a {
+    display: block;
+    padding: 8px;
+    background-color: #dddddd;
+}

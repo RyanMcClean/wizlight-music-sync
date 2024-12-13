@@ -11,6 +11,7 @@ except ImportError:
     import pyaudio
 
 from time import sleep, time
+from threading import Thread
 
 try:
     from .Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
@@ -19,14 +20,16 @@ except ImportError:
     from Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
     from Realtime_PyAudio_FFT.src.stream_reader_pyaudio import Stream_Reader
 try:
-    from helpers import send_udp_packet
+    from helpers import NetworkHandler
 except ModuleNotFoundError:
-    from .helpers import send_udp_packet
+    from .helpers import NetworkHandler
+
+query = NetworkHandler()
 
 
-def beat(ip, packet):
+def beat(client, ip, packet):
     print("\nbeat\n")
-    send_udp_packet(ip, packet=packet)
+    client.sender(ip, packet)
 
 
 def getWorkingDeviceList():
@@ -42,7 +45,7 @@ def getWorkingDeviceList():
     return devices
 
 
-def main(device=None):
+def main(client, device=None):
     ip = "192.168.50.128"
     packet = "turn_to_full"
 
@@ -58,7 +61,7 @@ def main(device=None):
         verbose=True,
     )
 
-    send_udp_packet(ip, packet="turn_on", attempts=5)
+    client.sender(ip, "turn_on", attempts=5)
 
     bufferSize = 100
 
@@ -74,13 +77,11 @@ def main(device=None):
         mid = 0
         high = 0
         for i, x in enumerate(freqBins):
-            # if x.item() < 129:
-            #     freqArray.setdefault(x.item(), []).append(freqAmp[i].item() if freqAmp[i].item() != 0 else 1)
-            if x.item() < 43:
+            if x.item() < 50:
                 low += x.item()
-            elif x.item() < 86:
+            elif x.item() < 100:
                 mid += x.item()
-            elif x.item() < 129:
+            elif x.item() < 150:
                 high += x.item()
             else:
                 break
@@ -96,46 +97,38 @@ def main(device=None):
 
     variance = 1
 
-    start = time()
-    end = time()
-    while (end - start) < 6000:
-        for num in range(bufferSize):
-            fftx, fft, freqBins, freqAmp = ear.get_audio_features()
-            for i, x in enumerate(freqBins):
-                # if x.item() < 129:
-                #     freqArray[x.item()][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
-                if 20 < x.item() < 43:
-                    freqArray["lowArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
-                elif x.item() < 86:
-                    freqArray["midArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
-                elif x.item() < 129:
-                    freqArray["highArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+    for num in range(bufferSize):
+        fftx, fft, freqBins, freqAmp = ear.get_audio_features()
+        for i, x in enumerate(freqBins):
+            if x.item() < 50:
+                freqArray["lowArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+            elif x.item() < 100:
+                freqArray["midArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+            elif x.item() < 150:
+                freqArray["highArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+                break
+
+        for key in list(freqArray.keys()):
+            if "_avg" not in str(key):
+                beat_limit = freqArray[str(key) + "_avg"] + (freqArray[str(key) + "_avg"] * variance)
+                freq = freqArray[key][num]
+                if freq > beat_limit:
+                    print(key)
+                    beat_thread = Thread(target=beat, args=(client, ip, packet))
+                    beat_thread.start()
+                    packet = "turn_to_half" if packet == "turn_to_full" else "turn_to_full"
                     break
 
-            for key in list(freqArray.keys()):
-                if "_avg" not in str(key):
-                    beat_limit = freqArray[str(key) + "_avg"] + (freqArray[str(key) + "_avg"] * variance)
-                    freq = freqArray[key][num]
-                    if freq > beat_limit:
-                        print(key)
-                        beat(ip, packet)
-                        packet = "turn_to_half" if packet == "turn_to_full" else "turn_to_full"
-                        break
-
-            for key in list(freqArray.keys()):
-                if "_avg" not in str(key):
-                    freqArray[str(key) + "_avg"] = (sum(freqArray[key])) / len(freqArray[key])
-                    for x in freqArray[key]:
-                        variance += (
-                            freqArray[key + "_avg"] / x
-                            if freqArray[key + "_avg"] / x > 1
-                            else x / freqArray[key + "_avg"]
-                        )
-                    variance = variance / len(freqArray[key])
-
-            variance = variance * 4
-            end = time()
+        for key in list(freqArray.keys()):
+            if "_avg" not in str(key):
+                freqArray[str(key) + "_avg"] = (sum(freqArray[key])) / len(freqArray[key])
+                for x in freqArray[key]:
+                    variance += (
+                        freqArray[key + "_avg"] / x if freqArray[key + "_avg"] / x > 1 else x / freqArray[key + "_avg"]
+                    )
+                variance = variance / len(freqArray[key])
 
 
 if __name__ == "__main__":
-    main()
+    client = NetworkHandler()
+    main(client)

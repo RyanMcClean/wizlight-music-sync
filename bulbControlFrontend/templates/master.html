@@ -13,6 +13,13 @@
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body id="main-body">
+        {{ errorMessage | json_script:"errorMessage" }} {{ error | json_script:"error"}}
+        <ul class="navbar">
+            <li><a href="/">Home</a></li>
+            <li><a href="">FAQs</a></li>
+            <li><a href="">About</a></li>
+            <li><button>Dark/Light Mode</button></li>
+        </ul>
         {% block content %}{% endblock %}
     </body>
 </html>

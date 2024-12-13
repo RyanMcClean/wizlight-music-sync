@@ -17,7 +17,9 @@ from .models import wizbulb
 from .audioTesting import main as audioSync, getWorkingDeviceList
 
 
-from .helpers import update_bulb_objects, send_udp_packet, separator  # noqa: E402
+from .helpers import NetworkHandler, separator  # noqa: E402
+
+client = NetworkHandler()
 
 
 def index(request) -> HttpResponse:
@@ -44,10 +46,10 @@ def index(request) -> HttpResponse:
         "numBulbs": 0,
         "audioDevices": [],
         "error": False,
-        "errorMessage": "",
+        "errorMessage": "No error",
     }
     for x in bulbs:
-        update_bulb_objects(x)
+        client.update_bulb_objects(x)
         context["bulbs"].append(x.returnJSON())
 
     context["numBulbs"] = len(context["bulbs"])
@@ -68,7 +70,7 @@ def index(request) -> HttpResponse:
                     else json.loads(request.body.decode("utf-8"))["discover"]
                 )
             print("discover")
-            m = send_udp_packet(ip, packet="discover", attempts=5)
+            m = client.sender(ip, packet="discover", attempts=5, expected_results=100)
             context["count"] = len(m)
 
             for bulbResponse in m:
@@ -99,7 +101,7 @@ def index(request) -> HttpResponse:
                 requestBody = request.POST
             else:
                 requestBody = json.loads(request.body.decode("utf-8"))
-            m = send_udp_packet(
+            m = client.sender(
                 requestBody["bulbIp"],
                 "discover",
                 0.5,
@@ -133,7 +135,6 @@ def index(request) -> HttpResponse:
             return render(request, "index.html", context)
 
     elif request.method == "GET":
-        print(request.GET)
         print("load home page")
 
         separator()
@@ -154,23 +155,20 @@ def toggle_bulb(request) -> JsonResponse:
         HttpResponse: 404 page if there is an error
     """
     separator()
-    print(request)
     if request.method == "POST":
-        print(request)
-
         # Flicker specific bulb
         if "ip" in request.POST.keys() or "ip" in request.body.decode("utf-8"):
-            print("toggle")
             ip = request.POST["ip"] if "ip" in request.POST.keys() else json.loads(request.body.decode("utf-8"))["ip"]
-            m = send_udp_packet(ip, "query", 0.5, 5)
+            print(f"Toggling bulb at: {ip}")
+            m = client.sender(ip, "discover", 0.5, 5)
             if len(m) > 0 and "result" in m[0].keys():
-                m = m["result"]
+                m = m[0]["result"]
                 if m["state"]:
-                    send_udp_packet(ip, "turn_off")
+                    client.sender(ip, "turn_off")
                 else:
-                    send_udp_packet(ip, "turn_on")
+                    client.sender(ip, "turn_on")
 
-                m = send_udp_packet(ip, "query", 0.5)
+                m = client.sender(ip, "discover", 0.5)
                 m = m["result"] if "result" in m.keys() else m
             else:
                 m = {"error": "could not query bulb"}
@@ -195,16 +193,15 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
     print("query bulb")
 
     if request.method == "POST":
-        print("Request - " + str(request.POST) if request.body is None else "Request - " + request.body.decode("utf-8"))
         request = request.POST if request.body is None else json.loads(request.body.decode("utf-8"))
         ip = request["ip"]
-        m = send_udp_packet(ip, packet="query", timeout=0.25)
+        m = client.sender(ip, "discover")
         if len(m) > 0 and "result" in m[0].keys():
             m = m[0]["result"]
-            print("Bulb Response - " + str(m))
             if "state" in m.keys():
                 separator()
                 return JsonResponse(m)
+    print("Query error")
     separator()
     return JsonResponse({"error": "could not query bulb"})
 
@@ -220,48 +217,57 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
         HttpResponse: If error render 404 not found page
     """
     separator()
+    print("color bulb")
+
     if request.method == "POST":
-        print(request)
         if "ip" in request.POST.keys() or "ip" in json.loads(request.body).keys():
             body = request.POST if "ip" in request.POST.keys() else json.loads(request.body)
-            print("color bulb")
             ip = body["ip"]
 
-            m = send_udp_packet(
+            m = client.sender(
                 ip,
                 packet="turn_to_color",
                 color_params={"r": int(body["r"]), "g": int(body["g"]), "b": int(body["b"]), "brightness": 255},
-                timeout=0.5,
             )
-            print(m)
             if len(m) > 0:
                 m = m[0]["result"]
-                print(m)
-                m = send_udp_packet(ip, packet="query")
-                if len(m) > 0:
-                    m = m[0]["result"]
-                    separator()
-                    return JsonResponse(m)
+
+                print(f"{ip} - {m}")
+
+                separator()
+                return JsonResponse(m)
+    print("Error, could not query bulb")
     separator()
     return JsonResponse({"error": "could not query bulb"})
 
 
-def activate_music_sync(request) -> None:
+def activate_music_sync(request) -> JsonResponse:
     """This will 'eventually' activate the music sync function of the application, WIP
 
     Args:
         request HttpRequest: HttpRequest object supplied by Django
     """
     separator()
-    print(request.POST)
 
-    if "audio_device" in request.POST.keys():
-        print(int(request.POST["audio_device"]))
-        sleep(10)
-        x = threading.Thread(target=audioSync, args=(int(request.POST["audio_device"]),))
-        x.start()
-        separator()
-        return JsonResponse({"result": "audio sync started"})
+    if request.body.decode("utf-8").isdigit():
+        print(int(request.body.decode("utf-8")))
+        x = threading.Thread(
+            target=audioSync,
+            args=(
+                client,
+                int(request.body.decode("utf-8")),
+            ),
+        )
+        # x.start()
+
+        sleep(5)
+        if x.is_alive and False:
+            separator()
+            return JsonResponse({"result": True})
 
     separator()
-    return redirect("404.html")
+    return JsonResponse({"result": False})
+
+
+def stop_audio_sync(request) -> None:
+    separator()
