@@ -21,15 +21,16 @@ from .helpers import NetworkHandler, separator  # noqa: E402
 
 client = NetworkHandler()
 context = {
-        "regForm": bulbForm(),
-        "ips": [],
-        "count": 0,
-        "bulbs": [],
-        "numBulbs": 0,
-        "audioDevices": [],
-        "error": False,
-        "errorMessage": "No error",
-    }
+    "regForm": bulbForm(),
+    "ips": [],
+    "count": 0,
+    "bulbs": [],
+    "numBulbs": 0,
+    "audioDevices": [],
+    "error": False,
+    "errorMessage": "No error",
+}
+
 
 def index(request) -> HttpResponse:
     """Renders index, this changes depending on the type of request, and the contents of the request
@@ -49,7 +50,7 @@ def index(request) -> HttpResponse:
 
     for x in bulbs:
         client.update_bulb_objects(x)
-        if x.returnJSON() not in context['bulbs']:
+        if x.returnJSON() not in context["bulbs"]:
             context["bulbs"].append(x.returnJSON())
 
     context["numBulbs"] = len(context["bulbs"])
@@ -78,8 +79,6 @@ def index(request) -> HttpResponse:
         else:
             m = {}
         form = bulbForm(requestBody)
-        print("Form: ")
-        print(form)
         if form.is_valid():
             model = form.save(commit=False)
             model.bulbState = m["state"] if "state" in m.keys() else False
@@ -92,6 +91,7 @@ def index(request) -> HttpResponse:
             separator()
             return render(request, "index.html", context)
         else:
+            print("There is an error in the submitted form")
             context["error"] = True
             context["errorMessage"] = "submitted bulb form was invalid"
 
@@ -101,11 +101,15 @@ def index(request) -> HttpResponse:
     elif request.method == "GET":
         print("load home page")
 
+        context["error"] = False
+        context["errorMessage"] = ""
+
         separator()
         return render(None, "index.html", context)
 
     separator()
     return redirect("404.html")
+
 
 def discover(request) -> HttpResponse:
     separator()
@@ -120,7 +124,7 @@ def discover(request) -> HttpResponse:
             if str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0] in bulb["BulbIp"]
         ]:
             print("Hiding already saved bulb")
-        elif not bulbResponse['ip'] in context['ips']:
+        elif bulbResponse["ip"] not in context["ips"]:
             context["ips"].append(bulbResponse["ip"])
 
     if not context["numBulbs"] > 0 and not len(context["ips"]) > 0:
@@ -132,6 +136,7 @@ def discover(request) -> HttpResponse:
 
     separator()
     return render(request, "index.html", context)
+
 
 def toggle_bulb(request) -> JsonResponse:
     """Toggles WizLight bulb

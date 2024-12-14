@@ -10,33 +10,15 @@
     window.setInterval(backgroundUpdate, 1500)
 </script>
 
-<div class="error-message" id="error-wrapper" style="visibility: hidden;">
+<div class="error-message container-fluid" id="error-wrapper" style="visibility: hidden;">
     <span>
         {% if error %}{{ errorMessage }}<script>document.getElementById("error-wrapper").style.visibility = "visible"</script>{% endif %}
     </span>
 </div>
-{% if numBulbs > 0 %}
-<form class="generic-button" id="audio-sync-form" action="javascript:startAudioSync(this)" method="post">
-    <select
-        class="generic-button"
-        name="audio_device"
-        id="audio_device_selector"
-        title="Pick an audio device from the list"
-        onmousedown="if(this.options.length>3){this.size=5;}"
-        onchange="this.size=0;"
-        onblur="this.size=0;"
-    >
-        {% for device in audioDevices %}
-        <option class="generic-button" value="{{ device.num }}">{{ device.name }}</option>
-        {% endfor %}
-    </select>
-    <br />
-    <button class="generic-button" id="activate-music-sync-button">Activate music sync</button>
-</form>
-{% endif %}  {% for x in bulbs %}
-<div class="bulb-container">
-    <p>{{ x.BulbName }}</p>
-    <div class="bulb-icon">
+{% for x in bulbs %}
+<div class="bulb-container container-fluid text-center">
+    <p class="fs-3 fw-bold" >{{ x.BulbName }}</p>
+    <div class="bulb-icon fs-1">
         <i name="{{ x.BulbName }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x.BulbIp }}"></i>
     </div>
     <div class="bulb-color-selector">
@@ -176,20 +158,20 @@
 {% endfor %}
 <br />
 <br />
-<div id="discovered-bulbs-container">
+<div class="container-fluid text-center align-items-center" id="discovered-bulbs-container">
 {% for x in ips %}
-<i name="{{ x }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x }}"></i>
+<h1 class="display-1 fw-bolder"><i name="{{ x }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x }}"></i></h1>
 <br />
-Toggle bulb
+<p class="fs-2 fw-bold">Toggle bulb</p>
 <br />
-<div class="bulb-registration">
+<div class="bulb-registration container text-center">
 <form class="bulb-registration-form" action="" method="post">
     {% for field in regForm %} {% if field.html_name == 'bulbIp' %}
     <div class="form-group">
-    <input type="hidden" name="{{ field.html_name }}" value="{{ x }}" />
+    <input class="form-control" type="hidden" name="{{ field.html_name }}" value="{{ x }}" />
     </div>
     {% elif field.html_name == 'bulbName' %} {{ field.errors }}
-    <label for="{{ field.id_for_label }}">Input a name for this bulb</label>
+    <label>{{ field.label_tag }}</label>
     {{ field }}
     <br />
     <br />
@@ -201,5 +183,5 @@ Toggle bulb
     <br />
 </div>
 </div>
-    {% endfor %} {% endblock %}
 </form>
+    {% endfor %} {% endblock %}
