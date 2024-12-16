@@ -11,7 +11,7 @@ updates:
       interval: "weekly"
     labels: 
       - "dependabot"
-      - "pip depenmdencies"
+      - "pip dependencies"
     pull-request-branch-name:
       separator: "-"
     target-branch: "dev"
