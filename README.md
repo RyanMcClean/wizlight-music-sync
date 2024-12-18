@@ -10,5 +10,6 @@ ambient music, using the microphone of the device.
 
 #### Jipes
 
-https://www.tagtraum.com/jipes/\
+https://www.tagtraum.com/jipes/
+
 https://repo1.maven.org/maven2/com/tagtraum/jipes/0.9.17/
