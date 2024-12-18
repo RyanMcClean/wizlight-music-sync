@@ -16,11 +16,6 @@ class IndexClientTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "index.html")
 
-    def test_post_index(self):
-        response = self.client.post("/", {"discover": localIp}, "application/json")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context["errorMessage"], bulbDiscoveryErrorMessage)
-
     def test_bulb_registration_form(self):
         form_data = {"bulbIp": localIp}
         response = self.client.post("/", form_data, "application/json")
@@ -28,6 +23,10 @@ class IndexClientTest(TestCase):
 
 
 class BulbFunctionsTest(TestCase):
+    def test_get_discover(self):
+        response = self.client.get("/discover/")
+        self.assertEqual(response.status_code, 200)
+
     def test_query_bulb(self):
         post_data = {"ip": localIp}
         response = self.client.post("/queryBulb/", post_data, "application/json")
