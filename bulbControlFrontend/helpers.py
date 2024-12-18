@@ -131,8 +131,4 @@ class NetworkHandler:
         )
 
 
-def separator() -> None:
-    try:
-        print("-" * os.get_terminal_size()[0])
-    except OSError:
-        print("-" * 5)
+

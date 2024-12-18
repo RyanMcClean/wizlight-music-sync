@@ -4,13 +4,11 @@
 </head>
 
 {% extends "master.html" %} {% load static %} {% block title %}Bulb Bop{% endblock %} {% block content %}
-<script type="text/javascript" src="{% static 'js/imageHandler.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/generic.js' %}"></script>
 <script>
-    window.setInterval(backgroundUpdate, 1500)
+    window.setInterval(backgroundUpdate, 15000)
 </script>
 
-<div class="error-message container-fluid" id="error-wrapper" style="visibility: hidden;">
+<div class="error-message modal-modal-dialog-centered" id="error-wrapper" style="visibility: hidden;">
     <span>
         {% if error %}{{ errorMessage }}<script>document.getElementById("error-wrapper").style.visibility = "visible"</script>{% endif %}
     </span>
@@ -165,7 +163,7 @@
 <p class="fs-2 fw-bold">Toggle bulb</p>
 <br />
 <div class="bulb-registration container text-center">
-<form class="bulb-registration-form" action="" method="post">
+<form class="bulb-registration-form" action="/" method="post">
     {% for field in regForm %} {% if field.html_name == 'bulbIp' %}
     <div class="form-group">
     <input class="form-control" type="hidden" name="{{ field.html_name }}" value="{{ x }}" />

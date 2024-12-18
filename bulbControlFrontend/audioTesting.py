@@ -16,20 +16,17 @@ from threading import Thread
 try:
     from .Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
     from .Realtime_PyAudio_FFT.src.stream_reader_pyaudio import Stream_Reader
+    from . import variables
+
 except ImportError:
     from Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
     from Realtime_PyAudio_FFT.src.stream_reader_pyaudio import Stream_Reader
-try:
-    from helpers import NetworkHandler
-except ModuleNotFoundError:
-    from .helpers import NetworkHandler
-
-query = NetworkHandler()
+    import variables
 
 
-def beat(client, ip, packet):
-    print("\nbeat\n")
-    client.sender(ip, packet)
+def beat(ip, packet):
+    variables.messageLoud("\nbeat\n")
+    variables.client.sender(ip, packet)
 
 
 def getWorkingDeviceList():
@@ -45,7 +42,7 @@ def getWorkingDeviceList():
     return devices
 
 
-def main(client, device=None):
+def main(device=None):
     ip = "192.168.50.128"
     packet = "turn_to_full"
 
@@ -61,7 +58,7 @@ def main(client, device=None):
         verbose=True,
     )
 
-    client.sender(ip, "turn_on", attempts=5)
+    variables.client.sender(ip, "turn_on", attempts=5)
 
     bufferSize = 100
 
@@ -113,8 +110,8 @@ def main(client, device=None):
                 beat_limit = freqArray[str(key) + "_avg"] + (freqArray[str(key) + "_avg"] * variance)
                 freq = freqArray[key][num]
                 if freq > beat_limit:
-                    print(key)
-                    beat_thread = Thread(target=beat, args=(client, ip, packet))
+                    variables.messageLoud(key)
+                    beat_thread = Thread(target=beat, args=(ip, packet))
                     beat_thread.start()
                     packet = "turn_to_half" if packet == "turn_to_full" else "turn_to_full"
                     break
@@ -130,5 +127,6 @@ def main(client, device=None):
 
 
 if __name__ == "__main__":
-    client = NetworkHandler()
-    main(client)
+    if not hasattr(variables, "init"):
+        variables.init()
+    main()
