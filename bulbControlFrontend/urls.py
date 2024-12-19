@@ -9,4 +9,7 @@ urlpatterns = [
     path("colorBulb/", views.color_bulb, name="color"),
     path("activateSync/", views.activate_music_sync, name="music-sync"),
     path("stopSync/", views.stop_audio_sync, name="stop-music-sync"),
+    path("crud/", views.crud, name="crud"),
+    path("delete/<str:ip>", views.delete_bulb, name="delete"),
+    path("clearError/", views.clear_error, name="clear-error"),
 ]

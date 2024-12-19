@@ -135,3 +135,5 @@ async function backgroundUpdate() {
         }
     }
 }
+
+window.setInterval(backgroundUpdate, 500);

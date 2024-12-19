@@ -1,14 +1,9 @@
 {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "java.debug.settings.onBuildFailureProceed": true,
-    "java.project.referencedLibraries": [
-        "BulbProject/lib/**/*.jar"
-    ],
     "python.analysis.extraPaths": [
         "./bulbControl/bulbControlFrontend"
     ],
     "djlint.showInstallError": false,
-    "java.compile.nullAnalysis.mode": "disabled",
     "[python]": {
         "diffEditor.ignoreTrimWhitespace": false,
         "editor.formatOnType": true,

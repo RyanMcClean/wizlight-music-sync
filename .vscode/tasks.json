@@ -11,7 +11,12 @@
         {
             "label": "Setup Playwright",
             "type": "shell",
-            "command": "playwright install",
+            "windows": {
+                "command": "${workspaceFolder}/env/Scripts/python.exe -m playwright install"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/env/bin/python3 -m playwright install"
+            },
             "presentation": {
                 "reveal": "always",
                 "focus": false,

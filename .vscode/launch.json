@@ -21,8 +21,8 @@
             ],
             "console": "integratedTerminal",
             "serverReadyAction": {
-                "pattern": ".*(http?:\\/\\/\\S+:[0-9]+\\/?).*",
-                "uriFormat": "%s",
+                "pattern": ".*(:[0-9]+\/?).*",
+                "uriFormat": "http://localhost:8000/",
                 "action": "openExternally",
             },
             "preLaunchTask": "Runtime_Setup_Part_2",

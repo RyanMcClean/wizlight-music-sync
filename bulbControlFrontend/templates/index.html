@@ -5,19 +5,14 @@
 
 {% extends "master.html" %} {% load static %} {% block title %}Bulb Bop{% endblock %} {% block content %}
 <script>
-    window.setInterval(backgroundUpdate, 15000)
+    window.setInterval(backgroundUpdate, 1000)
 </script>
 
-<div class="error-message modal-modal-dialog-centered" id="error-wrapper" style="visibility: hidden;">
-    <span>
-        {% if error %}{{ errorMessage }}<script>document.getElementById("error-wrapper").style.visibility = "visible"</script>{% endif %}
-    </span>
-</div>
 {% for x in bulbs %}
 <div class="bulb-container container-fluid text-center">
-    <p class="fs-3 fw-bold" >{{ x.BulbName }}</p>
+    <p class="fs-3 fw-bold" >{{ x.bulbName }}</p>
     <div class="bulb-icon fs-1">
-        <i name="{{ x.BulbName }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x.BulbIp }}"></i>
+        <i name="{{ x.bulbName }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x.bulbIp }}"></i>
     </div>
     <div class="bulb-color-selector">
         <img class="color-selector" src="{% static 'images/img_colormap.gif' %}" usemap="#colormap" alt="colormap" />
@@ -169,7 +164,7 @@
     <input class="form-control" type="hidden" name="{{ field.html_name }}" value="{{ x }}" />
     </div>
     {% elif field.html_name == 'bulbName' %} {{ field.errors }}
-    <label>{{ field.label_tag }}</label>
+    <label class="fs-2">{{ field.label_tag }}</label>
     {{ field }}
     <br />
     <br />

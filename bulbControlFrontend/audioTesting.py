@@ -10,23 +10,13 @@ try:
 except ImportError:
     import pyaudio
 
-from time import sleep, time
 from threading import Thread
 
 try:
-    from .Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
-    from .Realtime_PyAudio_FFT.src.stream_reader_pyaudio import Stream_Reader
-    from . import variables
+    from .Realtime_PyAudio_FFT.stream_analyzer import Stream_Analyzer
 
 except ImportError:
-    from Realtime_PyAudio_FFT.src.stream_analyzer import Stream_Analyzer
-    from Realtime_PyAudio_FFT.src.stream_reader_pyaudio import Stream_Reader
-    import variables
-
-
-def beat(ip, packet):
-    variables.messageLoud("\nbeat\n")
-    variables.client.sender(ip, packet)
+    from Realtime_PyAudio_FFT.stream_analyzer import Stream_Analyzer
 
 
 def getWorkingDeviceList():
@@ -40,6 +30,17 @@ def getWorkingDeviceList():
                 {"num": device["index"], "name": device["name"], "maxInputChannels": device["maxInputChannels"]}
             )
     return devices
+
+
+try:
+    from . import variables
+except ImportError:
+    import variables
+
+
+def beat(ip, packet):
+    variables.messageLoud("\nbeat\n")
+    variables.client.sender(ip, packet)
 
 
 def main(device=None):
