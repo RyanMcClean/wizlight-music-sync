@@ -9,7 +9,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
         super().setUpClass()
         os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
         cls.playwright = sync_playwright().start()
-        cls.chromium = cls.playwright.chromium.launch(headless=False, slow_mo=100)
+        cls.chromium = cls.playwright.chromium.launch()
 
     @classmethod
     def tearDownClass(cls):
