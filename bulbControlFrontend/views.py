@@ -5,11 +5,8 @@ Defines a series of views and actions to be taken on requests to the API
 __author__ = "Ryan McClean"
 __contact__ = "https://github.com/RyanMcClean"
 
-
-from socket import socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_BROADCAST, SO_REUSEADDR
-from time import sleep, time_ns
+from time import sleep
 import json
-import os
 import threading
 
 from django.shortcuts import render, redirect
@@ -18,13 +15,9 @@ from django.http import JsonResponse, HttpResponse
 from .forms import bulbForm
 from .models import wizbulb
 from .audioTesting import main as audioSync, getWorkingDeviceList
+from . import variables
 
-discover = b'{"method":"getPilot","params":{}}'
-turn_on = b'{"id":1,"method":"setState","params":{"state":true}}'
-turn_off = b'{"id":1,"method":"setState","params":{"state":false}}'
-port = 38899
-
-from .helpers import update_bulb_objects, send_udp_packet, turn_to_color, separator
+variables.init()
 
 
 def index(request) -> HttpResponse:
@@ -37,120 +30,101 @@ def index(request) -> HttpResponse:
         HttpResponse: Page to render, index if the request is within expected boundaries
     """
 
-    separator()
-    # To add a limit to the returned bulb objects the line would read:
-    # bulbs = wizbulb.objects.all()[x]
-    # where x is the number of bulb objects returned
-    bulbs = wizbulb.objects.all()
+    variables.separator()
 
-    context = {
-        "regForm": bulbForm(),
-        "ips": [],
-        "count": 0,
-        "bulbs": [],
-        "numBulbs": 0,
-        "audioDevices": [],
-        "error": False,
-        "errorMessage": "",
-    }
-    for x in bulbs:
-        update_bulb_objects(x)
-        context["bulbs"].append(x.returnJSON())
+    threading.Thread(target=variables.update_bulb_objects).start()
 
-    context["numBulbs"] = len(context["bulbs"])
-    if context["numBulbs"] > 0:
+    variables.context["numBulbs"] = len(variables.context["bulbs"])
+    if variables.context["numBulbs"] > 0:
         devices = getWorkingDeviceList()
         for device in devices:
-            context["audioDevices"].append(device)
+            if device not in variables.context["audioDevices"]:
+                variables.context["audioDevices"].append(device)
+    variables.update_bulb_objects()
 
     if request.method == "POST":
         # Discover bulbs on network
-        if "discover" in request.POST.keys():
-            print("discover")
-            sock = socket(AF_INET, SOCK_DGRAM)
-            sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-            sock.bind(("", port))
-            sock.settimeout(5)
-            sock.sendto(discover, ("255.255.255.255", port))
-            try:
-                m = sock.recvfrom(516)
-                count = 0
-                while m is not None:
-                    if m[0] != discover:
-                        bulbResponse = json.loads(m[0].decode("utf-8"))
-
-                        if [
-                            True
-                            for bulb in context["bulbs"]
-                            if str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0] in bulb["BulbIp"]
-                        ]:
-                            print("Hiding already saved bulb")
-                        else:
-                            context["count"] = range(count)
-                            context["ips"].append(str(m[1]).replace("(", "").replace("'", "").split(",", maxsplit=1)[0])
-                            count += 1
-                    try:
-                        m = sock.recvfrom(516)
-                    except TimeoutError:
-                        m = None
-                sock.close()
-            except TimeoutError:
-                context["error"] = True
-                context["errorMessage"] = (
-                    "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
-                )
-                print("Error finding bulbs")
-
-            if not context["numBulbs"] > 0 and context["ips"] is None:
-                context["error"] = True
-                context["errorMessage"] = (
-                    "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
-                )
-                print("Error finding bulbs")
-
-            separator()
-            return render(request, "index.html", context)
-
-            # Create bulb object in db
+        variables.messageLoud("form")
+        if "bulbIp" in request.POST.keys():
+            requestBody = request.POST
         else:
-            print("form")
-            try:
-                m = send_udp_packet(request.POST["bulbIp"], port, discover, 15)
-                bulbResponse = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
-            except TimeoutError:
-                pass
-            form = bulbForm(request.POST)
-            print("Form: ")
-            print(form)
-            if form.is_valid():
-                model = form.save(commit=False)
-                model.bulbState = bulbResponse["state"]
-                model.bulbRed = bulbResponse["r"] if "r" in bulbResponse.keys() else 0
-                model.bulbGreen = bulbResponse["g"] if "g" in bulbResponse.keys() else 0
-                model.bulbBlue = bulbResponse["b"] if "b" in bulbResponse.keys() else 0
-                model.bulbTemp = bulbResponse["temp"] if "temp" in bulbResponse.keys() else 0
-                model.save()
-                bulbs = wizbulb.objects.all()
-                separator()
-                return render(request, "index.html", context)
-            else:
-                pass
+            requestBody = json.loads(request.body.decode("utf-8"))
+        m = variables.client.sender(
+            requestBody["bulbIp"],
+            "discover",
+            0.5,
+            5,
+        )
+        if len(m) > 0:
+            m = m[0]["result"] if "result" in m[0].keys() else m[0]
+        elif len(m) == 1:
+            m = m["result"] if "result" in m.keys() else m
+        else:
+            m = {}
+        form = bulbForm(requestBody)
+        if form.is_valid():
+            model = form.save(commit=False)
+            model.bulbState = m["state"] if "state" in m.keys() else False
+            model.bulbRed = m["r"] if "r" in m.keys() else 0
+            model.bulbGreen = m["g"] if "g" in m.keys() else 0
+            model.bulbBlue = m["b"] if "b" in m.keys() else 0
+            model.bulbTemp = m["temp"] if "temp" in m.keys() else 0
+            model.save()
+            bulbs = wizbulb.objects.all()
+        else:
+            variables.messageLoud("There is an error in the submitted form", "error")
+            variables.context["error"] = True
+            variables.context["errorMessage"] = "submitted bulb form was invalid"
 
-            separator()
-            return render(request, "index.html", context)
+        variables.separator()
+        return render(request, "index.html", variables.context)
 
     elif request.method == "GET":
-        print(request.GET)
-        print("load home page")
+        variables.messageLoud("load home page")
 
-        separator()
-        return render(None, "index.html", context)
+        variables.context["error"] = False
+        variables.context["errorMessage"] = ""
 
-    separator()
+        variables.context["ips"] = list(set(variables.context["ips"]))
+        variables.separator()
+        return render(None, "index.html", variables.context)
+
+    variables.separator()
     return redirect("404.html")
 
 
-def toggle_bulb(request) -> JsonResponse | HttpResponse:
+def discover(request) -> HttpResponse:
+    variables.separator()
+    threading.Thread(target=variables.update_bulb_objects).start()
+
+    ip = "255.255.255.255"
+    variables.messageLoud("discover")
+    m = variables.client.sender(ip, packet="discover", attempts=5, expected_results=100)
+
+    for bulbResponse in m:
+        if [True for bulb in variables.context["bulbs"] if bulbResponse["ip"] in bulb["BulbIp"]]:
+            variables.messageLoud("Hiding already saved bulb")
+        elif bulbResponse["ip"] not in variables.context["ips"]:
+            variables.context["ips"].append(bulbResponse["ip"])
+
+    if (
+        not variables.context["numBulbs"] > 0
+        and not len(variables.context["ips"]) > 0
+        and len(variables.context["bulbs"]) < 0
+    ):
+        variables.context["error"] = True
+        variables.context["errorMessage"] = (
+            "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
+        )
+        variables.messageLoud(
+            "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
+        )
+
+    variables.separator()
+    return render(request, "index.html", variables.context)
+
+
+def toggle_bulb(request) -> JsonResponse:
     """Toggles WizLight bulb
 
     Args:
@@ -160,35 +134,31 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
         JsonResponse: State of bulb after toggle
         HttpResponse: 404 page if there is an error
     """
-    separator()
-    print(request)
-    if request.method == "POST":
-        print(request)
+    variables.separator()
 
+    if request.method == "POST":
         # Flicker specific bulb
-        if "ip" in request.POST.keys() or "ip" in json.loads(request.body.decode("utf-8")).keys():
-            print("toggle")
+        if "ip" in request.POST.keys() or "ip" in request.body.decode("utf-8"):
             ip = request.POST["ip"] if "ip" in request.POST.keys() else json.loads(request.body.decode("utf-8"))["ip"]
-            startTime = time_ns()
-            m = send_udp_packet(ip, port, discover, 0.5)
-            m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
-            endTime = time_ns()
-            totalTime = (endTime - startTime) / 1000000000
-            print("Toggle time: " + str(totalTime))
-            if m is not None and m["state"]:
-                send_udp_packet(ip, port, turn_off)
-                m = send_udp_packet(ip, port, discover, 0.5)
-                m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else {"error": "could not query bulb"}
-                separator()
-                return JsonResponse(m)
+            variables.messageLoud(f"Toggling bulb at: {ip}")
+            m = variables.client.sender(ip, "discover", 0.5, 5)
+            if len(m) > 0 and "result" in m[0].keys():
+                m = m[0]["result"]
+                if m["state"]:
+                    variables.client.sender(ip, "turn_off")
+                else:
+                    variables.client.sender(ip, "turn_on")
+
+                m = variables.client.sender(ip, "discover", 0.5)
+                m = m["result"] if "result" in m.keys() else m
             else:
-                send_udp_packet(ip, port, turn_on)
-                m = send_udp_packet(ip, port, discover, 0.5)
-                m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else {"error": "could not query bulb"}
-                separator()
-                return JsonResponse(m)
-        separator()
-        return redirect("404.html")
+                m = {"error": "could not query bulb"}
+                variables.messageLoud("Could not query bulb", "error")
+            variables.separator()
+            return JsonResponse(m)
+
+    variables.separator()
+    return render(request, "404.html", status=404)
 
 
 def query_bulb(request) -> JsonResponse | HttpResponse:
@@ -201,26 +171,21 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
         JsonResponse: Returns state of bulb
         HttpResponse: Renders 404 page
     """
-    separator()
+    variables.separator()
+    variables.messageLoud("query bulb")
+
     if request.method == "POST":
-        print("Request - " + str(request.POST))
-        print("Request - " + str(request.body))
-        body = json.loads(request.body.decode("utf-8")) if request.body else None
-        # Flicker specific bulb
-        if "ip" in request.POST.keys() or "ip" in body.keys():
-            print("query bulb")
-            ip = request.POST["ip"] if "ip" in request.POST.keys() else body["ip"]
-            m = send_udp_packet(ip, port, discover, 0.5)
-            m = json.loads(m[0].decode("utf-8"))["result"] if m is not None else None
-            print("Bulb Response - " + str(m))
-            if "state" in m.keys() and m["state"]:
-                separator()
+        request = request.POST if request.body is None else json.loads(request.body.decode("utf-8"))
+        ip = request["ip"]
+        m = variables.client.sender(ip, "discover", expected_results=1, attempts=1)
+        if len(m) > 0 and "result" in m[0].keys():
+            m = m[0]["result"]
+            if "state" in m.keys():
+                variables.separator()
                 return JsonResponse(m)
-            else:
-                separator()
-                return JsonResponse(m)
-    separator()
-    return redirect("404.html")
+    variables.messageLoud("Query error", "error")
+    variables.separator()
+    return JsonResponse({"error": "could not query bulb"})
 
 
 def color_bulb(request) -> JsonResponse | HttpResponse:
@@ -233,43 +198,62 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
         JsonResponse: Returns result of bulb color change
         HttpResponse: If error render 404 not found page
     """
-    separator()
+    variables.separator()
+    threading.Thread(target=variables.update_bulb_objects).start()
+    variables.messageLoud("color bulb")
+
     if request.method == "POST":
-        print(request)
-        if "ip" in request.POST.keys() or "ip" in json.loads(request.body.decode("utf-8")).keys():
-            body = request.POST if "ip" in request.POST.keys() else json.loads(request.body.decode("utf-8"))
-            print("color bulb")
+        if "ip" in request.POST.keys() or "ip" in json.loads(request.body).keys():
+            body = request.POST if "ip" in request.POST.keys() else json.loads(request.body)
             ip = body["ip"]
 
-            m = send_udp_packet(
-                ip, port, turn_to_color(r=int(body["r"]), g=int(body["g"]), b=int(body["b"]), brightness=255)
+            m = variables.client.sender(
+                ip,
+                packet="turn_to_color",
+                color_params={"r": int(body["r"]), "g": int(body["g"]), "b": int(body["b"]), "brightness": 255},
             )
-            m = json.loads(m)[0].decode("utf-8")["result"] if m is not None else None
-            print(m)
-            m = send_udp_packet(ip, port, discover)
-            m = json.loads(m)[0].decode("utf-8")["result"] if m is not None else {"result": False}
-            separator()
-            return JsonResponse(m)
-    separator()
-    return redirect("404.html")
+            if len(m) > 0:
+                m = m[0]["result"]
+
+                variables.messageLoud(f"{ip} - {m}")
+
+                variables.separator()
+                return JsonResponse(m)
+    variables.messageLoud("Error, could not query bulb", "error")
+    variables.separator()
+    return JsonResponse({"error": "could not query bulb"})
 
 
-def activate_music_sync(request) -> None:
+def activate_music_sync(request) -> JsonResponse:
     """This will 'eventually' activate the music sync function of the application, WIP
 
     Args:
         request HttpRequest: HttpRequest object supplied by Django
     """
-    separator()
-    print(request.POST)
+    variables.separator()
+    variables.messageLoud("Starting Audio Sync")
 
-    if "audio_device" in request.POST.keys():
-        print(int(request.POST["audio_device"]))
-        sleep(10)
-        x = threading.Thread(target=audioSync, args=(int(request.POST["audio_device"])))
-        x.start()
-        separator()
-        return JsonResponse({"result": "audio sync started"})
+    if request.body.decode("utf-8").isdigit():
+        variables.messageLoud(int(request.body.decode("utf-8")))
+        x = threading.Thread(
+            target=audioSync,
+            args=(
+                variables.client,
+                int(request.body.decode("utf-8")),
+            ),
+        )
+        # x.start()
 
-    separator()
-    return redirect("404.html")
+        sleep(5)
+        if x.is_alive:
+            variables.separator()
+            return JsonResponse({"result": True})
+
+    variables.messageLoud("Audio Sync did not stop", "error")
+    variables.separator()
+    return JsonResponse({"result": False})
+
+
+def stop_audio_sync(request) -> None:
+    variables.separator()
+    variables.messageLoud("Stopping Audio Sync")

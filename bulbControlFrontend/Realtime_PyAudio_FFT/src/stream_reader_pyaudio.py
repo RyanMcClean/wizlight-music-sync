@@ -3,6 +3,7 @@ import time
 import sys
 import math
 from collections import deque
+
 try:
     import pyaudiowpatch as pyaudio
 except:
@@ -23,13 +24,7 @@ class Stream_Reader:
 
     """
 
-    def __init__(self,
-                 device=None,
-                 rate=None,
-                 updates_per_second=1000,
-                 FFT_window_size=None,
-                 verbose=False):
-
+    def __init__(self, device=None, rate=None, updates_per_second=1000, FFT_window_size=None, verbose=False):
         self.rate = rate
         self.verbose = verbose
         self.pa = pyaudio.PyAudio()
@@ -44,12 +39,13 @@ class Stream_Reader:
             numDevices = self.pa.get_device_count()
             for mic in range(numDevices):
                 mic_info = self.pa.get_device_info_by_index(mic)
+                if mic_info["maxInputChannels"] < 1:
+                    continue
 
-                print('\nMIC %s:' % (str(mic)))
+                print("\nMIC %s:" % (str(mic)))
                 for k, v in sorted(mic_info.items()):
                     print("%s: %s" % (k, v))
-            self.device = int(
-                input("\nPlease select a device from the above list - "))
+            self.device = int(input("\nPlease select a device from the above list - "))
         if self.rate is None:
             self.rate = self.valid_low_rate(self.device)
             print("rate = " + str(self.rate))
@@ -57,8 +53,7 @@ class Stream_Reader:
             self.rate = self.valid_low_rate(self.device, test_rate=self.rate)
             print("Using rate = " + str(self.rate))
 
-        self.update_window_n_frames = round_up_to_even(
-            self.rate / updates_per_second)
+        self.update_window_n_frames = round_up_to_even(self.rate / updates_per_second)
         self.updates_per_second = self.rate / self.update_window_n_frames
         self.info = self.pa.get_device_info_by_index(self.device)
         self.data_capture_delays = deque(maxlen=20)
@@ -79,7 +74,8 @@ class Stream_Reader:
                 rate=self.rate,
                 input=True,
                 frames_per_buffer=self.update_window_n_frames,
-                stream_callback=self.non_blocking_stream_read)
+                stream_callback=self.non_blocking_stream_read,
+            )
         except:
             self.stream = self.pa.open(
                 input_device_index=self.device,
@@ -88,22 +84,24 @@ class Stream_Reader:
                 rate=self.rate,
                 input=True,
                 frames_per_buffer=self.update_window_n_frames,
-                stream_callback=self.non_blocking_stream_read)
+                stream_callback=self.non_blocking_stream_read,
+            )
 
         print("\n##################################################################################################")
         print("\nDefaulted to using first working mic, Running on:")
         self.print_mic_info(self.device)
         print("\n##################################################################################################")
-        print('Recording from %s at %d Hz\nUsing (non-overlapping) data-windows of %d samples (updating at %.2ffps)'
-              % (self.info["name"], self.rate, self.update_window_n_frames, self.updates_per_second))
+        print(
+            "Recording from %s at %d Hz\nUsing (non-overlapping) data-windows of %d samples (updating at %.2ffps)"
+            % (self.info["name"], self.rate, self.update_window_n_frames, self.updates_per_second)
+        )
 
     def non_blocking_stream_read(self, in_data, frame_count, time_info, status):
         if self.verbose:
             start = time.time()
 
         if self.data_buffer is not None:
-            self.data_buffer.append_data(
-                np.frombuffer(in_data, dtype=np.int16))
+            self.data_buffer.append_data(np.frombuffer(in_data, dtype=np.int16))
             self.new_data = True
 
         if self.verbose:
@@ -121,8 +119,7 @@ class Stream_Reader:
         else:
             self.data_windows_to_buffer = int(data_windows_to_buffer)
 
-        self.data_buffer = numpy_data_buffer(
-            self.data_windows_to_buffer, self.update_window_n_frames)
+        self.data_buffer = numpy_data_buffer(self.data_windows_to_buffer, self.update_window_n_frames)
 
         print("\n-- Starting live audio stream...\n")
         self.stream.start_stream()
@@ -148,8 +145,7 @@ class Stream_Reader:
         if self.test_device(device, rate=default_rate):
             return default_rate
 
-        print(
-            "SOMETHING'S WRONG! I can't figure out a good sample-rate for DEVICE =>", device)
+        print("SOMETHING'S WRONG! I can't figure out a good sample-rate for DEVICE =>", device)
         return False
 
     def test_device(self, device, rate=None):
@@ -172,7 +168,8 @@ class Stream_Reader:
                         input_device_index=device,
                         frames_per_buffer=self.update_window_n_frames,
                         rate=rate,
-                        input=True)
+                        input=True,
+                    )
                     time.sleep(1)
                     stream.stop_stream()
                     stream.close()
@@ -183,7 +180,8 @@ class Stream_Reader:
                         input_device_index=device,
                         frames_per_buffer=self.update_window_n_frames,
                         rate=rate,
-                        input=True)
+                        input=True,
+                    )
                     time.sleep(1)
                     stream.stop_stream()
                     stream.close()
@@ -194,12 +192,13 @@ class Stream_Reader:
 
             return True
         except Exception as e:
-            print('\n\n\n\n')
+            print("\n\n\n\n")
             print(e)
             import traceback
+
             traceback.print_exc()
             time.sleep(3)
-            print('\n\n\n\n')
+            print("\n\n\n\n")
             return False
 
     def input_device(self):
@@ -224,6 +223,6 @@ class Stream_Reader:
 
     def print_mic_info(self, mic):
         mic_info = self.pa.get_device_info_by_index(mic)
-        print('\nMIC %s:' % (str(mic)))
+        print("\nMIC %s:" % (str(mic)))
         for k, v in sorted(mic_info.items()):
             print("%s: %s" % (k, v))

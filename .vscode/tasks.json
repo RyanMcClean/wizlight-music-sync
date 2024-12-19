@@ -9,6 +9,18 @@
     },
     "tasks": [
         {
+            "label": "Setup Playwright",
+            "type": "shell",
+            "command": "playwright install",
+            "presentation": {
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "dependsOn": "install_requirements",
+            "problemMatcher": "$python"
+        },
+        {
             "label": "Runtime_Setup_Part_1",
             "type": "shell",
             "windows": {
@@ -131,7 +143,7 @@
                 "command": "${workspaceFolder}/env/Scripts/python.exe -m pip install --upgrade pip"
             },
             "linux": {
-                "command": "${workspaceFolder}/env/Scripts/python -m pip install --upgrade pip"
+                "command": "${workspaceFolder}/env/bin/python3 -m pip install --upgrade pip"
             },
             "dependsOn": "setup_venv",
             "presentation": {
