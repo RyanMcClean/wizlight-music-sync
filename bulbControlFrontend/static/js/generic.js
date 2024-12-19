@@ -1,5 +1,16 @@
-async function startAudioSync(element) {
+async function audioSync(element) {
     var audio_device = document.getElementById('audio_device_selector').value;
+    var button = document.getElementById('activate-music-sync-button');
+    var request;
+    if (button.classList.contains('btn-outline-danger')) {
+        button.classList.add('btn-danger');
+        button.classList.remove('btn-outline-danger');
+        request = '/activateSync/';
+    } else {
+        button.classList.remove('btn-danger');
+        button.classList.add('btn-outline-danger');
+        request = '/stopSync/';
+    }
     response = await fetch('/activateSync/', {
         method: 'post',
         body: audio_device,

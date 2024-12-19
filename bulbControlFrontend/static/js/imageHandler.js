@@ -10,8 +10,8 @@ grey = 'rgb(200, 200, 200)';
 
 async function clickColor(element, hexCode, seltop, selleft) {
     var node = element;
-    while (node.getAttribute('class') != 'bulb-container') {
-        var node = element.offsetParent;
+    while (!node.classList.contains('bulb-container')) {
+        var node = node.parentElement;
     }
 
     var bulb_element = node.getElementsByClassName('fa-solid')[0];
