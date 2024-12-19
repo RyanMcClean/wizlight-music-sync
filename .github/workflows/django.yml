@@ -1,36 +1,36 @@
 name: Django CI
 
 on:
-  push:
-    branches: ['main']
-  pull_request:
+    push:
+        branches: ['main']
+    pull_request:
 
 jobs:
-  job1:
-    name: Build and Test
+    job1:
+        name: Build and Test
 
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      max-parallel: 4
-      matrix:
-        python-version: [3.11, 3.12]
-        os: [ubutnu-latest, windows-latest]
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            max-parallel: 4
+            matrix:
+                python-version: [3.11, 3.12]
+                os: [ubutnu-latest, windows-latest]
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
-        id: dependencies
-        run: |
-          sudo apt install portaudio19-dev
-          python -m pip install --upgrade pip
-          cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install || true
-      - name: Run Tests
-        id: run_tests
-        run: |
-          pytest
-
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python ${{ matrix.python-version }}
+            uses: actions/setup-python@v3
+            with:
+                python-version: ${{ matrix.python-version }}
+            name: Install Dependencies
+            id: dependencies
+            run: |
+                sudo apt install portaudio19-dev
+                python -m pip install --upgrade pip
+                cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install || true
+				playwright install
+            name: Run Tests
+            id: run_tests
+            run: |
+                pytest

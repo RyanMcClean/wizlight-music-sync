@@ -9,6 +9,18 @@
     },
     "tasks": [
         {
+            "label": "Setup Playwright",
+            "type": "shell",
+            "command": "playwright install",
+            "presentation": {
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "dependsOn": "install_requirements",
+            "problemMatcher": "$python"
+        },
+        {
             "label": "Runtime_Setup_Part_1",
             "type": "shell",
             "windows": {

@@ -12,3 +12,4 @@ pytest-cov
 requests
 readme-coverage-badger
 django-bootstrap-v5
+playwright
