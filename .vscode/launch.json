@@ -9,10 +9,10 @@
             "type": "debugpy",
             "request": "launch",
             "windows": {
-                "python": "${workspaceFolder}/env/Scripts/python.exe",
+                "python": "${workspaceFolder}/env/Scripts/python.exe"
             },
             "linux": {
-                "python": "${workspaceFolder}/env/bin/python3",
+                "python": "${workspaceFolder}/env/bin/python3"
             },
             "program": "${workspaceRoot}/manage.py",
             "args": [
@@ -20,26 +20,44 @@
                 "0.0.0.0:8000"
             ],
             "console": "integratedTerminal",
-            "serverReadyAction": {
-                "pattern": ".*(:[0-9]+\/?).*",
-                "uriFormat": "http://localhost:8000/",
-                "action": "openExternally",
-            },
-            "preLaunchTask": "Runtime_Setup_Part_2",
+            "preLaunchTask": "Runtime_Setup_Part_2"
+        },
+        {
+            "name": "Launch localhost",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "url": "http://localhost:8000",
+            "webRoot": "${workspaceFolder}",
+            "pathMappings": [
+                {
+                    "url": "http://localhost:8000",
+                    "path": "${workspaceFolder}/bulbControlFrontend"
+                }
+            ]
         },
         {
             "name": "Current File (Python)",
             "type": "debugpy",
             "request": "launch",
             "windows": {
-                "python": "${workspaceFolder}/env/Scripts/python.exe",
+                "python": "${workspaceFolder}/env/Scripts/python.exe"
             },
             "linux": {
-                "python": "${workspaceFolder}/env/bin/python3",
+                "python": "${workspaceFolder}/env/bin/python3"
             },
             "program": "${file}",
             "console": "integratedTerminal",
-            "preLaunchTask": "install_requirements",
+            "preLaunchTask": "install_requirements"
         }
-    ]
+    ],
+    "compounds": [
+        {
+            "name": "Django and Web",
+            "configurations": [
+                "Django",
+                "Launch localhost"
+            ]
+        }
+    ],
 }

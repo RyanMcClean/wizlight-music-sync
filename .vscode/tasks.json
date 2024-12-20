@@ -23,7 +23,6 @@
                 "panel": "shared"
             },
             "dependsOn": "install_requirements",
-            "problemMatcher": "$python"
         },
         {
             "label": "Runtime_Setup_Part_1",
@@ -40,7 +39,6 @@
                 "panel": "shared"
             },
             "dependsOn": "install_requirements",
-            "problemMatcher": "$python"
         },
         {
             "label": "Runtime_Setup_Part_2",
@@ -57,9 +55,6 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "problemMatcher": [
-                "$python"
-            ]
         },
         {
             "label": "install_requirements",
@@ -76,9 +71,6 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "problemMatcher": [
-                "$python"
-            ],
             "runOptions": {
                 "runOn": "folderOpen"
             },
@@ -97,9 +89,6 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "problemMatcher": [
-                "$python"
-            ]
         },
         {
             "label": "start_venv",
@@ -116,9 +105,6 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "problemMatcher": [
-                "$python"
-            ]
         },
         {
             "label": "create_default_admin",
@@ -137,9 +123,6 @@
                 "showReuseMessage": true,
                 "clear": false
             },
-            "problemMatcher": [
-                "$python"
-            ]
         },
         {
             "label": "update_pip",
@@ -156,9 +139,6 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "problemMatcher": [
-                "$python"
-            ]
         },
     ]
 }
