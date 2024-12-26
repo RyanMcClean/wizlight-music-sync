@@ -60,12 +60,13 @@ async function clickColor(element, hexCode, seltop, selleft) {
 }
 
 async function updateImage() {
-    element = document.getElementsByClassName(this.getAttribute('class'))[0];
-    console.log(element);
+    // element = document.getElementsByClassName(this.getAttribute('class'))[0];
+    // console.log(element);
     ip = this.getAttribute('value');
+    console.log(ip);
     response = await fetch('/toggleBulb/', {
         method: 'POST',
-        body: JSON.stringify({ ip: element.getAttribute('value') }),
+        body: JSON.stringify({ ip: ip }),
     }).then(function (response) {
         return response.json();
     });
@@ -73,9 +74,9 @@ async function updateImage() {
     if (response['state']) {
         if (response.hasOwnProperty('temp')) {
             console.log('added orange');
-            element.style.color = orange;
+            this.style.color = orange;
         } else if (response.hasOwnProperty('r')) {
-            element.style.color =
+            this.style.color =
                 'rgb(' +
                 response['r'] +
                 ', ' +
@@ -86,7 +87,7 @@ async function updateImage() {
             console.log('added color');
         }
     } else {
-        element.style.color = grey;
+        this.style.color = grey;
         console.log('removed color');
     }
 }
@@ -135,5 +136,3 @@ async function backgroundUpdate() {
         }
     }
 }
-
-window.setInterval(backgroundUpdate, 500);

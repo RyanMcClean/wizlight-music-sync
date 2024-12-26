@@ -5,7 +5,7 @@
 
 {% extends "master.html" %} {% load static %} {% block title %}Bulb Bop{% endblock %} {% block content %}
 <script>
-    window.setInterval(backgroundUpdate, 1000)
+    window.setInterval(backgroundUpdate, 100000)
 </script>
 
 {% for x in bulbs %}
