@@ -20,8 +20,6 @@ from . import variables
 variables.init()
 while variables.ready is False:
     pass
-variables.update_bulb_objects()
-variables.update_working_audio_devices()
 
 
 def index(request) -> HttpResponse:
@@ -36,8 +34,12 @@ def index(request) -> HttpResponse:
 
     variables.separator()
 
-    threading.Thread(target=variables.update_bulb_objects).start()
-    threading.Thread(target=variables.update_working_audio_devices).start()
+    if len(variables.context['bulbs']) < 1 or len(variables.contect['audioDevices']) < 1:
+        variables.update_bulb_objects()
+        variables.update_working_audio_devices()
+    else:
+        threading.Thread(target=variables.update_bulb_objects).start()
+        threading.Thread(target=variables.update_working_audio_devices).start()
 
     variables.context["numBulbs"] = len(variables.context["bulbs"])
 

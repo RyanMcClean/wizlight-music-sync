@@ -19,22 +19,14 @@
                 "runserver",
                 "0.0.0.0:8000"
             ],
+            "serverReadyAction": {
+                "action": "openExternally",
+                "killOnServerStop": false,
+                "pattern": ".*:([0-9]+\/)",
+                "uriFormat": "http://localhost:%s"
+            },
             "console": "integratedTerminal",
             "preLaunchTask": "Runtime_Setup_Part_2"
-        },
-        {
-            "name": "Launch localhost",
-            "type": "firefox",
-            "request": "launch",
-            "reAttach": true,
-            "url": "http://localhost:8000",
-            "webRoot": "${workspaceFolder}",
-            "pathMappings": [
-                {
-                    "url": "http://localhost:8000",
-                    "path": "${workspaceFolder}/bulbControlFrontend"
-                }
-            ]
         },
         {
             "name": "Current File (Python)",
@@ -49,15 +41,6 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "preLaunchTask": "install_requirements"
-        }
-    ],
-    "compounds": [
-        {
-            "name": "Django and Web",
-            "configurations": [
-                "Django",
-                "Launch localhost"
-            ]
         }
     ],
 }
