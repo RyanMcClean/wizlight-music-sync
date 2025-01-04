@@ -1,4 +1,5 @@
 from django.urls import path
+import threading
 from . import views
 from . import variables
 
@@ -13,7 +14,7 @@ urlpatterns = [
     path("crud/", views.crud, name="crud"),
     path("delete/<str:ip>", views.delete_bulb, name="delete"),
     path("clearError/", views.clear_error, name="clear-error"),
+    path("faq/", views.faqs, name="faq"),
 ]
 
-variables.update_bulb_objects()
-variables.getWorkingDeviceList()
+threading.Thread(target=variables.update_bulb_objects).start()

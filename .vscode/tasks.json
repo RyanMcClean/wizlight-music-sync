@@ -77,9 +77,6 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "runOptions": {
-                "runOn": "folderOpen"
-            }
         },
         {
             "label": "setup_venv",

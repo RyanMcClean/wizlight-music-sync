@@ -1,0 +1,54 @@
+{% extends "master.html" %} {% load static %} {% block title %}Bulb Bop{% endblock %} {% block content %}
+
+<header class="container justify-content-center text-center">
+    <h1 class="fw-bold">Frequently Asked Questions</h1>
+</header>
+<br />
+<br />
+<div class="container justify-content-center text-center">
+    <section>
+        <div class="faq-item">
+            <h3 class="fw-bolder">What is the Bulb Bop?</h3>
+            <p>Bulb bop is a web application designed to manage and control wiz smart bulbs and sync them up with your music.</p>
+        </div>
+        <div class="faq-item">
+            <h3 class="fw-bolder">How do I install the Bulb Bop?</h3>
+            <p>
+                You can install the Bulb Bop by following the instructions provided in the installation guide on our website,
+                <a href="https://github.com/RyanMcClean/wizlight-music-sync">https://github.com/RyanMcClean/wizlight-music-sync</a>
+            </p>
+        </div>
+    </section>
+    <br />
+    <section>
+        <h2 class="fw-bold">Technical Questions</h2>
+        <div class="faq-item">
+            <h3 class="fw-bolder">What technologies are used in this project?</h3>
+            <p>This project uses Django (python) for the backend and HTML, CSS, and JavaScript for the frontend.</p>
+        </div>
+        <div class="faq-item">
+            <h3>How do I connect my smart bulbs to the application?</h3>
+            <p>You can connect your smart bulbs to the application by clicking on the "Find Bulbs" button and allowing the application to search for bulbs on your network</p>
+        </div>
+    </section>
+    <br />
+    <section>
+        <h2 class="fw-bold">Troubleshooting</h2>
+        <div class="faq-item">
+            <h3 class="fw-bolder">What should I do if my bulbs are not responding?</h3>
+            <p>If your bulbs are not responding, try restarting the application and ensuring that your bulbs are properly connected to the network.</p>
+        </div>
+        <div class="faq-item">
+            <h3 class="fw-bolder">How do I connect bulbs to my network?</h3>
+            <p>
+                WizBulbs are connected to your internet via the WizApp, information about the app and links to download it can be found here:
+                <a href="https://www.wizconnected.com/en-us/explore-wiz/app">https://www.wizconnected.com/en-us/explore-wiz/app</a>
+            </p>
+        </div>
+        <div class="faq-item">
+            <h3 class="fw-bolder">Who can I contact for support?</h3>
+            <p>If you need further assistance, please contact our support team at support@bulbbop.com.</p>
+        </div>
+    </section>
+</div>
+{% endblock %}

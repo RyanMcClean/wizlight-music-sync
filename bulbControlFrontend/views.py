@@ -17,9 +17,9 @@ from .models import wizbulb
 from .audioTesting import main as audioSync
 from . import variables
 
-variables.init()
-while not variables.ready:
-    pass
+
+if not variables.ready:
+    variables.init()
 
 
 def index(request) -> HttpResponse:
@@ -33,10 +33,6 @@ def index(request) -> HttpResponse:
     """
 
     variables.separator()
-
-
-    threading.Thread(target=variables.update_bulb_objects).start()
-    threading.Thread(target=variables.update_working_audio_devices).start()
 
     variables.context["numBulbs"] = len(variables.context["bulbs"])
 
@@ -89,7 +85,6 @@ def index(request) -> HttpResponse:
 
 def discover(request) -> HttpResponse:
     variables.separator()
-    threading.Thread(target=variables.update_bulb_objects).start()
 
     ip = "255.255.255.255"
     variables.messageLoud("discover")
@@ -175,8 +170,8 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
         ip = request["ip"]
         m = variables.client.sender(ip, "discover", expected_results=1, attempts=1)
         if len(m) > 0 and "result" in m[0].keys():
-            m = m[0]["result"]
-            if "state" in m.keys():
+            m = m[0]
+            if "state" in m["result"].keys():
                 variables.separator()
                 return JsonResponse(m)
     variables.messageLoud("Query error", "error")
@@ -195,7 +190,7 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
         HttpResponse: If error render 404 not found page
     """
     variables.separator()
-    threading.Thread(target=variables.update_bulb_objects).start()
+
     variables.messageLoud("color bulb")
 
     if request.method == "POST":
@@ -267,7 +262,7 @@ def crud(request) -> HttpResponse:
         HttpResponse: Renders 404 page if error
     """
     variables.separator()
-    threading.Thread(target=variables.update_bulb_objects).start()
+
 
     if request.method == "GET":
         variables.messageLoud("load CRUD page")
@@ -301,3 +296,19 @@ def clear_error(request) -> JsonResponse:
     variables.context["error"] = False
     variables.context["errorMessage"] = ""
     return JsonResponse({"result": True})
+
+def faqs(request) -> HttpResponse:
+    """Renders the FAQ page
+
+    Args:
+        request HttpRequest: HttpRequest object supplied by Django
+
+    Returns:
+        HttpResponse: FAQ page
+    """
+    variables.separator()
+    if request.method == "GET":
+        variables.messageLoud("load FAQ page")
+        variables.separator()
+        return render(request, "faq.html", variables.context)
+    

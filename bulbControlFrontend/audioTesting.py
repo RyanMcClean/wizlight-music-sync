@@ -1,4 +1,4 @@
-"""File for syncronising the audio beat with the music
+"""File for synchronising the audio beat with the music
 being played through the specified audio device
 """
 
