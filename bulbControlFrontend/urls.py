@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import variables
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -13,3 +14,6 @@ urlpatterns = [
     path("delete/<str:ip>", views.delete_bulb, name="delete"),
     path("clearError/", views.clear_error, name="clear-error"),
 ]
+
+variables.update_bulb_objects()
+variables.getWorkingDeviceList()

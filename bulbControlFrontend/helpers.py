@@ -22,7 +22,7 @@ class NetworkHandler:
         self.clientSender = socket(AF_INET, SOCK_DGRAM)
         self.clientSender.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
-    def sender(self, ip=None, packet="", timeout=2.5, attempts=3, color_params={}, expected_results=1) -> list:
+    def sender(self, ip=None, packet="", timeout=2.5, attempts=3, color_params={}, expected_results=0) -> list:
         """Sends UDP packet to local ip address
 
         Args:
@@ -39,6 +39,8 @@ class NetworkHandler:
             for x in range(attempts):
                 try:
                     self.clientSender.sendto(packet, (ip, self.port))
+                    if expected_results < 0:
+                        break
 
                     m, recv_ip = self.receive_message()
                     while m in list(self.bulbPackets.values()):
@@ -56,7 +58,7 @@ class NetworkHandler:
                 except gaierror as e:
                     print(e)
                     print(ip)
-                if not continue_loop or len(messages) >= expected_results:
+                if not continue_loop or (expected_results == 0 or len(messages) >= expected_results):
                     break
         except TimeoutError:
             print(f"Bulb query has timed out, {len(messages)} bulbs responded")

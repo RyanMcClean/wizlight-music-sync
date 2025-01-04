@@ -6,11 +6,16 @@ __contact__ = "https://github.com/RyanMcClean"
 import json
 import os
 import logging
-from .models import wizbulb
-from .forms import bulbForm
-from .helpers import NetworkHandler
-from .audioTesting import getWorkingDeviceList
-
+try:
+    from .models import wizbulb
+    from .forms import bulbForm
+    from .helpers import NetworkHandler
+    from .audioTesting import getWorkingDeviceList
+except:
+    from models import wizbulb
+    from forms import bulbForm
+    from helpers import NetworkHandler
+    from audioTesting import getWorkingDeviceList
 
 def init():
     # Global variables
@@ -19,6 +24,8 @@ def init():
     global separator, messageLoud, messageQuiet, update_bulb_objects, setup_logger, update_working_audio_devices
     # Global classes
     global color
+
+
 
     ready = False
     musicSync = False

@@ -18,7 +18,7 @@ from .audioTesting import main as audioSync
 from . import variables
 
 variables.init()
-while variables.ready is False:
+while not variables.ready:
     pass
 
 
@@ -34,12 +34,9 @@ def index(request) -> HttpResponse:
 
     variables.separator()
 
-    if len(variables.context['bulbs']) < 1 or len(variables.contect['audioDevices']) < 1:
-        variables.update_bulb_objects()
-        variables.update_working_audio_devices()
-    else:
-        threading.Thread(target=variables.update_bulb_objects).start()
-        threading.Thread(target=variables.update_working_audio_devices).start()
+
+    threading.Thread(target=variables.update_bulb_objects).start()
+    threading.Thread(target=variables.update_working_audio_devices).start()
 
     variables.context["numBulbs"] = len(variables.context["bulbs"])
 
@@ -96,7 +93,7 @@ def discover(request) -> HttpResponse:
 
     ip = "255.255.255.255"
     variables.messageLoud("discover")
-    m = variables.client.sender(ip, packet="discover", attempts=4, expected_results=100)
+    m = variables.client.sender(ip, packet="discover", attempts=5)
 
     for bulbResponse in m:
         if [True for bulb in variables.context["bulbs"] if bulbResponse["ip"] in bulb["bulbIp"]]:
@@ -148,8 +145,8 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
                 else:
                     variables.client.sender(ip, "turn_on")
 
-                m = variables.client.sender(ip, "discover", 0.5)
-                m = m[0]["result"] if "result" in m[0].keys() else m[0]
+                m = variables.client.sender(ip, "discover", expected_results=1)
+                m = m[0]["result"] if len(m) > 0 and "result" in m[0].keys() else m
             else:
                 m = {"error": "could not query bulb"}
                 variables.messageLoud("Could not query bulb", "error")
@@ -234,30 +231,30 @@ def activate_music_sync(request) -> JsonResponse:
 
     if request.body.decode("utf-8").isdigit():
         variables.messageLoud(int(request.body.decode("utf-8")))
-        audioSyncThread = threading.Thread(target=audioSync, args=(int(request.body.decode("utf-8")),))
+        audioSyncThread = threading.Thread(target=audioSync, args=[int(request.body.decode("utf-8"))], daemon=True)
         try:
+            variables.musicSync = True
             audioSyncThread.start()
             pass
         except Exception:
             pass
 
-        sleep(5)
-        if audioSyncThread.is_alive():
-            variables.musicSync = True
+        sleep(15)
+        if not audioSyncThread.is_alive():
+            variables.musicSync = False
             variables.separator()
-            return JsonResponse({"result": True})
 
-    variables.messageLoud("Audio Sync did not start", "error")
+    if not variables.musicSync: 
+        variables.messageLoud("Audio Sync did not start", "error")
     variables.separator()
-    return JsonResponse({"result": False})
+    return JsonResponse({"result": variables.musicSync})
 
 
 def stop_audio_sync(request) -> JsonResponse:
     variables.separator()
     variables.messageLoud("Stopping Audio Sync")
-    for thread in threading.enumerate():
-        variables.messageLoud(thread)
-    return JsonResponse({"result": False})
+    variables.musicSync = False
+    return JsonResponse({"result": True})
 
 
 def crud(request) -> HttpResponse:

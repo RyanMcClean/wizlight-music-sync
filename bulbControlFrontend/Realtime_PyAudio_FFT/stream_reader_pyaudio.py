@@ -62,30 +62,32 @@ class Stream_Reader:
             self.data_capture_delays = deque(maxlen=20)
             self.num_data_captures = 0
 
-        print(self.device)
-        print(self.rate)
-        time.sleep(1)
-
+        time.sleep(5)
         try:
-            self.stream = self.pa.open(
-                input_device_index=self.device,
-                format=pyaudio.paInt8,
-                channels=2,
-                rate=self.rate,
-                input=True,
-                frames_per_buffer=self.update_window_n_frames,
-                stream_callback=self.non_blocking_stream_read,
-            )
+            try:
+                self.stream = self.pa.open(
+                    input_device_index=self.device,
+                    format=pyaudio.paInt8,
+                    channels=2,
+                    rate=self.rate,
+                    input=True,
+                    frames_per_buffer=self.update_window_n_frames,
+                    stream_callback=self.non_blocking_stream_read,
+                )
+            except Exception as e:
+                print(e)
+                self.stream = self.pa.open(
+                    input_device_index=self.device,
+                    format=pyaudio.paInt16,
+                    channels=1,
+                    rate=self.rate,
+                    input=True,
+                    frames_per_buffer=self.update_window_n_frames,
+                    stream_callback=self.non_blocking_stream_read,
+                )
         except:
-            self.stream = self.pa.open(
-                input_device_index=self.device,
-                format=pyaudio.paInt16,
-                channels=1,
-                rate=self.rate,
-                input=True,
-                frames_per_buffer=self.update_window_n_frames,
-                stream_callback=self.non_blocking_stream_read,
-            )
+            self.pa.terminate()
+            sys.exit()
 
         print("\n##################################################################################################")
         print("\nDefaulted to using first working mic, Running on:")
