@@ -1,6 +1,6 @@
 Django
 matplotlib==3.10.0
-numpy==2.2.1
+numpy==2.2.3
 PyAudio==0.2.14
 PyAudioWPatch==0.2.12.6
 scipy==1.14.1
