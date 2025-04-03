@@ -7,6 +7,5 @@ class BulbcontrolfrontendConfig(AppConfig):
     def ready(self):
         import bulbControlFrontend.variables
         bulbControlFrontend.variables.init()
-        bulbControlFrontend.variables.update_bulb_objects()
         bulbControlFrontend.variables.update_working_audio_devices()
 
