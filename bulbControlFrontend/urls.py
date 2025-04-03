@@ -1,5 +1,7 @@
 from django.urls import path
+import threading
 from . import views
+from . import variables
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -9,4 +11,10 @@ urlpatterns = [
     path("colorBulb/", views.color_bulb, name="color"),
     path("activateSync/", views.activate_music_sync, name="music-sync"),
     path("stopSync/", views.stop_audio_sync, name="stop-music-sync"),
+    path("crud/", views.crud, name="crud"),
+    path("delete/<str:ip>", views.delete_bulb, name="delete"),
+    path("clearError/", views.clear_error, name="clear-error"),
+    path("faq/", views.faqs, name="faq"),
 ]
+
+threading.Thread(target=variables.update_bulb_objects).start()

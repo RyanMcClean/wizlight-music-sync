@@ -128,26 +128,45 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "format": "{levelname} - {asctime} - {module} - {process:d} - {thread:d} - {message}",
             "style": "{",
         },
         "simple": {
-            "format": "{levelname} {message}",
+            "format": "{levelname} - {asctime} - {message}",
             "style": "{",
         },
     },
     "handlers": {
-        "file": {
-            "level": "DEBUG",
+        "django-file": {
+            "level": "INFO",
             "class": "logging.FileHandler",
             "filename": "./django_debug.log",
+            "formatter": "verbose",
+        },
+        "django-stream": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "app-file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "./bulb_control_debug.log",
+            "formatter": "verbose",
+        },
+        "app-stream": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
         },
     },
     "loggers": {
         "django": {
-            "handlers": ["file"],
+            "handlers": ["django-file", "django-stream"],
+        },
+        "bulbControlFrontend": {
+            "handlers": ["app-file", "app-stream"],
             "level": "DEBUG",
-            "propagate": True,
         },
     },
 }

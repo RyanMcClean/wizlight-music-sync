@@ -22,7 +22,7 @@ class NetworkHandler:
         self.clientSender = socket(AF_INET, SOCK_DGRAM)
         self.clientSender.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
-    def sender(self, ip=None, packet="", timeout=2.5, attempts=3, color_params={}, expected_results=1) -> dict | None:
+    def sender(self, ip=None, packet="", timeout=2.5, attempts=3, color_params={}, expected_results=0) -> list:
         """Sends UDP packet to local ip address
 
         Args:
@@ -39,6 +39,8 @@ class NetworkHandler:
             for x in range(attempts):
                 try:
                     self.clientSender.sendto(packet, (ip, self.port))
+                    if expected_results < 0:
+                        break
 
                     m, recv_ip = self.receive_message()
                     while m in list(self.bulbPackets.values()):
@@ -48,7 +50,7 @@ class NetworkHandler:
                             continue_loop = False
                         message = m
                         message["ip"] = recv_ip
-                        if not message in messages:
+                        if message not in messages:
                             messages.append(message)
                         m, rev_ip = self.receive_message()
                 except TimeoutError:
@@ -56,7 +58,7 @@ class NetworkHandler:
                 except gaierror as e:
                     print(e)
                     print(ip)
-                if not continue_loop or len(messages) >= expected_results:
+                if not continue_loop or (expected_results == 0 or len(messages) >= expected_results):
                     break
         except TimeoutError:
             print(f"Bulb query has timed out, {len(messages)} bulbs responded")
@@ -103,8 +105,8 @@ class NetworkHandler:
         """
         try:
             m = self.sender(wizObj.bulbIp, "discover")[0]
-            m = m["result"] if "result" in m.keys() else ""
-            wizObj.bulbState = m["state"]
+            m = m["result"] if "result" in m.keys() else {}
+            wizObj.bulbState = m["state"] if "state" in m.keys() else False
             wizObj.bulbRed = m["r"] if "r" in m.keys() else 0
             wizObj.bulbGreen = m["g"] if "g" in m.keys() else 0
             wizObj.bulbBlue = m["b"] if "b" in m.keys() else 0
@@ -129,6 +131,3 @@ class NetworkHandler:
             '{"id":1,"method":"setState","params":{"r": %d, "g": %d, "b": %d, "dimming": %d}}' % (r, g, b, brightness),
             encoding="utf-8",
         )
-
-
-

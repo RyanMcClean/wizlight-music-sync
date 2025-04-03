@@ -42,10 +42,10 @@ class wizbulb(models.Model):
             dict: JSON dict of fields and values in the object
         """
         return {
-            "BulbIp": self.bulbIp,
-            "BulbName": self.bulbName,
-            "BulbState": self.bulbState,
-            "BulbRed": self.bulbRed,
+            "bulbIp": self.bulbIp,
+            "bulbName": self.bulbName,
+            "bulbState": self.bulbState,
+            "bulbRed": self.bulbRed,
             "bulbGreen": self.bulbGreen,
             "bulbBlue": self.bulbBlue,
             "bulbTemp": self.bulbTemp,

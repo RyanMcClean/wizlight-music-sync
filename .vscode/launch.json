@@ -9,37 +9,38 @@
             "type": "debugpy",
             "request": "launch",
             "windows": {
-                "python": "${workspaceFolder}/env/Scripts/python.exe",
+                "python": "${workspaceFolder}/env/Scripts/python.exe"
             },
             "linux": {
-                "python": "${workspaceFolder}/env/bin/python3",
+                "python": "${workspaceFolder}/env/bin/python3"
             },
             "program": "${workspaceRoot}/manage.py",
             "args": [
                 "runserver",
                 "0.0.0.0:8000"
             ],
-            "console": "integratedTerminal",
             "serverReadyAction": {
-                "pattern": ".*(http?:\\/\\/\\S+:[0-9]+\\/?).*",
-                "uriFormat": "%s",
                 "action": "openExternally",
+                "killOnServerStop": false,
+                "pattern": ".*:([0-9]+\/)",
+                "uriFormat": "http://localhost:%s"
             },
-            "preLaunchTask": "Runtime_Setup_Part_2",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Runtime_Setup_Part_2"
         },
         {
             "name": "Current File (Python)",
             "type": "debugpy",
             "request": "launch",
             "windows": {
-                "python": "${workspaceFolder}/env/Scripts/python.exe",
+                "python": "${workspaceFolder}/env/Scripts/python.exe"
             },
             "linux": {
-                "python": "${workspaceFolder}/env/bin/python3",
+                "python": "${workspaceFolder}/env/bin/python3"
             },
             "program": "${file}",
             "console": "integratedTerminal",
-            "preLaunchTask": "install_requirements",
+            "preLaunchTask": "install_requirements"
         }
-    ]
+    ],
 }

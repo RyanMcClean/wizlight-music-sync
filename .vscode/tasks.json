@@ -11,14 +11,18 @@
         {
             "label": "Setup Playwright",
             "type": "shell",
-            "command": "playwright install",
+            "windows": {
+                "command": "${workspaceFolder}/env/Scripts/python.exe -m playwright install"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/env/bin/python3 -m playwright install"
+            },
             "presentation": {
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared"
             },
-            "dependsOn": "install_requirements",
-            "problemMatcher": "$python"
+            "dependsOn": "install_requirements"
         },
         {
             "label": "Runtime_Setup_Part_1",
@@ -35,7 +39,9 @@
                 "panel": "shared"
             },
             "dependsOn": "install_requirements",
-            "problemMatcher": "$python"
+            "problemMatcher": [
+                "$python"
+            ]
         },
         {
             "label": "Runtime_Setup_Part_2",
@@ -71,12 +77,6 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "problemMatcher": [
-                "$python"
-            ],
-            "runOptions": {
-                "runOn": "folderOpen"
-            },
         },
         {
             "label": "setup_venv",
@@ -91,10 +91,7 @@
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared"
-            },
-            "problemMatcher": [
-                "$python"
-            ]
+            }
         },
         {
             "label": "start_venv",
@@ -110,10 +107,7 @@
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared"
-            },
-            "problemMatcher": [
-                "$python"
-            ]
+            }
         },
         {
             "label": "create_default_admin",
@@ -131,10 +125,7 @@
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": false
-            },
-            "problemMatcher": [
-                "$python"
-            ]
+            }
         },
         {
             "label": "update_pip",
@@ -150,10 +141,7 @@
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared"
-            },
-            "problemMatcher": [
-                "$python"
-            ]
-        },
+            }
+        }
     ]
 }

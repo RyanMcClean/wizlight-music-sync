@@ -6,18 +6,29 @@ __contact__ = "https://github.com/RyanMcClean"
 import json
 import os
 import logging
-from .models import wizbulb
-from .forms import bulbForm
-from .helpers import NetworkHandler
-
+try:
+    from .models import wizbulb
+    from .forms import bulbForm
+    from .helpers import NetworkHandler
+    from .audioTesting import getWorkingDeviceList
+except:
+    from models import wizbulb
+    from forms import bulbForm
+    from helpers import NetworkHandler
+    from audioTesting import getWorkingDeviceList
 
 def init():
     # Global variables
-    global client, context, logger, bulbs, init
+    global client, context, logger, bulbs, ready, musicSync
     # Global functions
-    global separator, messageLoud, messageQuiet, update_bulb_objects, setup_logger
+    global separator, messageLoud, messageQuiet, update_bulb_objects, setup_logger, update_working_audio_devices
     # Global classes
     global color
+
+
+
+    ready = False
+    musicSync = False
 
     def separator() -> None:
         try:
@@ -48,13 +59,18 @@ def init():
         # bulbs = wizbulb.objects.all()[x]
         # where x is the number of bulb objects returned
         bulbs = wizbulb.objects.all()
-        context["bulbs"] = []
-        for x in bulbs:
-            client.update_bulb_objects(x)
-            if x.returnJSON() not in context["bulbs"]:
-                context["bulbs"].append(x.returnJSON())
-            if x.bulbIp in context["ips"]:
-                context["ips"].remove(x.bulbIp)
+        if len(bulbs) > 0:
+            for x in bulbs:
+                client.update_bulb_objects(x)
+                if x.bulbIp not in [y["bulbIp"] for y in context["bulbs"]]:
+                    context["bulbs"].append(x.returnJSON())
+                if x.bulbIp in context["ips"]:
+                    context["ips"].remove(x.bulbIp)
+        else:
+            context["bulbs"] = []
+        # Oneliner to remove duplicates from list of dicts https://stackoverflow.com/questions/9427163/remove-duplicate-dict-in-list-in-python
+        context["bulbs"] = [dict(x) for x in {tuple(y.items()) for y in context["bulbs"]}]
+        context["numBulbs"] = len(context["bulbs"])
 
     def setup_logger(name, log_file, level) -> logging.Logger:
         """Setup as many loggers as needed
@@ -101,8 +117,17 @@ def init():
         "audioDevices": [],
         "error": False,
         "errorMessage": "No error",
+        "musicSync": musicSync,
     }
     logger = setup_logger("Main Logger", "./django_server.log", logging.DEBUG)
     bulbs = wizbulb.objects.all()
 
-    init = True
+    def update_working_audio_devices():
+        if context["numBulbs"] > 0 or len(context["bulbs"]) > 0:
+            devices = getWorkingDeviceList()
+            for device in devices:
+                if device not in context["audioDevices"]:
+                    context["audioDevices"].append(device)
+        context["audioDevices"] = [dict(x) for x in {tuple(y.items()) for y in context["audioDevices"]}]
+
+    ready = True
