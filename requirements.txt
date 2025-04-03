@@ -3,8 +3,8 @@ matplotlib==3.10.0
 numpy==2.2.1
 PyAudio==0.2.14
 PyAudioWPatch==0.2.12.6
+setuptools==78.1.0
 scipy==1.15.2
-setuptools==75.6.0
 sounddevice==0.5.1
 pytest
 pytest-django
