@@ -2,7 +2,7 @@ Django
 matplotlib==3.10.0
 numpy==2.2.1
 PyAudio==0.2.14
-PyAudioWPatch==0.2.12.6
+PyAudioWPatch==0.2.12.7
 setuptools==78.1.0
 scipy==1.15.2
 sounddevice==0.5.1
