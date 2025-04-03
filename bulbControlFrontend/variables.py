@@ -58,8 +58,8 @@ def init():
         # To add a limit to the returned bulb objects the line would read:
         # bulbs = wizbulb.objects.all()[x]
         # where x is the number of bulb objects returned
-        bulbs = wizbulb.objects.all()
-        if len(bulbs) > 0:
+        bulbs = None
+        if bulbs is not None and len(bulbs) > 0 and ready:
             for x in bulbs:
                 client.update_bulb_objects(x)
                 if x.bulbIp not in [y["bulbIp"] for y in context["bulbs"]]:
