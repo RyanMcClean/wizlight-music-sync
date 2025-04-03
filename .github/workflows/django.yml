@@ -36,6 +36,7 @@ jobs:
             - name: Run Migrations
               id: run_migrations
               run: |
+                  python manage.py makemigrations bulbControlFrontend--noinput 
                   python manage.py migrate --noinput
             - name: Run Tests
               id: run_tests
