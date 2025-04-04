@@ -61,7 +61,7 @@ class wizbulb(models.Model):
                 f"\nBulb Temp: {self.bulbTemp}\n" + "-" * os.get_terminal_size()[0]
             )
         except OSError as e:
-            return (f"\nBulb Ip: {self.bulbIp}\nBulb Name: {self.bulbName}\nBulb State: {self.bulbState}"
+            return (f"Bulb Ip: {self.bulbIp}\nBulb Name: {self.bulbName}\nBulb State: {self.bulbState}"
                 f"\nBulb Red: {self.bulbRed}\nBulb Green {self.bulbGreen}\nBulb Blue: {self.bulbBlue}"
                 f"\nBulb Temp: {self.bulbTemp}\n")
 

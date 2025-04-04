@@ -1,7 +1,7 @@
 import string
 from random import randint, choice
 
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from bulbControlFrontend.models import wizbulb
 from django.test import TestCase
 from django.core.exceptions import ValidationError
@@ -9,31 +9,44 @@ from django.core.exceptions import ValidationError
 
 class DB_Tests(TestCase):
         
-    bulbArray = []
-    ipArray = []
-    for x in range(randint(100, 1000)):
-        name = "".join(choice(string.ascii_letters) for i in range(randint(3, 15)))
-        if name not in bulbArray:
-            bulbArray.append(name)
-    for x in range(len(bulbArray)):
-        ipArray.append(".".join(str(randint(1,254)) for _ in range(4)))
-
     @classmethod
     def setUpTestData(cls):
-        for x, y in zip(cls.bulbArray, cls.ipArray):
-            wizbulb.objects.create(bulbName=x, bulbIp=y)
+        cls.bulbArray = []
+        cls.ipArray = []
+        for x in range(randint(100, 1000)):
+            name = "".join(choice(string.ascii_letters) for i in range(randint(3, 15)))
+            if name not in cls.bulbArray:
+                cls.bulbArray.append(name)
+        for x in range(len(cls.bulbArray)):
+            cls.ipArray.append(".".join(str(randint(1,254)) for _ in range(4)))
 
-    def test_set_bulb_name(self):
-        """Test if the bulb name is set correctly"""
-        print(f"Testing {len(self.bulbArray)} bulbs")
-        for x in self.bulbArray:
-            bulb = wizbulb.objects.get(bulbName=x)
-            self.assertEqual(bulb.bulbName, x)
-
-    def test_set_bulb_ip(self):
+    def test_bulb_creation(self):
+        """Test if the bulb name and ip are set correctly"""
+        for x, y in zip(self.bulbArray, self.ipArray):
+            bulb = wizbulb()
+            bulb.bulbName = x
+            bulb.bulbIp = y
+            bulb.save()
+        print(f"Testing {len(self.bulbArray)} bulbs", self)
         for x, y in zip(self.bulbArray, self.ipArray):
             bulb = wizbulb.objects.get(bulbName=x)
+            self.assertEqual(bulb.bulbName, x)
             self.assertEqual(bulb.bulbIp, y)
+
+    def test_invalid_bulb_creation(self):
+        """Set invalid bulb name and ip and ensure it raises an appropriate error"""
+        for x in self.bulbArray:
+            bulb = wizbulb()
+            bulb.bulbName = x
+            with self.assertRaisesRegex(ValidationError, "bulbIp.*This field cannot be null.*"):
+                bulb.full_clean()
+                bulb.save()
+        for y in self.ipArray:
+            bulb = wizbulb()
+            bulb.bulbIp = y
+            with self.assertRaisesRegex(ValidationError, "bulbName.*This field cannot be null.*"):
+                bulb.full_clean()
+                bulb.save()
 
     def test_set_null_object(self):
         with self.assertRaisesRegex(IntegrityError, "NOT NULL constraint failed:.*bulb.*"):
@@ -46,12 +59,3 @@ class DB_Tests(TestCase):
     def test_set_null_bulb_name(self):
         with self.assertRaisesRegex(IntegrityError, "NOT NULL constraint failed:.*.bulbName"):
             wizbulb.objects.create(bulbIp="192.168.50.1")
-
-    def test_set_null_bulb_name(self):
-        bulb = wizbulb()
-        bulb.bulbName = ""
-        bulb.bulbIp = "192.168.50.6"
-        with self.assertRaisesRegex(ValidationError, ".*bulbName.*This field cannot be blank.*"):
-            bulb.full_clean()
-            bulb.save()
-

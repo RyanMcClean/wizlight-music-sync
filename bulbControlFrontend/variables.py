@@ -119,7 +119,7 @@ def init():
         "errorMessage": "No error",
         "musicSync": musicSync,
     }
-    logger = setup_logger("Main Logger", "./django_server.log", logging.DEBUG)
+    logger = setup_logger("Main Logger", "./test_logs/django_server.log", logging.DEBUG)
     bulbs = wizbulb.objects.all()
 
     def update_working_audio_devices():
