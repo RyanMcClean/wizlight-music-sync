@@ -1,2 +1,6 @@
-toggle bulb test failing on local machine and on CI 
-passing into the wrong view?
+toggle bulb test failing on local machine and on CI passing into the wrong view?
+
+CI caught bug that only shows when db table doesn't exist. So would have
+prevented installs. I had put a call to the table in the init of the app, before
+the table is created. Which is fine when the machine has it already, but would
+error on a fresh install
