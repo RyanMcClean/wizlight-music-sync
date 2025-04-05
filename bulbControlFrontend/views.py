@@ -80,7 +80,7 @@ def index(request) -> HttpResponse:
         return render(None, "index.html", variables.context)
 
     variables.separator()
-    return redirect("404.html")
+    return render(request, "404.html", status=404)
 
 
 def discover(request) -> HttpResponse:
