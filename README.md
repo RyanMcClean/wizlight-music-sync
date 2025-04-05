@@ -4,12 +4,21 @@
 
 Ryan McClean's QUB final year project.
 
-This project is an attempt to synchronize the brightness and color of Wiz light
-bulbs with the rhythm of music, either played from the local device, or the
-ambient music, using the microphone of the device.
+This project is an attempt to synchronize the brightness and color of Wiz light  
+bulbs with the rhythm of music, either played from the local device, or the  
+ambient music, using the microphone of the device.  
 
-#### Jipes
+The project has been developed in Python (There was an attempt in Java, but it did not work).  
 
-https://www.tagtraum.com/jipes/
+## Features
 
-https://repo1.maven.org/maven2/com/tagtraum/jipes/0.9.17/
+- **Audio Synchronization**: Dynamically adjusts the brightness of Wiz light bulbs based on the rhythm and beats of the music.  
+- **Local and Ambient Music Support**: Works with both locally played music and ambient sound captured via the device's microphone.  
+
+## Technologies Used
+
+- **Programming Language**: Python
+- **Libraries**: 
+  - `pyaudio` for audio input
+  - `numpy` for signal processing
+- **Hardware**: Wiz light bulbs and a computer (Windows, or Linux) with a microphone.
