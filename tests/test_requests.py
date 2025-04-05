@@ -9,7 +9,6 @@ bulbDiscoveryErrorMessage = (
 # This IP is used in testing to prevent it actually querying a bulb
 localIp = "127.0.0.1"
 
-
 class IndexClientTest(TestCase):
     def test_get_index(self):
         response = self.client.get("/")
@@ -20,6 +19,11 @@ class IndexClientTest(TestCase):
         form_data = {"bulbIp": localIp}
         response = self.client.post("/", form_data, "application/json")
         self.assertEqual(response.status_code, 200)
+        
+    def test_404_index(self):
+        response = self.client.delete("/")
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, "404.html")
 
 
 class BulbFunctionsTest(TestCase):
@@ -55,3 +59,13 @@ class BulbFunctionsTest(TestCase):
         response = self.client.get("/toggleBulb/")
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, "404.html")
+        
+    def test_start_audio_sync(self):
+        response = self.client.post("/activateSync/", content_type="text/xml", data="0")
+        self.assertEqual(response.status_code, 200)
+        
+    def test_stop_audio_sync(self):
+        response = self.client.get("/stopSync/")
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(json.loads(response.content.decode("utf-8")), {"result": True})
+        
