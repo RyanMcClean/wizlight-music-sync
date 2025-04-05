@@ -7,7 +7,7 @@ import os
 
 from django.core.validators import validate_ipv4_address
 from django.core.exceptions import ValidationError
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 
 # Create your models here.
@@ -35,16 +35,32 @@ class wizbulb(models.Model):
         blank=True)
     bulbRed = models.IntegerField(
         null=True,
-        blank=True)
+        blank=True,
+        validators=[
+            MaxValueValidator(255),
+            MinValueValidator(0)
+        ])
     bulbGreen = models.IntegerField(
         null=True,
-        blank=True)
+        blank=True,
+        validators=[
+            MaxValueValidator(255),
+            MinValueValidator(0)
+        ])
     bulbBlue = models.IntegerField(
         null=True,
-        blank=True)
+        blank=True,
+        validators=[
+            MaxValueValidator(255),
+            MinValueValidator(0)
+        ])
     bulbTemp = models.IntegerField(
         null=True,
-        blank=True)
+        blank=True,
+        validators=[
+            MaxValueValidator(100),
+            MinValueValidator(0)
+        ])
 
     def __str__(self) -> str:
         """Returns a summary of wizbulb object
