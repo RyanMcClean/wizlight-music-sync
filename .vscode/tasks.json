@@ -66,7 +66,7 @@
             "label": "install_requirements",
             "type": "shell",
             "windows": {
-                "command": "Foreach ($package in (Get-Content -Path ${workspaceFolder}/requirements.txt)) { ${workspaceFolder}/env/Scripts/pip.exe install $package }"
+                "command": "Foreach ($package in (Get-Content -Path ${workspaceFolder}/requirements.txt)) { if ( !$package.contains('#') -and $package ) { ${workspaceFolder}/env/Scripts/pip.exe install $package }}"
             },
             "linux": {
                 "command": "cat ${workspaceFolder}/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 ${workspaceFolder}/env/bin/pip3 install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi"
@@ -77,6 +77,9 @@
                 "focus": false,
                 "panel": "shared"
             },
+            "problemMatcher": [
+                "$python"
+            ]
         },
         {
             "label": "setup_venv",
