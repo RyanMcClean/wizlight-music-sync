@@ -15,6 +15,7 @@ urlpatterns = [
     path("delete/<str:ip>", views.delete_bulb, name="delete"),
     path("clearError/", views.clear_error, name="clear-error"),
     path("faq/", views.faqs, name="faq"),
+    path("about/", views.about, name="about"),
 ]
 
 threading.Thread(target=variables.update_bulb_objects).start()

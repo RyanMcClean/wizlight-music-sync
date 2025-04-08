@@ -1,39 +1,35 @@
 {% extends "master.html" %} {% load static %} {% block title %}Bulb Bop{% endblock %} {% block content %}
 <br />
 <header class="container justify-content-center text-center">
-    <h1 class="fw-bold">Frequently Asked Questions</h1>
+    <h1 class="fw-bold fs-1">About</h1>
 </header>
 <br />
 <br />
 <div class="container justify-content-center text-center">
     <section>
-        <div class="faq-item">
-            <h3 class="fw-bolder">What is Bulb Bop?</h3>
+        <div class="about-item">
+            <h3 class="fw-bolder fs-2">The Project</h3>
             <p>Bulb bop is a web application designed to manage and control wiz smart bulbs and sync them up with your music.</p>
-        </div>
-        <div class="faq-item">
-            <h3 class="fw-bolder">How do I install the Bulb Bop?</h3>
-            <p>
-                You can install the Bulb Bop by following the instructions provided in the installation guide on our website,
-                <a href="https://github.com/RyanMcClean/wizlight-music-sync">https://github.com/RyanMcClean/wizlight-music-sync</a>
-            </p>
+            <br />
+            <p>This project has been the work of Ryan McClean, a student at Queen's University Belfast, as his final year project.</p>
         </div>
     </section>
     <br />
     <section>
-        <h2 class="fw-bold">Technical Questions</h2>
+        <h2 class="fw-bold fs-2">The Author</h2>
         <div class="faq-item">
-            <h3 class="fw-bolder">What technologies are used in this project?</h3>
-            <p>This project uses Django (python) for the backend and HTML, CSS, and JavaScript for the frontend.</p>
-        </div>
-        <div class="faq-item">
-            <h3>How do I connect my smart bulbs to the application?</h3>
-            <p>You can connect your smart bulbs to the application by clicking on the "Find Bulbs" button and allowing the application to search for bulbs on your network</p>
+            <h3 class="fw-bolder fs-4">Ryan McClean</h3>
+            <br />
+            <a href="https://github.com/RyanMcClean"><img class="img-thumbnail object-fit-sm-scale w-25" src="{% static 'images/Portrait.jpg' %}" alt="Image of author" /></a>
+            <br />
+            <br />
+            <p>Ryan McClean is a final year student in Queens, studying a Masters in Computer Programming</p>
+            <br />
         </div>
     </section>
     <br />
     <section>
-        <h2 class="fw-bold">Troubleshooting</h2>
+        <h2 class="fw-bold fs-2">Troubleshooting</h2>
         <div class="faq-item">
             <h3 class="fw-bolder">What should I do if my bulbs are not responding?</h3>
             <p>If your bulbs are not responding, try restarting the application and ensuring that your bulbs are properly connected to the network.</p>

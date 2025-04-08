@@ -80,7 +80,7 @@ def index(request) -> HttpResponse:
         return render(None, "index.html", variables.context)
 
     variables.separator()
-    return redirect("404.html")
+    return render(request, "404.html", status=404)
 
 
 def discover(request) -> HttpResponse:
@@ -311,4 +311,19 @@ def faqs(request) -> HttpResponse:
         variables.messageLoud("load FAQ page")
         variables.separator()
         return render(request, "faq.html", variables.context)
+
+def about(request) -> HttpResponse:
+    """Renders the ABOUT page
+
+    Args:
+        request HttpRequest: HttpRequest object supplied by Django
+
+    Returns:
+        HttpResponse: ABOUT page
+    """
+    variables.separator()
+    if request.method == "GET":
+        variables.messageLoud("load ABOUT page")
+        variables.separator()
+        return render(request, "about.html", variables.context)
     
