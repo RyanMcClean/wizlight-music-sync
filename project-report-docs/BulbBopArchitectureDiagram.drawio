@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0" version="26.2.9">
   <diagram name="Page-1" id="_lMVKRdNleyuSEj8tpFd">
-    <mxGraphModel dx="235" dy="656" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
+    <mxGraphModel dx="985" dy="552" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -70,8 +70,26 @@
         <mxCell id="QggOMXuUhDjHbgbRRyJi-24" value="UDP Packets" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="190" y="192.5" width="100" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="QggOMXuUhDjHbgbRRyJi-26">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="650" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="350" y="990" />
+              <mxPoint x="710" y="990" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
         <mxCell id="QggOMXuUhDjHbgbRRyJi-26" value="Index Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="290" y="1025" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="QggOMXuUhDjHbgbRRyJi-28" target="QggOMXuUhDjHbgbRRyJi-46">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="650" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="600" y="990" />
+              <mxPoint x="710" y="990" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="QggOMXuUhDjHbgbRRyJi-28" value="About Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="540" y="1025" width="120" height="40" as="geometry" />
@@ -79,14 +97,40 @@
         <mxCell id="QggOMXuUhDjHbgbRRyJi-29" value="Discover Button" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="510" y="610" width="120" height="40" as="geometry" />
         </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="QggOMXuUhDjHbgbRRyJi-46">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="717.25" y="680" as="targetPoint" />
+            <mxPoint x="480.7476744186047" y="1025" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="481" y="990" />
+              <mxPoint x="710" y="990" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
         <mxCell id="QggOMXuUhDjHbgbRRyJi-30" value="FAQ Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="413.5" y="1025" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="QggOMXuUhDjHbgbRRyJi-32" target="QggOMXuUhDjHbgbRRyJi-46">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="990" />
+              <mxPoint x="710" y="990" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="QggOMXuUhDjHbgbRRyJi-32" value="Edit Bulbs Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="670" y="1025" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="QggOMXuUhDjHbgbRRyJi-46" value="Discover Button" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-46" value="Start Audio Sync Button" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="650" y="610" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.47;entryY=0.986;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="QggOMXuUhDjHbgbRRyJi-28" target="QggOMXuUhDjHbgbRRyJi-29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="600" y="990" />
+              <mxPoint x="566" y="990" />
+            </Array>
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
