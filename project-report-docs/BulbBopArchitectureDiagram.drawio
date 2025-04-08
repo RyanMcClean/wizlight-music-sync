@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0" version="26.2.9">
   <diagram name="Page-1" id="_lMVKRdNleyuSEj8tpFd">
-    <mxGraphModel dx="985" dy="552" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
+    <mxGraphModel dx="1216" dy="682" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -131,6 +131,30 @@
               <mxPoint x="566" y="990" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-58" value="/index" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="282" y="530" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-59" value="/about" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="334" y="530" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-60" value="/discover" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="386" y="530" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-61" value="/toggleBulb" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="438" y="530" width="70" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-62" value="/queryBulb" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="530" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-63" value="/colorBulb" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="572" y="530" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-64" value="/activateSync" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="634" y="530" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QggOMXuUhDjHbgbRRyJi-65" value="/stopsync" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="716" y="530" width="60" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
