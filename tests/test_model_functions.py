@@ -16,7 +16,6 @@ class ModelFunctionTests(TestCase):
 
     def test_str_method(self):
         """Test the __str__ method of wizbulb"""
-        
         self.assertRegex(str(self.bulb), f"^Bulb Ip: {self.bulb.bulbIp}\\nBulb Name: " +
                         f"{self.bulb.bulbName}\\nBulb State: {self.bulb.bulbState}\\nBulb Red: " +
                         f"{self.bulb.bulbRed}\\nBulb Green {self.bulb.bulbGreen}\\nBulb Blue: " +
@@ -24,7 +23,6 @@ class ModelFunctionTests(TestCase):
 
     def test_json_method(self):
         """Test the returnJSON method of wizbulb"""
-        
         expected_json = {
             "bulbIp": self.bulb.bulbIp,
             "bulbName": self.bulb.bulbName,

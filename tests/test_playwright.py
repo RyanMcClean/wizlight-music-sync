@@ -20,7 +20,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
     def test_load_index(self):
         chromiumPage = self.chromium.new_page()
         chromiumPage.goto(f"{self.live_server_url}")
-        chromiumPage.locator("#find-bulbs-button").wait_for()
+        chromiumPage.locator("#find-bulbs-button").wait_for(state='attached')
         self.assertEqual(chromiumPage.title(), "Bulb Bop")
         expect(chromiumPage.locator("#main-title")).to_be_visible()
         expect(chromiumPage.locator("#find-bulbs-button")).to_be_visible()
@@ -31,8 +31,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
     def test_load_discover(self):
         chromiumPage = self.chromium.new_page()
         chromiumPage.goto(f"{self.live_server_url}/discover")
-        chromiumFindButton = chromiumPage.locator("#find-bulbs-button")
-        chromiumFindButton.wait_for(timeout=0, state="attached")
+        chromiumPage.locator("#find-bulbs-button").wait_for(state='attached')
         self.assertEqual(chromiumPage.title(), "Bulb Bop")
         expect(chromiumPage.locator("#main-title")).to_be_visible()
         expect(chromiumPage.locator("#find-bulbs-button")).to_be_visible()
@@ -43,8 +42,8 @@ class PlaywrightTests(StaticLiveServerTestCase):
     def test_from_index_to_discover(self):
         chromiumPage = self.chromium.new_page()
         chromiumPage.goto(f"{self.live_server_url}")
-        if chromiumPage.locator("#error-wrapper").is_visible():
-            chromiumPage.locator("button", has_text="Close").click()
+        # if chromiumPage.locator("#error-wrapper").is_visible():
+        #     chromiumPage.locator("button", has_text="Close").click()
         chromiumFindButton = chromiumPage.locator("#find-bulbs-button")
         chromiumFindButton.wait_for(timeout=0, state="attached")
         chromiumFindButton.click()
