@@ -43,9 +43,9 @@ class PlaywrightTests(StaticLiveServerTestCase):
         chromiumPage = self.chromium.new_page()
         chromiumPage.goto(f"{self.live_server_url}")
         chromiumFindButton = chromiumPage.locator("#find-bulbs-button")
-        chromiumFindButton.wait_for(timeout=0, state="attached")
+        chromiumFindButton.wait_for(state="attached")
         chromiumFindButton.click()
-        chromiumFindButton.wait_for(timeout=0, state="attached")
+        chromiumFindButton.wait_for(state="attached")
         url = chromiumPage.url
         self.assertIn("discover", url)
         self.assertEqual(chromiumPage.title(), "Bulb Bop")
