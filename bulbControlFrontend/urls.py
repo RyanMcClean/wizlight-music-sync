@@ -1,5 +1,4 @@
 from django.urls import path
-import threading
 from . import views
 from . import variables
 
@@ -17,5 +16,3 @@ urlpatterns = [
     path("faq/", views.faqs, name="faq"),
     path("about/", views.about, name="about"),
 ]
-
-threading.Thread(target=variables.update_bulb_objects).start()
