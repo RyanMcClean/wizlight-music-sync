@@ -42,8 +42,6 @@ class PlaywrightTests(StaticLiveServerTestCase):
     def test_from_index_to_discover(self):
         chromiumPage = self.chromium.new_page()
         chromiumPage.goto(f"{self.live_server_url}")
-        # if chromiumPage.locator("#error-wrapper").is_visible():
-        #     chromiumPage.locator("button", has_text="Close").click()
         chromiumFindButton = chromiumPage.locator("#find-bulbs-button")
         chromiumFindButton.wait_for(timeout=0, state="attached")
         chromiumFindButton.click()
@@ -60,6 +58,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
     def test_from_discover_to_index(self):
         chromiumPage = self.chromium.new_page()
         chromiumPage.goto(f"{self.live_server_url}/discover")
+        # An error message shows due to the system being unable to find any bulbs on the simulated environment
         if chromiumPage.locator("#error-wrapper").is_visible():
             chromiumPage.locator("button", has_text="Close").click()
         chromiumPage.locator("#find-bulbs-button").wait_for(timeout=0, state="attached")
