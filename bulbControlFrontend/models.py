@@ -58,8 +58,8 @@ class wizbulb(models.Model):
         null=True,
         blank=True,
         validators=[
-            MaxValueValidator(2000),
-            MinValueValidator(6500)
+            MinValueValidator(2000),
+            MaxValueValidator(6500)
         ])
 
     def __str__(self) -> str:

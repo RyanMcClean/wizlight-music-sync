@@ -21,6 +21,9 @@ from . import variables
 if not variables.ready:
     variables.init()
 
+variables.update_bulb_objects()
+variables.getWorkingDeviceList()
+
 
 def index(request) -> HttpResponse:
     """Renders index, this changes depending on the type of request, and the contents of the request
@@ -33,6 +36,7 @@ def index(request) -> HttpResponse:
     """
 
     variables.separator()
+
 
     variables.context["numBulbs"] = len(variables.context["bulbs"])
 
