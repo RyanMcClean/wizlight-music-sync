@@ -131,7 +131,7 @@ class DB_Validation_Tests(TestCase):
         bulb_array.append(wizbulb(bulbName="Invalid Temp",  bulbIp="192.168.50.1", bulbTemp=randint(0, 199)))
         # Step 2, attempt to create bulbs with invalid int values and ensure it raises an error
         for bulb in bulb_array:
-            with self.assertRaisesRegex(ValidationError, "{'bulb(Red|Blue|Green|Temp)': \['Ensure this value is less than or equal to (100|255)\.'\]}"):
+            with self.assertRaisesRegex(ValidationError, "{'bulb(Red|Blue|Green|Temp)': \['Ensure this value is (less|greater) than or equal to (2000|255)\.'\]}"):
                 bulb.full_clean()
                 bulb.save()
             print(bulb.bulbName + ":\tPassed!", self)
