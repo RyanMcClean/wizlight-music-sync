@@ -26,6 +26,9 @@ SECRET_KEY = "django-insecure-%3x%ut_8u$eb0=#z-_+3g%&8@*4b1!(m4rik(m_(tae_(g5#ji
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
+# User defined env variables
+STATIC_ROOT = BASE_DIR / "static"
+
 
 # Application definition
 
@@ -44,7 +47,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",

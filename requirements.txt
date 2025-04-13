@@ -1,23 +1,19 @@
 # Requirements for Wizbulb Music Sync Project
-
 # Main web dependencies
 Django
 django-bootstrap-v5
 requests
-
 # Audio processing dependencies
-numpy==2.2.1
-PyAudio==0.2.14
-PyAudioWPatch==0.2.12.7
-scipy==1.15.2
-sounddevice==0.5.1
-
+numpy
+sounddevice
+PyAudio
+PyAudioWPatch
+scipy
 # Testing dependencies
 pytest
 pytest-django
 pytest-cov
-pytest-xdist>=3.6.1
+pytest-xdist
 playwright
-
 # Miscellaneous dependencies
 readme-coverage-badger

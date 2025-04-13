@@ -35,3 +35,5 @@ replay_pid*
 **/lib
 **/.pytest_cache
 *coverage*
+**/test_logs
+/static

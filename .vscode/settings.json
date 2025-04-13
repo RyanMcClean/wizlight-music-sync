@@ -27,6 +27,13 @@
     "python.testing.unittestEnabled": false,
     "cSpell.words": [
         "DGRAM",
+        "elif",
+        "endfor",
+        "onclick",
+        "scipy",
+        "sounddevice",
+        "tabindex",
+        "testpaths",
         "wizbulb",
         "Wizlight"
     ],

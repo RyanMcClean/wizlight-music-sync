@@ -26,7 +26,7 @@
     <br />
     <div class="bulb-registration container text-center">
         <form class="bulb-registration-form" action="/" method="post">
-            {% for field in regForm %} {% if field.html_name == 'bulbIp' %}
+            {% csrf_token %} {% for field in regForm %} {% if field.html_name == 'bulbIp' %}
             <div class="form-group">
                 <input class="form-control" type="hidden" name="{{ field.html_name }}" value="{{ x }}" />
             </div>

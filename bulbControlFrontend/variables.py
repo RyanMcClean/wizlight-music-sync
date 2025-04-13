@@ -119,6 +119,8 @@ def init():
         "audioDevices": [],
         "error": False,
         "errorMessage": "No error",
+        "success": False,
+        "successMessage": "No success",
         "musicSync": musicSync,
     }
     logger = setup_logger("Main Logger", "./test_logs/django_server.log", logging.DEBUG)
