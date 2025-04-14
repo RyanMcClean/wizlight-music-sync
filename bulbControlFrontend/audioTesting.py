@@ -62,7 +62,7 @@ def test_device(pa, device, rate=None):
                     stream.stop_stream()
                     stream.close()
                 except:
-                    stream = self.pa.open(
+                    stream = pa.open(
                         format=pyaudio.paInt8,
                         channels=2,
                         input_device_index=device,
