@@ -52,21 +52,11 @@ async function audioSync(element) {
 
     if (response['result']) {
     } else {
-        var errorMessage = JSON.parse(
-            document.getElementById('errorMessage').textContent,
-        );
         errorMessage = 'Audio sync failed to start, please try again';
-        var error_wrapper = new bootstrap.Modal(
-            document.getElementById('error-wrapper'),
-            {
-                keyboard: true,
-            },
-        );
-        error_wrapper.show();
-        error_message = document
-            .getElementById('error-wrapper')
-            .getElementsByTagName('p')[0];
-        error_message.textContent = errorMessage;
+        var toastEl = document.getElementById('error-toast');
+        toastEl.textContent = errorMessage;
+        var toast = new bootstrap.Toast(toastEl, { delay: 10000 });
+        toast.show();
     }
 }
 // Toggles light and dark themes
