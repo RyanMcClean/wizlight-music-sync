@@ -32,11 +32,11 @@
         {{ errorMessage | json_script:"errorMessage" }} {{ error | json_script:"error"}}
 
         <!-- This is the navigation bar that will be used on all pages -->
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-xxl bg-body-tertiary">
             <div class="container-fluid">
-                <div class="container-fluid flex-grow-0">
+                <div class="d-flex flex-sm-grow-1">
                     <!-- This is the logo that will be used on all pages -->
-                    <a id="main-title" class="navbar-brand fs-1 fw-bolder ms-5" href="/">Bulb Bop</a>
+                    <a id="main-title" class="navbar-brand fs-1 fw-bolder ms-5 w-50" href="/">Bulb Bop</a>
                     <button
                         class="navbar-toggler"
                         type="button"
@@ -53,19 +53,19 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-1 align-items-center justify-content-center">
                         <li class="nav-item">
                             <!-- Home link -->
-                            <a id="home-link" class="nav-link active fs-4 fw-bold text-center" aria-current="page" href="/">Home</a>
+                            <a id="home-link" class="nav-link active fs-2 fw-bold text-center" aria-current="page" href="/">Home</a>
                         </li>
                         <li class="nav-item">
                             <!-- FAQ link -->
-                            <a id="faq-link" class="nav-link fs-4 fw-bold text-center" href="/faq">FAQs</a>
+                            <a id="faq-link" class="nav-link fs-2 fw-bold text-center" href="/faq">FAQs</a>
                         </li>
                         <li class="nav-item">
                             <!-- About link -->
-                            <a id="about-link" class="nav-link fs-4 fw-bold text-center" href="/about">About</a>
+                            <a id="about-link" class="nav-link fs-2 fw-bold text-center" href="/about">About</a>
                         </li>
                         <li class="nav-item">
                             <!-- Edit bulbs link -->
-                            <a id="crud-link" class="nav-link fs-4 fw-bold text-center" href="/crud">
+                            <a id="crud-link" class="nav-link fs-2 fw-bold text-center" href="/crud">
                                 Edit
                                 <br />
                                 Bulbs
@@ -74,7 +74,7 @@
                         <li class="nav-item">
                             <a
                                 id="find-bulbs-button"
-                                class="btn {% if ips|length < 1 %} btn-outline-primary {% else %} btn-primary {% endif %} fw-bolder text-center align-items-center justify-contents-center"
+                                class="btn {% if ips|length < 1 %} btn-outline-primary {% else %} btn-primary {% endif %} fw-bolder text-center align-items-center justify-contents-center fs-2"
                                 role="button"
                                 title="Find Bulbs"
                                 href="/discover"
@@ -87,13 +87,13 @@
                     </ul>
                     {% if numBulbs > 0 %}
                     <form class="d-flex justify-content-end" id="audio-sync-form" action="javascript:audioSync(this)" method="post">
-                        <select class="form-select me-2" name="audio_device" id="audio_device_selector" title="Pick an audio device from the list">
+                        <select class="form-select select-lg me-2 fs-3" name="audio_device" id="audio_device_selector" title="Pick an audio device from the list">
                             <option selected>Select an audio device</option>
                             {% for device in audioDevices %}
                             <option class="generic-button" value="{{ device.num }}">{{ device.name }}</option>
                             {% endfor %}
                         </select>
-                        <button type="submit" class="btn btn-sm btn-outline-danger" id="activate-music-sync-button">Activate music sync</button>
+                        <button type="submit" class="btn btn-sm btn-outline-danger fs-2" id="activate-music-sync-button">Activate music sync</button>
                     </form>
                     {% endif %}
                 </div>
@@ -103,15 +103,20 @@
             </div>
         </nav>
 
-        <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center position-absolute bottom-0 end-0" style="z-index: 11; transform: translate(-20px, -20px)">
+        <div
+            aria-live="polite"
+            aria-atomic="true"
+            class="toast-container justify-content-center align-items-center position-absolute bottom-0 end-0 w-auto"
+            style="z-index: 11; transform: translate(-25px, -25px)"
+        >
             <!-- This is the modal that will be used to display success messages -->
-            {% if success %}
-            <div class="toast align-items-center text-bg-success border-0" id="success-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+            <div class="toast align-items-center text-bg-success border-5 border-success fs-2 fw-bold" id="success-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
                 <div class="d-flex">
                     <div class="toast-body">{{ successMessage }}</div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    <button type="button" id="success-close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
             </div>
+            {% if success %}
             <script>
                 window.onload = function () {
                     var toastEl = document.getElementById('success-toast');
@@ -120,14 +125,15 @@
                 };
             </script>
             {% endif %}
+
             <!-- This is the modal that will be used to display error messages -->
-            {% if error %}
-            <div class="toast align-items-center text-bg-danger border-0" id="error-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+            <div class="toast align-items-center text-bg-danger border-5 border-danger fs-2 fw-bold" id="error-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
                 <div class="d-flex">
-                    <div class="toast-body">{{ errorMessage }}</div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    <div class="toast-body" id="errorMessage">{{ errorMessage }}</div>
+                    <button type="button" id="error-close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
             </div>
+            {% if error %}
             <script>
                 window.onload = function () {
                     var toastEl = document.getElementById('error-toast');
