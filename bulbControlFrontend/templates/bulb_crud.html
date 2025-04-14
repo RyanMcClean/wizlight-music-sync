@@ -1,21 +1,21 @@
-{% extends "master.html" %} {% load static %} {% load remove_whitespace %} {% block title %}Bulb Bop{% endblock %} {% block content %}
+{% extends "master.html" %} {% load static %} {% load sanatise_title %} {% block title %}Bulb Bop{% endblock %} {% block content %}
 <div class="container-fluid">
     <table class="table table-striped table-hover table-bordered">
         <caption>Table of saved bulbs</caption>
         <thead>
             <tr>
-                <th scope="col">Bulb Name</th>
-                <th scope="col">Bulb Ip</th>
-                <th scope="col">Bulb State</th>
-                <th scope="col" colspan="2">Actions</th>
+                <th scope="col fs-1">Bulb Name</th>
+                <th scope="col fs-1">Bulb Ip</th>
+                <th scope="col fs-1">Bulb State</th>
+                <th scope="col fs-1" colspan="2">Actions</th>
             </tr>
         </thead>
         {% for x in bulbs %}
         <tbody>
             <tr>
-                <td>{{ x.bulbName }}</td>
-                <td>{{ x.bulbIp }}</td>
-                <td>{{ x.bulbState }}</td>
+                <td class="fs-1">{{ x.bulbName }}</td>
+                <td class="fs-1">{{ x.bulbIp }}</td>
+                <td class="fs-1">{{ x.bulbState }}</td>
                 <td id="edit-bulb-link">
                     <button
                         type="button"
@@ -24,7 +24,7 @@
                         data-bs-target="#edit-modal-{{ x.bulbName|sanatise_title }}"
                         style="height: 100%; width: 100%; padding: 0; border: none; background: none"
                     >
-                        <div class="container">Edit</div>
+                        <div class="container fs-1">Edit</div>
                     </button>
                 </td>
                 <div id="edit-modal-{{ x.bulbName|sanatise_title }}" class="modal fade" tabindex="-1">
@@ -68,7 +68,7 @@
                 </div>
                 <td id="delete-bulb-link">
                     <form action="/delete/{{x.bulbIp}}" method="post">
-                        <button type="submit" style="height: 100%; width: 100%; padding: 0; border: none; background: none"><div class="container">Delete</div></button>
+                        <button type="submit" style="height: 100%; width: 100%; padding: 0; border: none; background: none"><div class="container fs-1">Delete</div></button>
                     </form>
                 </td>
             </tr>
