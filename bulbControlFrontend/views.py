@@ -234,7 +234,7 @@ def activate_music_sync(request) -> JsonResponse:
         except Exception:
             pass
 
-        sleep(15)
+        sleep(30)
         if not audioSyncThread.is_alive():
             variables.musicSync = False
             variables.separator()
