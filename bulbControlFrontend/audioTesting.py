@@ -30,6 +30,7 @@ def getWorkingDeviceList():
             devices.append(
                 {"num": device["index"], "name": device["name"], "maxInputChannels": device["maxInputChannels"]}
             )
+    pa.terminate()
     return devices
 
 def valid_low_rate(pa, device, test_rates=[96000, 48000, 44100, 22050, 11025], test_rate=None):
