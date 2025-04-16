@@ -176,16 +176,19 @@ def main(device=None):
                             beat_thread = Thread(target=beat, args=(ip, packet))
                             beat_thread.start()
                         packet = "turn_to_half" if packet == "turn_to_full" else "turn_to_full"
+                        time.sleep(0.01)
                         break
 
             for key in list(freqArray.keys()):
                 if "_avg" not in str(key):
                     freqArray[str(key) + "_avg"] = (sum(freqArray[key])) / len(freqArray[key])
+                    per_diff = 0
                     for x in freqArray[key]:
-                        variance += (
-                            freqArray[key + "_avg"] / x if freqArray[key + "_avg"] / x > 1 else x / freqArray[key + "_avg"]
-                        )
-                    variance = variance / len(freqArray[key])
+                        per_diff += freqArray[key + "_avg"] / x
+                    if per_diff > 1:
+                        variance = per_diff / len(freqArray[key])
+                    else:
+                        variance = pow(per_diff, -1) / len(freqArray[key])
 
     ear.stream_reader.terminate()
 

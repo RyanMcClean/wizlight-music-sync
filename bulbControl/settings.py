@@ -143,7 +143,7 @@ LOGGING = {
         "django-file": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            "filename": "./test_logs/django_debug.log",
+            "filename": "./django_debug.log",
             "formatter": "verbose",
         },
         "django-stream": {
@@ -154,7 +154,7 @@ LOGGING = {
         "app-file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": "./test_logs/bulb_control_debug.log",
+            "filename": "./bulb_control_debug.log",
             "formatter": "verbose",
         },
         "app-stream": {
