@@ -33,11 +33,7 @@ jobs:
                   python -m pip install --upgrade pip
                   cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install || true 
                   playwright install
-            - name: Git Submodule Update
-              id: submodules
-              run: |
-                  git submodule init
-                  git submodule update
+            - uses: snickerbockers/submodules-init@v4
             - name: Run Migrations
               id: run_migrations
               run: |
