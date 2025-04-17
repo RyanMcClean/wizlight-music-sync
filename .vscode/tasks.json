@@ -69,7 +69,7 @@
                 "command": "Foreach ($package in (Get-Content -Path ${workspaceFolder}/requirements.txt)) { if ( !$package.contains('#') -and $package ) { ${workspaceFolder}/env/Scripts/pip.exe install $package }}"
             },
             "linux": {
-                "command": "cat ${workspaceFolder}/requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 ${workspaceFolder}/env/bin/pip3 install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi"
+                "command": "cat ${workspaceFolder}/requirements.txt | grep -Eo '(^[^#]+)' | xargs -n 1 ${workspaceFolder}/env/bin/pip3 install; if [ $? -eq 123 ]; then echo 'Running on linux pyaudiowpatch cannot be installed, do not be alarmed by the error'; fi"
             },
             "dependsOn": "start_venv",
             "presentation": {
@@ -116,10 +116,10 @@
             "label": "create_default_admin",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
+                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/manage.py createsuperuser --noinput --username ryan_mcc --email defaultemail@defaultprovider.com"
             },
             "linux": {
-                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/manage.py createsuperuser --noinput --username ryan_urq --email defaultemail@defaultprovider.com"
+                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/manage.py createsuperuser --noinput --username ryan_mcc --email defaultemail@defaultprovider.com"
             },
             "presentation": {
                 "echo": true,
@@ -128,7 +128,10 @@
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": false
-            }
+            },
+            "problemMatcher": [
+                "$python"
+            ]
         },
         {
             "label": "update_pip",

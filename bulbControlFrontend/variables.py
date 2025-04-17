@@ -17,6 +17,8 @@ except:
     from helpers import NetworkHandler
     from audioTesting import getWorkingDeviceList
 
+ready = False
+
 def init():
     # Global variables
     global client, context, logger, bulbs, ready, musicSync
@@ -59,9 +61,9 @@ def init():
         # bulbs = wizbulb.objects.all()[x]
         # where x is the number of bulb objects returned
         bulbs = wizbulb.objects.all()
-        if bulbs is not None and len(bulbs) > 0 and ready:
+        if len(bulbs) > 0 and ready:
             for x in bulbs:
-                client.update_bulb_objects(x)
+                client.update_bulb_db(x)
                 if x.bulbIp not in [y["bulbIp"] for y in context["bulbs"]]:
                     context["bulbs"].append(x.returnJSON())
                 if x.bulbIp in context["ips"]:
@@ -117,6 +119,8 @@ def init():
         "audioDevices": [],
         "error": False,
         "errorMessage": "No error",
+        "success": False,
+        "successMessage": "No success",
         "musicSync": musicSync,
     }
     logger = setup_logger("Main Logger", "./test_logs/django_server.log", logging.DEBUG)

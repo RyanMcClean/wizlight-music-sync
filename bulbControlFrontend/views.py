@@ -21,7 +21,6 @@ from . import variables
 if not variables.ready:
     variables.init()
 
-
 def index(request) -> HttpResponse:
     """Renders index, this changes depending on the type of request, and the contents of the request
 
@@ -33,6 +32,7 @@ def index(request) -> HttpResponse:
     """
 
     variables.separator()
+
 
     variables.context["numBulbs"] = len(variables.context["bulbs"])
 
@@ -77,7 +77,7 @@ def index(request) -> HttpResponse:
         variables.messageLoud("load home page")
 
         variables.separator()
-        return render(None, "index.html", variables.context)
+        return render(request, "index.html", variables.context)
 
     variables.separator()
     return render(request, "404.html", status=404)
@@ -234,7 +234,7 @@ def activate_music_sync(request) -> JsonResponse:
         except Exception:
             pass
 
-        sleep(15)
+        sleep(30)
         if not audioSyncThread.is_alive():
             variables.musicSync = False
             variables.separator()
@@ -250,7 +250,6 @@ def stop_audio_sync(request) -> JsonResponse:
     variables.messageLoud("Stopping Audio Sync")
     variables.musicSync = False
     return JsonResponse({"result": True})
-
 
 def crud(request) -> HttpResponse:
     """CRUD operations for the bulbs
@@ -269,7 +268,36 @@ def crud(request) -> HttpResponse:
 
         variables.context["ips"] = list(set(variables.context["ips"]))
         variables.separator()
-        return render(None, "bulb_crud.html", variables.context)
+        return render(request, "bulb_crud.html", variables.context)
+
+    variables.separator()
+    return render(request, "404.html", status=404)
+
+def crud_success(request, success) -> HttpResponse:
+    """CRUD operations for the bulbs
+
+    Args:
+        request HttpRequest: HttpRequest object supplied by Django
+
+    Returns:
+        HttpResponse: Renders 404 page if error
+    """
+    variables.separator()
+
+
+    if request.method == "GET":
+        variables.messageLoud("load CRUD page")
+        if success is not None:
+            success = success.replace("_", " ")
+            variables.messageLoud(success)
+            variables.context["success"] = True
+            variables.context["successMessage"] = success
+        else:
+            pass
+
+        variables.context["ips"] = list(set(variables.context["ips"]))
+        variables.separator()
+        return render(request, "bulb_crud.html", variables.context)
 
     variables.separator()
     return render(request, "404.html", status=404)
@@ -281,6 +309,8 @@ def delete_bulb(request, ip):
     try:
         wizbulb.objects.filter(bulbIp=ip).delete()
         variables.context["bulbs"] = [x for x in variables.context["bulbs"] if x["bulbIp"] != ip]
+        variables.context["success"] = True
+        variables.context["successMessage"] = f"Deleted bulb at {ip}"
     except Exception as e:
         print(e)
 
@@ -289,12 +319,45 @@ def delete_bulb(request, ip):
         print(bulb)
 
     variables.separator()
-    return redirect("/crud/")
+    return render(request, "bulb_crud.html", variables.context)
+
+def edit_bulb(request, ip):
+    variables.separator()
+    if request.method == "POST":
+        variables.messageLoud(f"Editing bulb at {ip}")
+        try:
+            form = bulbForm(request.POST)
+            bulb = wizbulb.objects.get(bulbIp=ip)
+            bulb.bulbName = form.data["bulbName"]
+            bulb.bulbIp = form.data["bulbIp"]
+            bulb.full_clean()
+            bulb.save()
+
+            bulbs = wizbulb.objects.all()
+            for bulb in bulbs:
+                print(bulb)
+            variables.context["bulbs"] = []
+            variables.update_bulb_objects()
+
+            variables.separator()
+            return redirect(f"/crud/{form.data['bulbName']}_edited_successfully")
+    
+        except Exception as e:
+            print(e)
+            variables.context["error"] = True
+            variables.context["errorMessage"] = "There was an error editing the bulb"
+            variables.separator()
+            return redirect(f"/crud/{form.data['bulbName']}_editing_failed")
 
 
 def clear_error(request) -> JsonResponse:
     variables.context["error"] = False
     variables.context["errorMessage"] = ""
+    return JsonResponse({"result": True})
+
+def clear_success(request) -> JsonResponse:
+    variables.context["success"] = False
+    variables.context["successMessage"] = ""
     return JsonResponse({"result": True})
 
 def faqs(request) -> HttpResponse:

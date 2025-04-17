@@ -97,7 +97,7 @@ class NetworkHandler:
             case _:
                 raise ValueError("Input value for packet is not valid")
 
-    def update_bulb_objects(self, wizObj) -> None:
+    def update_bulb_db(self, wizObj) -> None:
         """Queries bulb to update the model in the db
 
         Args:

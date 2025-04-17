@@ -1,29 +1,86 @@
-{% extends "master.html" %} {% load static %} {% block title %}Bulb Bop{% endblock %} {% block content %}
+{% extends "master.html" %} {% load static %} {% load sanatise_title %} {% block title %}Bulb Bop{% endblock %} {% block content %}
 <div class="container-fluid">
     <table class="table table-striped table-hover table-bordered">
         <caption>Table of saved bulbs</caption>
         <thead>
             <tr>
-                <th scope="col">Bulb Name</th>
-                <th scope="col">Bulb Ip</th>
-                <th scope="col">Bulb State</th>
-                <th scope="col" colspan="2">Actions</th>
+                <th scope="col fs-1">Bulb Name</th>
+                <th scope="col fs-1">Bulb Ip</th>
+                <th scope="col fs-1">Bulb State</th>
+                <th scope="col fs-1" colspan="2">Actions</th>
             </tr>
         </thead>
         {% for x in bulbs %}
         <tbody>
             <tr>
-                <td>{{ x.bulbName }}</td>
-                <td>{{ x.bulbIp }}</td>
-                <td>{{ x.bulbState }}</td>
-                <td id="edit-bulb-link">Edit</td>
+                <td class="fs-1">{{ x.bulbName }}</td>
+                <td class="fs-1">{{ x.bulbIp }}</td>
+                <td class="fs-1">{{ x.bulbState }}</td>
+                <td id="edit-bulb-link">
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#edit-modal-{{ x.bulbName|sanatise_title }}"
+                        style="height: 100%; width: 100%; padding: 0; border: none; background: none"
+                    >
+                        <div class="container fs-1">Edit</div>
+                    </button>
+                </td>
+                <div id="edit-modal-{{ x.bulbName|sanatise_title }}" class="modal fade" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <form action="/edit/{{x.bulbIp}}" method="post">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">{{ x.bulbName }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                <div id="save-spinner-{{ x.bulbName|sanatise_title }}" class="d-flex position-absolute justify-content-center top-30 start-0 end-0 h-auto w-auto" style="visibility: hidden;">
+                                    <div class="spinner-border text-primary" role="status" style="width: 6rem; height: 6rem;">
+                                    </div>
+                                    <span class="position-absolute top-100">Saving...</span>
+                                </div>
+                                <div id="Form-Content-{{ x.bulbName|sanatise_title }}" class="container">
+                                    <p>Edit bulb:</p>
+                                    {% csrf_token %}
+                                    {% for field in regForm %}
+                                    <div class="mb-3">
+                                        <div class="fieldWrapper">
+                                            {% if field.html_name == 'bulbIp' %} {{ field.label_tag }}
+                                            <input class="form-control" type="text" name="{{ field.html_name }}" value="{{ x.bulbIp }}" />
+                                            {% elif field.html_name == 'bulbName' %} {{ field.label_tag }}
+                                            <input class="form-control" type="text" name="{{ field.html_name }}" value="{{ x.bulbName }}" />
+                                            {% else %}
+                                            <input type="hidden" name="{{ field.html_name }}" value="" />
+                                            {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary" id="edit-submit-button-{{ x.bulbName|sanatise_title }}">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <td id="delete-bulb-link">
                     <form action="/delete/{{x.bulbIp}}" method="post">
-                        <div class="container"><button type="submit" style="height: 100%; width: 100%; padding: 0; border: none; background: none">Delete</button></div>
+                        <button type="submit" style="height: 100%; width: 100%; padding: 0; border: none; background: none"><div class="container fs-1">Delete</div></button>
                     </form>
                 </td>
             </tr>
         </tbody>
+        <script>
+            document.getElementById("edit-submit-button-{{ x.bulbName|sanatise_title }}").addEventListener("click", function(){
+                var formContent = document.getElementById("Form-Content-{{ x.bulbName|sanatise_title }}");
+                var spinner = document.getElementById("save-spinner-{{ x.bulbName|sanatise_title }}");
+                formContent.style.visibility = "hidden";
+                spinner.style.visibility = "visible";
+            })
+        </script>
         {% endfor %}
     </table>
 </div>

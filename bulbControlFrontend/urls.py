@@ -1,7 +1,8 @@
-from django.urls import path
-import threading
+from django.urls import path, re_path
 from . import views
-from . import variables
+from django.views.static import serve 
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -12,10 +13,12 @@ urlpatterns = [
     path("activateSync/", views.activate_music_sync, name="music-sync"),
     path("stopSync/", views.stop_audio_sync, name="stop-music-sync"),
     path("crud/", views.crud, name="crud"),
+    path("crud/<str:success>", views.crud_success, name="crud_success"),
     path("delete/<str:ip>", views.delete_bulb, name="delete"),
     path("clearError/", views.clear_error, name="clear-error"),
+    path("clearSuccess/", views.clear_success, name="clear-success"),
     path("faq/", views.faqs, name="faq"),
     path("about/", views.about, name="about"),
-]
-
-threading.Thread(target=variables.update_bulb_objects).start()
+    path("edit/<str:ip>", views.edit_bulb, name="edit"),
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT})
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

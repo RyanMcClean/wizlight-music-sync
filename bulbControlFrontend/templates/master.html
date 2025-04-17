@@ -19,8 +19,10 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"
     ></script>
+    <!-- local stylesheet -->
     <link rel="stylesheet" href="{% static 'main.css' %}" />
-    <script type="text/javascript" src="{% static 'js/imageHandler.js' %}"></script>
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'js/generic.js' %}"></script>
     <head>
         <script src="https://kit.fontawesome.com/96ce0bc79a.js" crossorigin="anonymous"></script>
@@ -32,106 +34,181 @@
         {{ errorMessage | json_script:"errorMessage" }} {{ error | json_script:"error"}}
 
         <!-- This is the navigation bar that will be used on all pages -->
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <div class="container-fluid flex-grow-0">
-                    <!-- This is the logo that will be used on all pages -->
-                    <a id="main-title" class="navbar-brand fs-1 fw-bolder ms-5" href="/">Bulb Bop</a>
-                    <button
-                        class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
+        <nav class="navbar navbar-expand-xxl bg-body-tertiary justify-content-around">
+            <div class="d-flex flex-sm-grow-1" style="max-width: 500px">
+                <!-- This is the logo that will be used on all pages -->
+                <a id="main-title" class="navbar-brand fs-1 fw-bolder ms-5 w-50" href="/"><big>Bulb Bop</big></a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <!--<div class="collapse container-fluid navbar-collapse" id="navbarSupportedContent">-->
+            <ul class="navbar-nav mb-2 mx-1 align-items-center">
+                <li class="nav-item">
+                    <!-- Home link -->
+                    <a
+                        id="home-link"
+                        class="nav-link {% if request.get_full_path == '/' or request.get_full_path == '/discover/' %} active {% endif %} fs-2 fw-bold text-center"
+                        aria-current="page"
+                        href="/"
                     >
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
-                <div class="collapse container navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-1 align-items-center justify-content-center">
-                        <li class="nav-item">
-                            <!-- Home link -->
-                            <a id="home-link" class="nav-link active fs-4 fw-bold text-center" aria-current="page" href="/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <!-- FAQ link -->
-                            <a id="faq-link" class="nav-link fs-4 fw-bold text-center" href="/faq">FAQs</a>
-                        </li>
-                        <li class="nav-item">
-                            <!-- About link -->
-                            <a id="about-link" class="nav-link fs-4 fw-bold text-center" href="/about">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <!-- Edit bulbs link -->
-                            <a id="crud-link" class="nav-link fs-4 fw-bold text-center" href="/crud">
-                                Edit
-                                <br />
-                                Bulbs
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a
-                                id="find-bulbs-button"
-                                class="btn {% if ips|length < 1 %} btn-outline-primary {% else %} btn-primary {% endif %} fw-bolder text-center align-items-center justify-contents-center"
-                                role="button"
-                                title="Find Bulbs"
-                                href="/discover"
-                            >
-                                Find
-                                <br />
-                                Bulbs
-                            </a>
-                        </li>
-                    </ul>
-                    {% if numBulbs > 0 %}
-                    <form class="d-flex justify-content-end" id="audio-sync-form" action="javascript:audioSync(this)" method="post">
-                        <select class="form-select me-2" name="audio_device" id="audio_device_selector" title="Pick an audio device from the list">
-                            <option selected>Select an audio device</option>
-                            {% for device in audioDevices %}
-                            <option class="generic-button" value="{{ device.num }}">{{ device.name }}</option>
-                            {% endfor %}
-                        </select>
-                        <button type="submit" class="btn btn-sm btn-outline-danger" id="activate-music-sync-button">Activate music sync</button>
-                    </form>
-                    {% endif %}
-                </div>
-                <div class="d-flex justify-content-end">
-                    <i class="fa-solid fa-circle-half-stroke fs-1" onclick="toggleTheme()"></i>
-                </div>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <!-- FAQ link -->
+                    <a
+                        id="faq-link"
+                        class="nav-link fs-2 {% if request.get_full_path == '/faq/' %} active {% endif %} fw-bold text-center"
+                        href="/faq"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="Frequently Asked Questions"
+                    >
+                        FAQs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <!-- About link -->
+                    <a
+                        id="about-link"
+                        class="nav-link fs-2 fw-bold text-center {% if request.get_full_path == '/about/' %} active {% endif %}"
+                        href="/about"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="About the system, and the author"
+                    >
+                        About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <!-- Edit bulbs link -->
+                    <a
+                        id="crud-link"
+                        class="nav-link fs-2 fw-bold text-center {% if request.get_full_path == '/crud/' %} active {% endif %}"
+                        href="/crud"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="Page to edit bulb names and ip addresses"
+                    >
+                        Edit
+                        <br />
+                        Bulbs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <!-- Find bulbs link -->
+                    <a
+                        id="find-bulbs-button"
+                        class="btn {% if request.get_full_path == '/discover/' %} btn-primary {% elif ips|length < 1 %} btn-outline-primary {% else %} btn-primary {% endif %} fw-bolder text-center align-items-center justify-contents-center fs-2"
+                        role="button"
+                        title="Find Bulbs"
+                        href="/discover"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-title="Discover bulbs connected to the local network"
+                    >
+                        Find
+                        <br />
+                        Bulbs
+                    </a>
+                </li>
+            </ul>
+            {% if numBulbs > 0 %}
+            <form class="container align-items-center justify-content-end" id="audio-sync-form" action="javascript:audioSync(this)" method="post" style="max-width: 500px">
+                <!-- Selector for which audio device to use to sync bulbs with -->
+                <select
+                    class="form-select select-lg me-2 fs-3 w-25"
+                    name="audio_device"
+                    id="audio_device_selector"
+                    title="Pick an audio device from the list"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="Select an audio device for the bulbs to sync with (Some devices can be flaky, feel free to try more than one)"
+                >
+                    <option selected>Select an audio device</option>
+                    {% for device in audioDevices %}
+                    <option class="generic-button" value="{{ device.num }}">{{ device.name }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Submit button to start audio sync -->
+                <button
+                    type="submit"
+                    class="btn btn-sm btn-outline-danger fs-2"
+                    id="activate-music-sync-button"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="Activate the sync of music and bulbs"
+                >
+                    Activate music sync
+                </button>
+            </form>
+            {% endif %}
+            <!--</div>-->
+            <!-- toggle light/dark mode -->
+            <div class="d-flex justify-content-end">
+                <i class="fa-solid fa-circle-half-stroke fs-1" onclick="toggleTheme()" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Toggle light/dark mode"></i>
             </div>
         </nav>
 
-        <!-- This is the modal that will be used to display error messages -->
-        <div id="error-wrapper" class="modal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Error</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                            {% if error %}{{ errorMessage }}
-                            <script>
-                                var errorModal = new bootstrap.Modal(document.getElementById('error-wrapper'));
-                                errorModal.show();
-                            </script>
-                            {% endif %}
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    </div>
+        <div
+            aria-live="polite"
+            aria-atomic="true"
+            class="toast-container justify-content-center align-items-center position-absolute bottom-0 end-0 w-auto"
+            style="z-index: 11; transform: translate(-25px, -25px)"
+        >
+            <!-- This is the modal that will be used to display success messages -->
+            <div class="toast align-items-center text-bg-success border-5 border-success fs-2 fw-bold" id="success-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                <div class="d-flex">
+                    <div class="toast-body">{{ successMessage }}</div>
+                    <button type="button" id="success-close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
             </div>
-        </div>
+            {% if success %}
+            <script>
+                window.onload = function () {
+                    var toastEl = document.getElementById('success-toast');
+                    var toast = new bootstrap.Toast(toastEl, { delay: 10000 });
+                    toast.show();
+                };
+            </script>
+            {% endif %}
 
+            <!-- This is the modal that will be used to display error messages -->
+            <div class="toast align-items-center text-bg-danger border-5 border-danger fs-2 fw-bold" id="error-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+                <div class="d-flex">
+                    <div class="toast-body" id="errorMessage">{{ errorMessage }}</div>
+                    <button type="button" id="error-close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+            {% if error %}
+            <script>
+                window.onload = function () {
+                    var toastEl = document.getElementById('error-toast');
+                    var toast = new bootstrap.Toast(toastEl, { delay: 10000 });
+                    toast.show();
+                };
+            </script>
+            {% endif %}
+        </div>
         {% block content %}{% endblock %}
     </body>
     <!-- basic footer for all pages. css ensures that this remains at the bottom of the page -->
     <footer>
-        <p>2023-24 : Bulb Bop : Ryan McClean : 4009912</p>
+        <p>2023-24 : Bulb Bop : Ryan McClean : 40099112</p>
     </footer>
+    <script>
+        clear_message();
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
+    {% csrf_token %}
 </html>
