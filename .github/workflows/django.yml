@@ -21,7 +21,10 @@ jobs:
                 os: [ubutnu-latest, windows-latest]
 
         steps:
-            - uses: actions/checkout@v4
+            - name: Checkout repo and submodules
+              uses: actions/checkout@v4
+              with:
+                  submodules: recursive
             - name: Set up Python ${{ matrix.python-version }}
               uses: actions/setup-python@v3
               with:
@@ -33,7 +36,6 @@ jobs:
                   python -m pip install --upgrade pip
                   cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install || true 
                   playwright install
-            - uses: snickerbockers/submodules-init@v4
             - name: Run Migrations
               id: run_migrations
               run: |
