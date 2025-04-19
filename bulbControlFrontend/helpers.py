@@ -16,6 +16,7 @@ class NetworkHandler:
             "turn_off": b'{"id":1,"method":"setState","params":{"state":false}}',
             "turn_to_half": b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":10}}',
             "turn_to_full": b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":100}}',
+            # Registration is not currently used, but can be used in future development
             "registration": b'{"method":"registration","params":{"phoneMac":"AAAAAAAAAAAA","register":false,"phoneIp":"1.2.3.4","id":"1"}}',
         }
         self.port = 38899
@@ -115,6 +116,7 @@ class NetworkHandler:
         except IndexError:
             print("Unable to update bulb, using last known state")
 
+    # turn_to_color is not used in the current implementation, but is left here for future development
     def turn_to_color(self, r=0, g=0, b=0, brightness=0) -> bytes:
         """Returns bytes packet to turn Wizbulb to specific colour
 
