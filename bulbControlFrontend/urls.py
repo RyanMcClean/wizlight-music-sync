@@ -29,6 +29,6 @@ urlpatterns = [
     path("activateSync/", views.activate_music_sync, name="music-sync"),
     path("stopSync/", views.stop_audio_sync, name="stop-music-sync"),
 
-
+    # This allows for serving of static files when DEBUG is False (i.e. in production)
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT})
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
