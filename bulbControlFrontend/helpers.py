@@ -53,7 +53,7 @@ class NetworkHandler:
                         message["ip"] = recv_ip
                         if message not in messages:
                             messages.append(message)
-                        m, rev_ip = self.receive_message()
+                        m, recv_ip = self.receive_message()
                 except TimeoutError:
                     pass
                 except gaierror as e:
