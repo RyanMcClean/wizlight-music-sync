@@ -7,43 +7,50 @@
 <script>
     window.setInterval(backgroundUpdate, 1000);
 </script>
-
-{% for x in bulbs %}
-<div class="bulb-container container-fluid text-center">
-    <p class="fs-3 fw-bold">{{ x.bulbName }}</p>
-    <div class="bulb-icon fs-1">
-        <i name="{{ x.bulbName }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x.bulbIp }}"></i>
+<div class="row row-cols-2 justify-content-center">
+    {% for x in bulbs %}
+    <div class="bulb-container container-fluid text-center col rounded-4 border p-5 m-5 w-25">
+        <p class="fs-3 fw-bold pt-5">{{ x.bulbName }}</p>
+        <div class="bulb-icon fs-1 pb-5 mb-5" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Click the bulb icon to toggle its state">
+            <i name="{{ x.bulbName }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x.bulbIp }}"></i>
+        </div>
     </div>
-</div>
-{% endfor %}
-<br />
-<br />
-<div class="container-fluid text-center align-items-center" id="discovered-bulbs-container">
-    {% for x in ips %}
-    <h1 class="display-1 fw-bolder"><i name="{{ x }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x }}"></i></h1>
-    <br />
-    <p class="fs-2 fw-bold">Toggle bulb</p>
-    <br />
-    <div class="bulb-registration container text-center">
-        <form class="bulb-registration-form" action="/" method="post">
-            {% csrf_token %} {% for field in regForm %} {% if field.html_name == 'bulbIp' %}
-            <div class="form-group">
-                <input class="form-control" type="hidden" name="{{ field.html_name }}" value="{{ x }}" />
-            </div>
-            {% elif field.html_name == 'bulbName' %} {{ field.errors }}
-            <label class="fs-2">{{ field.label_tag }}</label>
-            {{ field }}
-            <br />
-            <br />
-            {% else %}
-            <input type="hidden" name="{{ field.html_name }}" value="" />
-            {% endif %} {% endfor %}
-            <input class="generic-button" type="submit" value="save" />
-            <br />
-            <br />
-        </form>
+    {% empty %}
+    <div class="bulb-container container-fluid text-center col rounded-4 border p-5 m-5 w-50" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="If you're stuck have a look at the FAQ page">
+        <p class="fs-3 fw-bold pt-5">No bulb(s) yet ...</p>
+        <p class="fs-3 fw-bold pt-5">Connect your bulb(s) to the local network, then click 'Find Bulbs' to get started</p>
+        </div>
+        {% endfor %}
     </div>
+    <br />
+    <br />
+    <div class="container-fluid text-center align-items-center" id="discovered-bulbs-container">
+        {% for x in ips %}
+        <h1 class="display-1 fw-bolder"><i name="{{ x }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x }}"></i></h1>
+        <br />
+        <p class="fs-2 fw-bold">Toggle bulb</p>
+        <br />
+        <div class="bulb-registration container text-center">
+            <form class="bulb-registration-form" action="/" method="post">
+                {% csrf_token %} {% for field in regForm %} {% if field.html_name == 'bulbIp' %}
+                <div class="form-group">
+                    <input class="form-control" type="hidden" name="{{ field.html_name }}" value="{{ x }}" />
+                </div>
+                {% elif field.html_name == 'bulbName' %} {{ field.errors }}
+                <label class="fs-2">{{ field.label_tag }}</label>
+                {{ field }}
+                <br />
+                <br />
+                {% else %}
+                <input type="hidden" name="{{ field.html_name }}" value="" />
+                {% endif %} {% endfor %}
+                <input class="generic-button" type="submit" value="save" />
+                <br />
+                <br />
+            </form>
+        </div>
 
-    {% endfor %}
+        {% endfor %}
+    </div>
+    {% endblock %}
 </div>
-{% endblock %}

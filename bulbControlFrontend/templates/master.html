@@ -34,25 +34,24 @@
         {{ errorMessage | json_script:"errorMessage" }} {{ error | json_script:"error"}}
 
         <!-- This is the navigation bar that will be used on all pages -->
-        <nav class="navbar navbar-expand-xxl bg-body-tertiary justify-content-around">
-            <div class="d-flex flex-sm-grow-1" style="max-width: 500px">
-                <!-- This is the logo that will be used on all pages -->
-                <a id="main-title" class="navbar-brand fs-1 fw-bolder ms-5 w-50" href="/"><big>Bulb Bop</big></a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
+        <nav class="navbar navbar-expand-xxl bg-body-tertiary justify-content-center pb-5" style="min-height: 130px">
+            <!-- This is the logo that will be used on all pages -->
+            <a id="main-title" class="navbar-brand fs-1 fw-bolder ms-5 pb-5 w-50 position-absolute top-0 start-0 w-auto" href="/" style="transform: translate(25px, 25px)"><big>Bulb Bop</big></a>
+            <button
+                class="navbar-toggler position-absolute top-0 start-50"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                style="transform: translate(-130px, 40px)"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <!--<div class="collapse container-fluid navbar-collapse" id="navbarSupportedContent">-->
-            <ul class="navbar-nav mb-2 mx-1 align-items-center">
-                <li class="nav-item">
+            <ul class="navbar-nav mb-2 mx-1 align-items-center collapse navbar-collapse justify-content-center" id="navbarSupportedContent" style="min-height: 130px">
+                <li class="nav-item px-3">
                     <!-- Home link -->
                     <a
                         id="home-link"
@@ -63,7 +62,7 @@
                         Home
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item px-3">
                     <!-- FAQ link -->
                     <a
                         id="faq-link"
@@ -76,7 +75,7 @@
                         FAQs
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item px-3">
                     <!-- About link -->
                     <a
                         id="about-link"
@@ -89,7 +88,7 @@
                         About
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item px-3">
                     <!-- Edit bulbs link -->
                     <a
                         id="crud-link"
@@ -104,7 +103,7 @@
                         Bulbs
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item align-items-center px-3">
                     <!-- Find bulbs link -->
                     <a
                         id="find-bulbs-button"
@@ -115,18 +114,31 @@
                         data-bs-toggle="tooltip"
                         data-bs-placement="bottom"
                         data-bs-title="Discover bulbs connected to the local network"
+                        style="position: relative"
                     >
                         Find
                         <br />
                         Bulbs
                     </a>
+                    {% for x in bulbs %} {% empty %} {% if request.get_full_path != '/discover/' %}
+                    <h1 class="fs-1 position-absolute" style="transform: translate(40px, 25px)">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        Start here
+                    </h1>
+                    {% endif %} {% endfor %}
                 </li>
             </ul>
             {% if numBulbs > 0 %}
-            <form class="container align-items-center justify-content-end" id="audio-sync-form" action="javascript:audioSync(this)" method="post" style="max-width: 500px">
+            <form
+                class="container align-items-center justify-content-end position-absolute top-0 end-0 pe-5 me-2 pt-1"
+                id="audio-sync-form"
+                action="javascript:audioSync(this)"
+                method="post"
+                style="max-width: 500px; transform: translate(-20px, 0px)"
+            >
                 <!-- Selector for which audio device to use to sync bulbs with -->
                 <select
-                    class="form-select select-lg me-2 fs-3 w-25"
+                    class="form-select select-lg me-2 fs-5 w-50 start-0"
                     name="audio_device"
                     id="audio_device_selector"
                     title="Pick an audio device from the list"
@@ -142,20 +154,28 @@
                 <!-- Submit button to start audio sync -->
                 <button
                     type="submit"
-                    class="btn btn-sm btn-outline-danger fs-2"
+                    class="btn btn-sm btn-outline-danger fs-3 w-auto mb-2"
                     id="activate-music-sync-button"
                     data-bs-toggle="tooltip"
                     data-bs-placement="bottom"
                     data-bs-title="Activate the sync of music and bulbs"
                 >
-                    Activate music sync
+                    <p>Activate</p>
+                    <p>music sync</p>
                 </button>
             </form>
             {% endif %}
             <!--</div>-->
             <!-- toggle light/dark mode -->
             <div class="d-flex justify-content-end">
-                <i class="fa-solid fa-circle-half-stroke fs-1" onclick="toggleTheme()" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Toggle light/dark mode"></i>
+                <i
+                    class="fa-solid fa-circle-half-stroke fs-1 position-absolute top-0 end-0"
+                    onclick="toggleTheme()"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="Toggle light/dark mode"
+                    style="transform: translate(-25px, 40px)"
+                ></i>
             </div>
         </nav>
 
@@ -200,11 +220,12 @@
             {% endif %}
         </div>
         {% block content %}{% endblock %}
+        <footer class="absolute-position start-0 bottom-0">
+            <p>2023-25 : Bulb Bop : Ryan McClean : 40099112</p>
+        </footer>
     </body>
     <!-- basic footer for all pages. css ensures that this remains at the bottom of the page -->
-    <footer>
-        <p>2023-24 : Bulb Bop : Ryan McClean : 40099112</p>
-    </footer>
+
     <script>
         clear_message();
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
