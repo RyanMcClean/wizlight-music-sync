@@ -2,7 +2,7 @@
 Defines a series of views and actions to be taken on requests to the API
 """
 
-__author__ = "Ryan McClean"
+__author__ = "Ryan Urquhart"
 __contact__ = "https://github.com/RyanMcClean"
 
 from time import sleep

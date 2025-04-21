@@ -1,6 +1,6 @@
 """DESCRIPTION"""
 
-__author__ = "Ryan McClean"
+__author__ = "Ryan Urquhart"
 __contact__ = "https://github.com/RyanMcClean"
 
 import json

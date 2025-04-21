@@ -1,6 +1,6 @@
 /**
  *
- * @author Ryan McClean
+ * @author Ryan Urquhart
  * @contact https://github.com/RyanMcClean
  */
 
