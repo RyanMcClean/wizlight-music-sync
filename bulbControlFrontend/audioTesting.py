@@ -128,6 +128,7 @@ def main(device=None):
     tempMid = []
     tempHigh = []
 
+    # Get the initial values for the low, mid and high frequencies
     for x in range(bufferSize):
         fftx, fft, freqBins, freqAmp = ear.get_audio_features()
         low = 0
@@ -152,11 +153,13 @@ def main(device=None):
     for key in list(freqArray.keys()):
         freqArray[str(key) + "_avg"] = max(freqArray[key])
 
+    # Set initial values for variance, this will be changed by the equations later
     variance = 1
     while variables.musicSync:
         for num in range(bufferSize):
             fftx, fft, freqBins, freqAmp = ear.get_audio_features()
             for i, x in enumerate(freqBins):
+                # the 'else 1' is to prevent division by zero errors
                 if x.item() < 50:
                     freqArray["lowArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
                 elif x.item() < 100:
