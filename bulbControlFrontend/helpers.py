@@ -1,6 +1,6 @@
 """Helpers file, has functions that are used by other files"""
 
-__author__ = "Ryan McClean"
+__author__ = "Ryan Urquhart"
 __contact__ = "https://github.com/RyanMcClean"
 
 from socket import socket, AF_INET, SOCK_DGRAM, SO_BROADCAST, SOL_SOCKET, gaierror

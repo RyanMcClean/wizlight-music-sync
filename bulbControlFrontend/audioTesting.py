@@ -2,7 +2,7 @@
 being played through the specified audio device
 """
 
-__author__ = "Ryan McClean"
+__author__ = "Ryan Urquhart"
 __contact__ = "https://github.com/RyanMcClean"
 
 try:
