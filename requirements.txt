@@ -6,7 +6,7 @@ requests
 # Audio processing dependencies
 numpy
 sounddevice
-PyAudio == 0.2.12
+PyAudio == 0.2.14
 PyAudioWPatch
 scipy
 # Testing dependencies
