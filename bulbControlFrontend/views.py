@@ -65,6 +65,8 @@ def index(request) -> HttpResponse:
             variables.context["bulbs"].append(model.returnJSON())
             variables.context["numBulbs"] = len(variables.context["bulbs"])
             variables.context["ips"].remove(model.bulbIp)
+            variables.context["success"] = True
+            variables.context["successMessage"] = f"Bulb {model.bulbName} added successfully"
         else:
             variables.messageLoud("There is an error in the submitted form", "error")
             variables.context["error"] = True
