@@ -8,8 +8,10 @@ import json
 import os
 
 
+# This class is used to send and receive UDP packets to WizBulbs
 class NetworkHandler:
     def __init__(self):
+        # These are the packets defining specific functions for the bulbs
         self.bulbPackets = {
             "discover": b'{"method":"getPilot","params":{}}',
             "turn_on": b'{"id":1,"method":"setState","params":{"state":true}}',
@@ -23,7 +25,16 @@ class NetworkHandler:
         self.clientSender = socket(AF_INET, SOCK_DGRAM)
         self.clientSender.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
-    def sender(self, ip=None, packet="", timeout=2.5, attempts=3, color_params={}, expected_results=0) -> list:
+    # Used to send the packets to the bulbs, only sends UDP packets
+    def sender(
+        self,
+        ip=None,
+        packet="",
+        timeout=2.5,
+        attempts=3,
+        color_params={},
+        expected_results=0,
+    ) -> list:
         """Sends UDP packet to local ip address
 
         Args:
@@ -47,7 +58,11 @@ class NetworkHandler:
                     while m in list(self.bulbPackets.values()):
                         m, revc_ip = self.receive_message()
                     while m is not None:
-                        if "result" in m.keys() and "success" in m["result"].keys() and m["result"]["success"]:
+                        if (
+                            "result" in m.keys()
+                            and "success" in m["result"].keys()
+                            and m["result"]["success"]
+                        ):
                             continue_loop = False
                         message = m
                         message["ip"] = recv_ip
@@ -59,7 +74,9 @@ class NetworkHandler:
                 except gaierror as e:
                     print(e)
                     print(ip)
-                if not continue_loop or (expected_results == 0 or len(messages) >= expected_results):
+                if not continue_loop or (
+                    expected_results == 0 or len(messages) >= expected_results
+                ):
                     break
         except TimeoutError:
             print(f"Bulb query has timed out, {len(messages)} bulbs responded")
@@ -71,12 +88,14 @@ class NetworkHandler:
             print(e)
         return messages
 
+    # Listener for the UDP packets, used to receive messages from the bulbs
     def receive_message(self):
         data, ip = self.clientSender.recvfrom(516)
         data = json.loads(data.decode("utf-8"))
         ip = ip[0]
         return data, ip
 
+    # This matches the given string to the correct packet to send to the bulb
     def _match_packet(
         self,
         packet,
@@ -89,7 +108,10 @@ class NetworkHandler:
                 return self.bulbPackets[packet]
             case "turn_to_color":
                 return self.turn_to_color(
-                    color_params["r"], color_params["g"], color_params["b"], color_params["brightness"]
+                    color_params["r"],
+                    color_params["g"],
+                    color_params["b"],
+                    color_params["brightness"],
                 )
             case "turn_to_full":
                 return self.bulbPackets["turn_to_full"]
@@ -98,6 +120,7 @@ class NetworkHandler:
             case _:
                 raise ValueError("Input value for packet is not valid")
 
+    # Helper to update bulb in the database
     def update_bulb_db(self, wizObj) -> None:
         """Queries bulb to update the model in the db
 
@@ -130,6 +153,7 @@ class NetworkHandler:
             bytes: _description_
         """
         return bytes(
-            '{"id":1,"method":"setState","params":{"r": %d, "g": %d, "b": %d, "dimming": %d}}' % (r, g, b, brightness),
+            '{"id":1,"method":"setState","params":{"r": %d, "g": %d, "b": %d, "dimming": %d}}'
+            % (r, g, b, brightness),
             encoding="utf-8",
         )

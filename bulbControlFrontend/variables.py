@@ -6,6 +6,7 @@ __contact__ = "https://github.com/RyanMcClean"
 import json
 import os
 import logging
+
 try:
     from .models import wizbulb
     from .forms import bulbForm
@@ -19,6 +20,7 @@ except:
 
 ready = False
 
+
 def init():
     # Global variables
     global client, context, logger, bulbs, ready, musicSync
@@ -26,8 +28,6 @@ def init():
     global separator, messageLoud, messageQuiet, update_bulb_objects, setup_logger, update_working_audio_devices
     # Global classes
     global color
-
-
 
     ready = False
     musicSync = False
@@ -132,6 +132,8 @@ def init():
             for device in devices:
                 if device not in context["audioDevices"]:
                     context["audioDevices"].append(device)
-        context["audioDevices"] = [dict(x) for x in {tuple(y.items()) for y in context["audioDevices"]}]
+        context["audioDevices"] = [
+            dict(x) for x in {tuple(y.items()) for y in context["audioDevices"]}
+        ]
 
     ready = True

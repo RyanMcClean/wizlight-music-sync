@@ -5,6 +5,7 @@ from test_helper import formatter
 
 LOGGER = logging.getLogger(__name__)
 
+
 class ModelFunctionTests(TestCase):
 
     @classmethod
@@ -29,10 +30,13 @@ class ModelFunctionTests(TestCase):
             LOGGER.removeHandler(hdlr)
         LOGGER.addHandler(log_handler)
         try:
-            self.assertRegex(str(self.bulb), f"^Bulb Ip: {self.bulb.bulbIp}\\nBulb Name: " +
-                            f"{self.bulb.bulbName}\\nBulb State: {self.bulb.bulbState}\\nBulb Red: " +
-                            f"{self.bulb.bulbRed}\\nBulb Green {self.bulb.bulbGreen}\\nBulb Blue: " +
-                            f"{self.bulb.bulbBlue}\\nBulb Temp: {self.bulb.bulbTemp}\\n$")
+            self.assertRegex(
+                str(self.bulb),
+                f"^Bulb Ip: {self.bulb.bulbIp}\\nBulb Name: "
+                + f"{self.bulb.bulbName}\\nBulb State: {self.bulb.bulbState}\\nBulb Red: "
+                + f"{self.bulb.bulbRed}\\nBulb Green {self.bulb.bulbGreen}\\nBulb Blue: "
+                + f"{self.bulb.bulbBlue}\\nBulb Temp: {self.bulb.bulbTemp}\\n$",
+            )
             LOGGER.debug("String representation of wizbulb is correct")
         except Exception as e:
             LOGGER.error("An error occurred in test_str_method: %s", e)

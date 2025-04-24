@@ -21,6 +21,7 @@ from . import variables
 if not variables.ready:
     variables.init()
 
+
 def index(request) -> HttpResponse:
     """Renders index, this changes depending on the type of request, and the contents of the request
 
@@ -32,7 +33,6 @@ def index(request) -> HttpResponse:
     """
 
     variables.separator()
-
 
     variables.context["numBulbs"] = len(variables.context["bulbs"])
 
@@ -133,7 +133,11 @@ def toggle_bulb(request) -> JsonResponse | HttpResponse:
     if request.method == "POST":
         # Flicker specific bulb
         if "ip" in request.POST.keys() or "ip" in request.body.decode("utf-8"):
-            ip = request.POST["ip"] if "ip" in request.POST.keys() else json.loads(request.body.decode("utf-8"))["ip"]
+            ip = (
+                request.POST["ip"]
+                if "ip" in request.POST.keys()
+                else json.loads(request.body.decode("utf-8"))["ip"]
+            )
             variables.messageLoud(f"Toggling bulb at: {ip}")
             m = variables.client.sender(ip, "discover", 0.5, 5)
             if len(m) > 0 and "result" in m[0].keys():
@@ -204,7 +208,12 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
             m = variables.client.sender(
                 ip,
                 packet="turn_to_color",
-                color_params={"r": int(body["r"]), "g": int(body["g"]), "b": int(body["b"]), "brightness": 255},
+                color_params={
+                    "r": int(body["r"]),
+                    "g": int(body["g"]),
+                    "b": int(body["b"]),
+                    "brightness": 255,
+                },
             )
             if len(m) > 0:
                 m = m[0]["result"]
@@ -229,7 +238,9 @@ def activate_music_sync(request) -> JsonResponse:
 
     if request.body.decode("utf-8").isdigit():
         variables.messageLoud(int(request.body.decode("utf-8")))
-        audioSyncThread = threading.Thread(target=audioSync, args=[int(request.body.decode("utf-8"))], daemon=True)
+        audioSyncThread = threading.Thread(
+            target=audioSync, args=[int(request.body.decode("utf-8"))], daemon=True
+        )
         try:
             variables.musicSync = True
             audioSyncThread.start()
@@ -242,7 +253,7 @@ def activate_music_sync(request) -> JsonResponse:
             variables.musicSync = False
             variables.separator()
 
-    if not variables.musicSync: 
+    if not variables.musicSync:
         variables.messageLoud("Audio Sync did not start", "error")
     variables.separator()
     return JsonResponse({"result": variables.musicSync})
@@ -253,6 +264,7 @@ def stop_audio_sync(request) -> JsonResponse:
     variables.messageLoud("Stopping Audio Sync")
     variables.musicSync = False
     return JsonResponse({"result": True})
+
 
 def crud(request) -> HttpResponse:
     """CRUD operations for the bulbs
@@ -265,7 +277,6 @@ def crud(request) -> HttpResponse:
     """
     variables.separator()
 
-
     if request.method == "GET":
         variables.messageLoud("load CRUD page")
 
@@ -275,6 +286,7 @@ def crud(request) -> HttpResponse:
 
     variables.separator()
     return render(request, "404.html", status=404)
+
 
 def delete_bulb(request, ip):
     variables.separator()
@@ -294,6 +306,7 @@ def delete_bulb(request, ip):
     variables.separator()
     return render(request, "bulb_crud.html", variables.context)
 
+
 def edit_bulb(request, ip):
     variables.separator()
     if request.method == "POST":
@@ -311,7 +324,7 @@ def edit_bulb(request, ip):
 
             variables.context["success"] = True
             variables.context["successMessage"] = f"Successfully edited bulb at {ip}"
-    
+
         except Exception as e:
             print(e)
             variables.context["error"] = True
@@ -326,10 +339,12 @@ def clear_error(request) -> JsonResponse:
     variables.context["errorMessage"] = ""
     return JsonResponse({"result": True})
 
+
 def clear_success(request) -> JsonResponse:
     variables.context["success"] = False
     variables.context["successMessage"] = ""
     return JsonResponse({"result": True})
+
 
 def faqs(request) -> HttpResponse:
     """Renders the FAQ page
@@ -345,6 +360,7 @@ def faqs(request) -> HttpResponse:
         variables.messageLoud("load FAQ page")
         variables.separator()
         return render(request, "faq.html", variables.context)
+
 
 def about(request) -> HttpResponse:
     """Renders the ABOUT page

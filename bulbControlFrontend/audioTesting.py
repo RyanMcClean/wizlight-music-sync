@@ -28,67 +28,73 @@ def getWorkingDeviceList():
         device = pa.get_device_info_by_index(num)
         if valid_low_rate(pa, device["index"]):
             devices.append(
-                {"num": device["index"], "name": device["name"], "maxInputChannels": device["maxInputChannels"]}
+                {
+                    "num": device["index"],
+                    "name": device["name"],
+                    "maxInputChannels": device["maxInputChannels"],
+                }
             )
     pa.terminate()
     return devices
 
+
 def valid_low_rate(pa, device, test_rates=[96000, 48000, 44100, 22050, 11025], test_rate=None):
-        """Set the rate to the lowest supported audio rate."""
-        test_rates.append(test_rate)
-        for testrate in test_rates:
-            if test_device(pa, device, rate=testrate):
-                return True
-        return False
+    """Set the rate to the lowest supported audio rate."""
+    test_rates.append(test_rate)
+    for testrate in test_rates:
+        if test_device(pa, device, rate=testrate):
+            return True
+    return False
+
 
 def test_device(pa, device, rate=None):
-        """given a device ID and a rate, return True/False if it's valid."""
-        try:
-            info = pa.get_device_info_by_index(device)
+    """given a device ID and a rate, return True/False if it's valid."""
+    try:
+        info = pa.get_device_info_by_index(device)
 
-            if not info["maxInputChannels"] > 0:
-                return False
-
-            try:
-                try:
-                    stream = pa.open(
-                        format=pyaudio.paInt16,
-                        channels=1,
-                        input_device_index=device,
-                        frames_per_buffer=1024,
-                        rate=rate,
-                        input=True,
-                    )
-                    time.sleep(1)
-                    stream.stop_stream()
-                    stream.close()
-                except:
-                    stream = pa.open(
-                        format=pyaudio.paInt8,
-                        channels=2,
-                        input_device_index=device,
-                        frames_per_buffer=1024,
-                        rate=rate,
-                        input=True,
-                    )
-                    time.sleep(1)
-                    stream.stop_stream()
-                    stream.close()
-
-            except Exception as err:
-                # print(err)
-                return False
-
-            return True
-        except Exception as e:
-            print("\n\n\n\n")
-            print(e)
-            import traceback
-
-            traceback.print_exc()
-            time.sleep(3)
-            print("\n\n\n\n")
+        if not info["maxInputChannels"] > 0:
             return False
+
+        try:
+            try:
+                stream = pa.open(
+                    format=pyaudio.paInt16,
+                    channels=1,
+                    input_device_index=device,
+                    frames_per_buffer=1024,
+                    rate=rate,
+                    input=True,
+                )
+                time.sleep(1)
+                stream.stop_stream()
+                stream.close()
+            except:
+                stream = pa.open(
+                    format=pyaudio.paInt8,
+                    channels=2,
+                    input_device_index=device,
+                    frames_per_buffer=1024,
+                    rate=rate,
+                    input=True,
+                )
+                time.sleep(1)
+                stream.stop_stream()
+                stream.close()
+
+        except Exception as err:
+            # print(err)
+            return False
+
+        return True
+    except Exception as e:
+        print("\n\n\n\n")
+        print(e)
+        import traceback
+
+        traceback.print_exc()
+        time.sleep(3)
+        print("\n\n\n\n")
+        return False
 
 
 try:
@@ -170,7 +176,9 @@ def main(device=None):
 
             for key in list(freqArray.keys()):
                 if "_avg" not in str(key):
-                    beat_limit = freqArray[str(key) + "_avg"] + (freqArray[str(key) + "_avg"] * variance)
+                    beat_limit = freqArray[str(key) + "_avg"] + (
+                        freqArray[str(key) + "_avg"] * variance
+                    )
                     freq = freqArray[key][num]
                     if freq > beat_limit:
                         variables.messageLoud(key)
