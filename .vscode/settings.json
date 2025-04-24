@@ -1,7 +1,7 @@
 {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "python.analysis.extraPaths": [
-        "./bulbControl/bulbControlFrontend"
+        "./bulb_control_frontend"
     ],
     "djlint.showInstallError": false,
     "[python]": {

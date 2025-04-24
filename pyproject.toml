@@ -1,8 +1,8 @@
 [tool.pytest.ini_options]
 
-DJANGO_SETTINGS_MODULE = "bulbControl.settings"
+DJANGO_SETTINGS_MODULE = "bulb_control.settings"
 
-addopts = "-rP -v -p no:warnings --cov=./bulbControlFrontend --no-cov-on-fail --cov-report=html:test_logs/cov.html -n auto"
+addopts = "-rP -v -p no:warnings --cov=./bulb_control_frontend --no-cov-on-fail --cov-report=html:test_logs/cov.html -n auto"
 
 django_debug_mode = "false"
 
@@ -28,3 +28,6 @@ testpaths = [
 
 [tool.black]
 line-length = 100
+
+[tool.pylint.format]
+max-line-length = 110

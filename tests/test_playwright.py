@@ -1,3 +1,5 @@
+"""Playwright tests to ensure that webpages load correctly, and that navigation works as expected"""
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import sync_playwright, expect
 import os

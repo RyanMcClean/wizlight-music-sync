@@ -1,3 +1,5 @@
+"""Helper functions for testing"""
+
 import logging
 
 formatter = logging.Formatter(

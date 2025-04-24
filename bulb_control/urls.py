@@ -1,5 +1,5 @@
 """
-URL configuration for bulbControl project.
+URL configuration for bulb_control project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -20,5 +20,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("bulbControlFrontend.urls")),
+    path("", include("bulb_control_frontend.urls")),
 ]

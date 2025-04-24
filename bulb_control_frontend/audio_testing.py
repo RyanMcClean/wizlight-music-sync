@@ -20,7 +20,8 @@ except ImportError:
     from Realtime_PyAudio_FFT.stream_analyzer import Stream_Analyzer
 
 
-def getWorkingDeviceList():
+def get_working_device_list():
+    """Get a list of all tested and working audio devices on the system"""
     devices = []
     pa = pyaudio.PyAudio()
     device_count = pa.get_device_count()

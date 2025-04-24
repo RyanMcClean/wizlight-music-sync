@@ -28,10 +28,10 @@
             "label": "Runtime_Setup_Part_1",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/manage.py makemigrations bulbControlFrontend"
+                "command": "${workspaceFolder}/env/Scripts/python.exe ${workspaceFolder}/manage.py makemigrations bulb_control_frontend"
             },
             "linux": {
-                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/manage.py makemigrations bulbControlFrontend"
+                "command": "${workspaceFolder}/env/bin/python3 ${workspaceFolder}/manage.py makemigrations bulb_control_frontend"
             },
             "presentation": {
                 "reveal": "always",

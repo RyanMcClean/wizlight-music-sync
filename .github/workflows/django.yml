@@ -39,7 +39,7 @@ jobs:
             - name: Run Migrations
               id: run_migrations
               run: |
-                  python manage.py makemigrations bulbControlFrontend --noinput 
+                  python manage.py makemigrations bulb_control_frontend --noinput 
                   python manage.py migrate --noinput --run-syncdb
             - name: Run Tests
               id: run_tests

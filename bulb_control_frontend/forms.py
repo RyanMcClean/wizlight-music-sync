@@ -1,3 +1,5 @@
+"""Django form, used for html form submission"""
+
 from django import forms
 from .models import wizbulb
 

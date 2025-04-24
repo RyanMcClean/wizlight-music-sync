@@ -14,7 +14,7 @@ from django.http import JsonResponse, HttpResponse
 
 from .forms import bulbForm
 from .models import wizbulb
-from .audioTesting import main as audioSync
+from .audio_testing import main as audioSync
 from . import variables
 
 

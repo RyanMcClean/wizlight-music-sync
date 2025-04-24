@@ -1,7 +1,8 @@
+"""Test database for integrity, add models directly to database, should pass or fail depending on table restrictions"""
 from random import randint
 import logging, os
 from django.db import IntegrityError
-from bulbControlFrontend.models import wizbulb
+from bulb_control_frontend.models import wizbulb
 from django.test import TestCase
 from random import randint
 from test_helper import formatter
@@ -28,7 +29,7 @@ class DB_Integrity_Tests(TestCase):
         try:
             with self.assertRaisesRegex(
                 IntegrityError,
-                "NOT NULL constraint failed: bulbControlFrontend_wizbulb\.bulbIp",
+                "NOT NULL constraint failed: bulb_control_frontend_wizbulb\.bulbIp",
             ):
                 wizbulb.objects.create()
                 LOGGER.debug("Null object creation failed as expected")
@@ -47,7 +48,7 @@ class DB_Integrity_Tests(TestCase):
         try:
             with self.assertRaisesRegex(
                 IntegrityError,
-                "NOT NULL constraint failed: bulbControlFrontend_wizbulb\.bulbIp",
+                "NOT NULL constraint failed: bulb_control_frontend_wizbulb\.bulbIp",
             ):
                 wizbulb.objects.create(bulbName="Test Bulb")
                 LOGGER.debug("Null IP creation failed as expected")
@@ -66,7 +67,7 @@ class DB_Integrity_Tests(TestCase):
         try:
             with self.assertRaisesRegex(
                 IntegrityError,
-                "NOT NULL constraint failed: bulbControlFrontend_wizbulb\.bulbName",
+                "NOT NULL constraint failed: bulb_control_frontend_wizbulb\.bulbName",
             ):
                 wizbulb.objects.create(bulbIp=".".join(str(randint(1, 254)) for _ in range(4)))
                 LOGGER.debug("Null name creation failed as expected")

@@ -1,4 +1,4 @@
-"""DESCRIPTION"""
+"""A series of variables to be used globally across the system"""
 
 __author__ = "Ryan Urquhart"
 __contact__ = "https://github.com/RyanMcClean"
@@ -11,17 +11,18 @@ try:
     from .models import wizbulb
     from .forms import bulbForm
     from .helpers import NetworkHandler
-    from .audioTesting import getWorkingDeviceList
+    from .audio_testing import get_working_device_list
 except:
     from models import wizbulb
     from forms import bulbForm
     from helpers import NetworkHandler
-    from audioTesting import getWorkingDeviceList
+    from audio_testing import get_working_device_list
 
 ready = False
 
 
 def init():
+    """Initiate the """
     # Global variables
     global client, context, logger, bulbs, ready, musicSync
     # Global functions
@@ -33,12 +34,14 @@ def init():
     musicSync = False
 
     def separator() -> None:
+        """Prints a line of dashes the width of the terminal, or 5 is no width can be found"""
         try:
             print("-" * os.get_terminal_size()[0])
         except OSError:
             print("-" * 5)
 
     def messageLoud(text, type="text"):
+        """Prints a message to the console and logs it to the file"""
         match type:
             case "text":
                 print(str(text))
@@ -53,10 +56,8 @@ def init():
                 logger.error(str(text))
                 exit(1)
 
-    def messageQuiet(*args, **kwargs):
-        pass
-
     def update_bulb_objects():
+        """Updates the bulb objects in the database and the context dictionary"""
         # To add a limit to the returned bulb objects the line would read:
         # bulbs = wizbulb.objects.all()[x]
         # where x is the number of bulb objects returned
@@ -98,6 +99,7 @@ def init():
         return logger
 
     class color:
+        """Used to select a colour for printing to screen"""
         PURPLE = "\033[1;35;48m"
         CYAN = "\033[1;36;48m"
         BOLD = "\033[1;37;48m"
@@ -127,8 +129,9 @@ def init():
     bulbs = wizbulb.objects.all()
 
     def update_working_audio_devices():
+        """Updates context with working tested audio devices from the host machine"""
         if context["numBulbs"] > 0 or len(context["bulbs"]) > 0:
-            devices = getWorkingDeviceList()
+            devices = get_working_device_list()
             for device in devices:
                 if device not in context["audioDevices"]:
                     context["audioDevices"].append(device)

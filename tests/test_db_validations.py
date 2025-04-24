@@ -1,7 +1,9 @@
+"""Unit tests for the wizbulb model to ensure that invalid data is not accepted by the database."""
+
 import string
 from random import randint, choice, getrandbits
 import logging, os
-from bulbControlFrontend.models import wizbulb
+from bulb_control_frontend.models import wizbulb
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from test_helper import formatter

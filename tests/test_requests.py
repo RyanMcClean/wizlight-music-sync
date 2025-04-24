@@ -1,3 +1,5 @@
+"""Unit tests for API requests"""
+
 from django.test import TestCase
 import json
 import logging, os

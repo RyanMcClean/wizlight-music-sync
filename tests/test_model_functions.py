@@ -1,5 +1,7 @@
+"""Unit tests for WizBulb models, tests that their user created functions work as expected."""
+
 from django.test import TestCase
-from bulbControlFrontend.models import wizbulb
+from bulb_control_frontend.models import wizbulb
 import logging, os
 from test_helper import formatter
 
