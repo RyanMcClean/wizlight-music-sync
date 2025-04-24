@@ -1,4 +1,4 @@
-[submodule "bulbControlFrontend/Realtime_PyAudio_FFT"]
-	path = bulbControlFrontend/Realtime_PyAudio_FFT
+[submodule "bulb_control_frontend/Realtime_PyAudio_FFT"]
+	path = bulb_control_frontend/Realtime_PyAudio_FFT
 	url = git@github.com:RyanMcClean/Realtime_PyAudio_FFT.git
 	branch = master

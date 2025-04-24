@@ -35,11 +35,11 @@ jobs:
                   sudo apt install portaudio19-dev
                   python -m pip install --upgrade pip
                   cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install || true 
-                  playwright install
+                  playwright install --with-deps
             - name: Run Migrations
               id: run_migrations
               run: |
-                  python manage.py makemigrations bulbControlFrontend --noinput 
+                  python manage.py makemigrations bulb_control_frontend --noinput 
                   python manage.py migrate --noinput --run-syncdb
             - name: Run Tests
               id: run_tests

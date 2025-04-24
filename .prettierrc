@@ -1,9 +1,8 @@
 {
     "arrowParens": "avoid",
     "bracketSpacing": true,
-    "htmlWhitespaceSensitivity": "css",
+    "bracketSameLine": false,
     "insertPragma": false,
-    "jsxBracketSameLine": false,
     "jsxSingleQuote": true,
     "printWidth": 80,
     "proseWrap": "always",
@@ -14,20 +13,19 @@
     "tabWidth": 4,
     "trailingComma": "all",
     "useTabs": false,
+    "singleAttributePerLine": true,
     "overrides": [
         {
             "files": "**/templates/*html",
             "options": {
                 "printWidth": 200,
-                "htmlWhitespaceSensitivity": "ignore",
-                "tabWidth": 4
+                "htmlWhitespaceSensitivity": "ignore"
             }
         },
         {
             "files": "*.js",
             "options": {
-                "semi": true,
-                "tabWidth": 4
+                "semi": true
             }
         }
     ]
