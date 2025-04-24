@@ -12,10 +12,10 @@
             "label": "Setup Playwright",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}/env/Scripts/python.exe -m playwright install"
+                "command": "${workspaceFolder}/env/Scripts/python.exe -m playwright install --with-deps"
             },
             "linux": {
-                "command": "${workspaceFolder}/env/bin/python3 -m playwright install"
+                "command": "${workspaceFolder}/env/bin/python3 -m playwright install --with-deps"
             },
             "presentation": {
                 "reveal": "always",
