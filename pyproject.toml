@@ -2,7 +2,7 @@
 
 DJANGO_SETTINGS_MODULE = "bulb_control.settings"
 
-addopts = "-rP -v -p no:warnings --cov=./bulb_control_frontend --no-cov-on-fail --cov-report=html:test_logs/cov.html -n auto"
+addopts = "-rP -v -p no:warnings --cov=./bulb_control_frontend --no-cov-on-fail --cov-report=html:test_logs/cov.html -n auto --headed"
 
 django_debug_mode = "false"
 
@@ -31,3 +31,9 @@ line-length = 100
 
 [tool.pylint.format]
 max-line-length = 110
+
+[tool.pylint.main]
+ignore = ["Realtime_PyAudio_FFT", "migrations", "bulb_control", "env", ".github", ".pytest_cache", ".vscode", "notes", "project_report_docs", "static", "test_logs"]
+ignore-patterns = [".*logs"]
+jobs = 1
+reports = true

@@ -4,9 +4,6 @@ __author__ = "Ryan Urquhart"
 __contact__ = "https://github.com/RyanMcClean"
 
 import os
-
-from django.core.validators import validate_ipv4_address
-from django.core.exceptions import ValidationError
 from django.core.validators import (
     MinLengthValidator,
     MaxValueValidator,
@@ -17,11 +14,11 @@ from django.db import models
 # Create your models here.
 
 
-class wizbulb(models.Model):
+class Wizbulb(models.Model):
     """Wizbulb object"""
 
-    bulbIp = models.GenericIPAddressField(null=False, blank=False, unique=True, protocol="ipv4")
-    bulbName = models.CharField(
+    bulb_ip = models.GenericIPAddressField(null=False, blank=False, unique=True, protocol="ipv4")
+    bulb_name = models.CharField(
         max_length=255,
         null=False,
         blank=False,
@@ -31,17 +28,17 @@ class wizbulb(models.Model):
             MinLengthValidator(1),
         ],
     )
-    bulbState = models.BooleanField(auto_created=True, null=True, blank=True)
-    bulbRed = models.IntegerField(
+    bulb_state = models.BooleanField(auto_created=True, null=True, blank=True)
+    bulb_red = models.IntegerField(
         null=True, blank=True, validators=[MaxValueValidator(255), MinValueValidator(0)]
     )
-    bulbGreen = models.IntegerField(
+    bulb_green = models.IntegerField(
         null=True, blank=True, validators=[MaxValueValidator(255), MinValueValidator(0)]
     )
-    bulbBlue = models.IntegerField(
+    bulb_blue = models.IntegerField(
         null=True, blank=True, validators=[MaxValueValidator(255), MinValueValidator(0)]
     )
-    bulbTemp = models.IntegerField(
+    bulb_temp = models.IntegerField(
         null=True,
         blank=True,
         validators=[MinValueValidator(2000), MaxValueValidator(6500)],
@@ -56,31 +53,31 @@ class wizbulb(models.Model):
         try:
             return (
                 "-" * os.get_terminal_size()[0]
-                + f"\nBulb Ip: {self.bulbIp}\nBulb Name: {self.bulbName}\nBulb State: {self.bulbState}"
-                f"\nBulb Red: {self.bulbRed}\nBulb Green {self.bulbGreen}\nBulb Blue: {self.bulbBlue}"
-                f"\nBulb Temp: {self.bulbTemp}\n" + "-" * os.get_terminal_size()[0]
+                + f"\nBulb Ip: {self.bulb_ip}\nBulb Name: {self.bulb_name}\nBulb State: {self.bulb_state}"
+                f"\nBulb Red: {self.bulb_red}\nBulb Green {self.bulb_green}\nBulb Blue: {self.bulb_blue}"
+                f"\nBulb Temp: {self.bulb_temp}\n" + "-" * os.get_terminal_size()[0]
             )
-        except OSError as e:
+        except OSError:
             return (
-                f"Bulb Ip: {self.bulbIp}\nBulb Name: {self.bulbName}\nBulb State: {self.bulbState}"
-                f"\nBulb Red: {self.bulbRed}\nBulb Green {self.bulbGreen}\nBulb Blue: {self.bulbBlue}"
-                f"\nBulb Temp: {self.bulbTemp}\n"
+                f"Bulb Ip: {self.bulb_ip}\nBulb Name: {self.bulb_name}\nBulb State: {self.bulb_state}"
+                f"\nBulb Red: {self.bulb_red}\nBulb Green {self.bulb_green}\nBulb Blue: {self.bulb_blue}"
+                f"\nBulb Temp: {self.bulb_temp}\n"
             )
 
-    def returnJSON(self) -> dict:
+    def return_json(self) -> dict:
         """JSON dict of fields and values in the object
 
         Returns:
             dict: JSON dict of fields and values in the object
         """
         return {
-            "bulbIp": self.bulbIp,
-            "bulbName": self.bulbName,
-            "bulbState": self.bulbState,
-            "bulbRed": self.bulbRed,
-            "bulbGreen": self.bulbGreen,
-            "bulbBlue": self.bulbBlue,
-            "bulbTemp": self.bulbTemp,
+            "bulb_ip": self.bulb_ip,
+            "bulb_name": self.bulb_name,
+            "bulb_state": self.bulb_state,
+            "bulb_red": self.bulb_red,
+            "bulb_green": self.bulb_green,
+            "bulb_blue": self.bulb_blue,
+            "bulb_temp": self.bulb_temp,
         }
 
     objects = models.Manager()

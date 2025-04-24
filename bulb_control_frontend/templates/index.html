@@ -10,9 +10,9 @@
 <div class="row row-cols-2 justify-content-center">
     {% for x in bulbs %}
     <div class="bulb-container container-fluid text-center col rounded-4 border p-5 m-5 w-25">
-        <p class="fs-3 fw-bold pt-5">{{ x.bulbName }}</p>
+        <p class="fs-3 fw-bold pt-5">{{ x.bulb_name }}</p>
         <div class="bulb-icon fs-1 pb-5 mb-5" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Click the bulb icon to toggle its state">
-            <i name="{{ x.bulbName }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x.bulbIp }}"></i>
+            <i name="{{ x.bulb_name }}" class="fa-solid fa-lightbulb" onclick="updateImage.call(this)" value="{{ x.bulb_ip }}"></i>
         </div>
     </div>
     {% empty %}
@@ -32,11 +32,11 @@
         <br />
         <div class="bulb-registration container text-center">
             <form class="bulb-registration-form" action="/" method="post">
-                {% csrf_token %} {% for field in regForm %} {% if field.html_name == 'bulbIp' %}
+                {% csrf_token %} {% for field in regForm %} {% if field.html_name == 'bulb_ip' %}
                 <div class="form-group">
                     <input class="form-control" type="hidden" name="{{ field.html_name }}" value="{{ x }}" />
                 </div>
-                {% elif field.html_name == 'bulbName' %} {{ field.errors }}
+                {% elif field.html_name == 'bulb_name' %} {{ field.errors }}
                 <label class="fs-2">{{ field.label_tag }}</label>
                 {{ field }}
                 <br />

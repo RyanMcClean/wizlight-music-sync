@@ -5,25 +5,26 @@ __contact__ = "https://github.com/RyanMcClean"
 
 from socket import socket, AF_INET, SOCK_DGRAM, SO_BROADCAST, SOL_SOCKET, gaierror
 import json
-import os
 
 
 # This class is used to send and receive UDP packets to WizBulbs
 class NetworkHandler:
+    """NetworkHandler class, used to send and receive UDP packets to WizBulbs"""
     def __init__(self):
         # These are the packets defining specific functions for the bulbs
-        self.bulbPackets = {
+        self.bulb_packets = {
             "discover": b'{"method":"getPilot","params":{}}',
             "turn_on": b'{"id":1,"method":"setState","params":{"state":true}}',
             "turn_off": b'{"id":1,"method":"setState","params":{"state":false}}',
             "turn_to_half": b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":10}}',
             "turn_to_full": b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":100}}',
             # Registration is not currently used, but can be used in future development
-            "registration": b'{"method":"registration","params":{"phoneMac":"AAAAAAAAAAAA","register":false,"phoneIp":"1.2.3.4","id":"1"}}',
+            "registration": b'{"method":"registration","params":{"phoneMac":'
+            b'"AAAAAAAAAAAA","register":false,"phoneIp":"1.2.3.4","id":"1"}}',
         }
         self.port = 38899
-        self.clientSender = socket(AF_INET, SOCK_DGRAM)
-        self.clientSender.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.client_sender = socket(AF_INET, SOCK_DGRAM)
+        self.client_sender.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
     # Used to send the packets to the bulbs, only sends UDP packets
     def sender(
@@ -32,7 +33,7 @@ class NetworkHandler:
         packet="",
         timeout=2.5,
         attempts=3,
-        color_params={},
+        color_params=None,
         expected_results=0,
     ) -> list:
         """Sends UDP packet to local ip address
@@ -45,18 +46,18 @@ class NetworkHandler:
         """
         messages = []
         packet = self._match_packet(packet, color_params)
-        self.clientSender.settimeout(timeout)
+        self.client_sender.settimeout(timeout)
         try:
             continue_loop = True
-            for x in range(attempts):
+            for _ in range(attempts):
                 try:
-                    self.clientSender.sendto(packet, (ip, self.port))
+                    self.client_sender.sendto(packet, (ip, self.port))
                     if expected_results < 0:
                         break
 
                     m, recv_ip = self.receive_message()
-                    while m in list(self.bulbPackets.values()):
-                        m, revc_ip = self.receive_message()
+                    while m in list(self.bulb_packets.values()):
+                        m, _ = self.receive_message()
                     while m is not None:
                         if (
                             "result" in m.keys()
@@ -80,17 +81,14 @@ class NetworkHandler:
                     break
         except TimeoutError:
             print(f"Bulb query has timed out, {len(messages)} bulbs responded")
-        except Exception as e:
-            print("General exception")
-            import traceback
-
-            traceback.print_exc()
-            print(e)
+        except WindowsError:
+            print("Unable to send UDP packet, please check your network connection - Windows Error")
         return messages
 
     # Listener for the UDP packets, used to receive messages from the bulbs
     def receive_message(self):
-        data, ip = self.clientSender.recvfrom(516)
+        """Listens for UDP packet returns from bulbs"""
+        data, ip = self.client_sender.recvfrom(516)
         data = json.loads(data.decode("utf-8"))
         ip = ip[0]
         return data, ip
@@ -99,14 +97,16 @@ class NetworkHandler:
     def _match_packet(
         self,
         packet,
-        color_params={"r": 0, "g": 0, "b": 0, "brightness": 0},
+        color_params=None,
     ):
         match packet:
             case "discover":
-                return self.bulbPackets["discover"]
+                return self.bulb_packets["discover"]
             case "turn_on" | "turn_off":
-                return self.bulbPackets[packet]
+                return self.bulb_packets[packet]
             case "turn_to_color":
+                if color_params is None:
+                    color_params = {"r": 0, "g": 0, "b": 0, "brightness": 0}
                 return self.turn_to_color(
                     color_params["r"],
                     color_params["g"],
@@ -114,28 +114,28 @@ class NetworkHandler:
                     color_params["brightness"],
                 )
             case "turn_to_full":
-                return self.bulbPackets["turn_to_full"]
+                return self.bulb_packets["turn_to_full"]
             case "turn_to_half":
-                return self.bulbPackets["turn_to_half"]
+                return self.bulb_packets["turn_to_half"]
             case _:
                 raise ValueError("Input value for packet is not valid")
 
     # Helper to update bulb in the database
-    def update_bulb_db(self, wizObj) -> None:
+    def update_bulb_db(self, wiz_object) -> None:
         """Queries bulb to update the model in the db
 
         Args:
-            wizObj (WizBulb): WizBulb object to update
+            wiz_object (WizBulb): WizBulb object to update
         """
         try:
-            m = self.sender(wizObj.bulbIp, "discover")[0]
+            m = self.sender(wiz_object.bulb_ip, "discover")[0]
             m = m["result"] if "result" in m.keys() else {}
-            wizObj.bulbState = m["state"] if "state" in m.keys() else False
-            wizObj.bulbRed = m["r"] if "r" in m.keys() else 0
-            wizObj.bulbGreen = m["g"] if "g" in m.keys() else 0
-            wizObj.bulbBlue = m["b"] if "b" in m.keys() else 0
-            wizObj.bulbTemp = m["temp"] if "temp" in m.keys() else 0
-            wizObj.save()
+            wiz_object.bulb_state = m["state"] if "state" in m.keys() else False
+            wiz_object.bulb_red = m["r"] if "r" in m.keys() else 0
+            wiz_object.bulb_green = m["g"] if "g" in m.keys() else 0
+            wiz_object.bulb_blue = m["b"] if "b" in m.keys() else 0
+            wiz_object.bulb_temp = m["temp"] if "temp" in m.keys() else 0
+            wiz_object.save()
         except IndexError:
             print("Unable to update bulb, using last known state")
 

@@ -29,15 +29,25 @@
         "DGRAM",
         "elif",
         "endfor",
+        "gaierror",
         "onclick",
+        "portaudio",
+        "pyaudio",
+        "pyaudiowpatch",
+        "pylint",
+        "samplerate",
         "scipy",
         "sounddevice",
         "tabindex",
         "testpaths",
+        "testrate",
         "wizbulb",
         "Wizlight"
     ],
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[properties]": {
+        "editor.defaultFormatter": "lkrms.inifmt"
     },
 }

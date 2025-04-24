@@ -1,9 +1,11 @@
+# pylint: disable = broad-exception-caught
 """Playwright tests to ensure that webpages load correctly, and that navigation works as expected"""
 
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from playwright.sync_api import sync_playwright, expect
 import os
 import logging
+from playwright.sync_api import sync_playwright, expect
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+import pytest
 from test_helper import formatter
 
 LOGGER = logging.getLogger(__name__)
@@ -15,138 +17,146 @@ class PlaywrightTests(StaticLiveServerTestCase):
         super().setUpClass()
         os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
         cls.playwright = sync_playwright().start()
-        cls.chromium = cls.playwright.chromium.launch()
+        cls.browser = []
+        cls.browser.append(cls.playwright.chromium.launch())
+        cls.browser.append(cls.playwright.firefox.launch())
+        cls.browser.append(cls.playwright.webkit.launch())
 
     @classmethod
     def tearDownClass(cls):
-        cls.chromium.close()
+        for browser in cls.browser:
+            browser.close()
         cls.playwright.stop()
         return super().tearDownClass()
 
+    @pytest.mark.django_db
     def test_load_index(self):
+        """Load index page, and check that telltale elements are visible"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_load_index.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
         log_handler = logging.FileHandler(log_filename, "w")
         log_handler.setFormatter(formatter)
-        for hdlr in LOGGER.handlers[:]:
-            LOGGER.removeHandler(hdlr)
+        for handler in LOGGER.handlers[:]:
+            LOGGER.removeHandler(handler)
         LOGGER.addHandler(log_handler)
-        try:
-            chromiumPage = self.chromium.new_page()
-            chromiumPage.goto(f"{self.live_server_url}")
-            chromiumPage.locator("#find-bulbs-button").wait_for(state="attached")
-            self.assertEqual(chromiumPage.title(), "Bulb Bop")
+        for browser in self.browser:
+            LOGGER.info("Running tests on: %s", browser.browser_type.name)
+            page = browser.new_page()
+            page.goto(f"{self.live_server_url}")
+            page.locator("#find-bulbs-button").wait_for(state="attached")
+            if page.locator(".navbar-toggler-icon").is_visible():
+                page.locator(".navbar-toggler-icon").click()
+            self.assertEqual(page.title(), "Bulb Bop")
             LOGGER.debug("Page title is Bulb Bop")
-            expect(chromiumPage.locator("#main-title")).to_be_visible()
+            expect(page.locator("#main-title")).to_be_visible()
             LOGGER.debug("Main title is visible")
-            expect(chromiumPage.locator("#find-bulbs-button")).to_be_visible()
+            expect(page.locator("#find-bulbs-button")).to_be_visible()
             LOGGER.debug("Find bulbs button is visible")
-            expect(chromiumPage.locator("#home-link")).to_be_visible()
+            expect(page.locator("#home-link")).to_be_visible()
             LOGGER.debug("Home link is visible")
-            expect(chromiumPage.locator("#faq-link")).to_be_visible()
+            expect(page.locator("#faq-link")).to_be_visible()
             LOGGER.debug("FAQ link is visible")
-            expect(chromiumPage.locator("#about-link")).to_be_visible()
+            expect(page.locator("#about-link")).to_be_visible()
             LOGGER.debug("About link is visible")
-        except Exception as e:
-            LOGGER.error("An error occurred in test_load_index: %s", e)
 
+    @pytest.mark.django_db
     def test_load_discover(self):
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_load_discover.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
         log_handler = logging.FileHandler(log_filename, "w")
         log_handler.setFormatter(formatter)
-        for hdlr in LOGGER.handlers[:]:
-            LOGGER.removeHandler(hdlr)
+        for handler in LOGGER.handlers[:]:
+            LOGGER.removeHandler(handler)
         LOGGER.addHandler(log_handler)
-        try:
-            chromiumPage = self.chromium.new_page()
-            chromiumPage.goto(f"{self.live_server_url}/discover")
-            chromiumPage.locator("#find-bulbs-button").wait_for(state="attached")
-            self.assertEqual(chromiumPage.title(), "Bulb Bop")
-            expect(chromiumPage.locator("#main-title")).to_be_visible()
+        for browser in self.browser:
+            page = browser.new_page()
+            page.goto(f"{self.live_server_url}/discover")
+            page.locator("#find-bulbs-button").wait_for(state="attached")
+            if page.locator(".navbar-toggler-icon").is_visible():
+                page.locator(".navbar-toggler-icon").click()
+            self.assertEqual(page.title(), "Bulb Bop")
+            expect(page.locator("#main-title")).to_be_visible()
             LOGGER.debug("Main title is visible")
-            expect(chromiumPage.locator("#find-bulbs-button")).to_be_visible()
+            expect(page.locator("#find-bulbs-button")).to_be_visible()
             LOGGER.debug("Find bulbs button is visible")
-            expect(chromiumPage.locator("#home-link")).to_be_visible()
+            expect(page.locator("#home-link")).to_be_visible()
             LOGGER.debug("Home link is visible")
-            expect(chromiumPage.locator("#faq-link")).to_be_visible()
+            expect(page.locator("#faq-link")).to_be_visible()
             LOGGER.debug("FAQ link is visible")
-            expect(chromiumPage.locator("#about-link")).to_be_visible()
+            expect(page.locator("#about-link")).to_be_visible()
             LOGGER.debug("About link is visible")
-        except Exception as e:
-            LOGGER.error("An error occurred in test_load_discover: %s", e)
 
+    @pytest.mark.django_db
     def test_from_index_to_discover(self):
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_index_to_discover.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
         log_handler = logging.FileHandler(log_filename, "w")
         log_handler.setFormatter(formatter)
-        for hdlr in LOGGER.handlers[:]:
-            LOGGER.removeHandler(hdlr)
+        for handler in LOGGER.handlers[:]:
+            LOGGER.removeHandler(handler)
         LOGGER.addHandler(log_handler)
-        try:
-            chromiumPage = self.chromium.new_page()
-            chromiumPage.goto(f"{self.live_server_url}")
-            chromiumFindButton = chromiumPage.locator("#find-bulbs-button")
+        for browser in self.browser:
+            page = browser.new_page()
+            page.goto(f"{self.live_server_url}")
+            chromiumFindButton = page.locator("#find-bulbs-button")
             chromiumFindButton.wait_for(state="attached")
+            if page.locator(".navbar-toggler-icon").is_visible():
+                page.locator(".navbar-toggler-icon").click()
             chromiumFindButton.click()
             chromiumFindButton.wait_for(state="attached")
-            url = chromiumPage.url
+            url = page.url
             self.assertIn("discover", url)
-            LOGGER.debug("URL contains discover")
-            self.assertEqual(chromiumPage.title(), "Bulb Bop")
+            if page.locator(".navbar-toggler-icon").is_visible():
+                page.locator(".navbar-toggler-icon").click()
+            LOGGER.debug("URL is: %s", url)
+            self.assertEqual(page.title(), "Bulb Bop")
             LOGGER.debug("Page title is Bulb Bop")
-            expect(chromiumPage.locator("#main-title")).to_be_visible()
+            expect(page.locator("#main-title")).to_be_visible()
             LOGGER.debug("Main title is visible")
-            expect(chromiumPage.locator("#find-bulbs-button")).to_be_visible()
+            expect(page.locator("#find-bulbs-button")).to_be_visible()
             LOGGER.debug("Find bulbs button is visible")
-            expect(chromiumPage.locator("#home-link")).to_be_visible()
+            expect(page.locator("#home-link")).to_be_visible()
             LOGGER.debug("Home link is visible")
-            expect(chromiumPage.locator("#faq-link")).to_be_visible()
+            expect(page.locator("#faq-link")).to_be_visible()
             LOGGER.debug("FAQ link is visible")
-            expect(chromiumPage.locator("#about-link")).to_be_visible()
+            expect(page.locator("#about-link")).to_be_visible()
             LOGGER.debug("About link is visible")
-        except Exception as e:
-            LOGGER.error("An error occurred in test_from_index_to_discover: %s", e)
 
+    @pytest.mark.django_db
     def test_from_discover_to_index(self):
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_discover_to_index.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
         log_handler = logging.FileHandler(log_filename, "w")
         log_handler.setFormatter(formatter)
-        for hdlr in LOGGER.handlers[:]:
-            LOGGER.removeHandler(hdlr)
+        for handler in LOGGER.handlers[:]:
+            LOGGER.removeHandler(handler)
         LOGGER.addHandler(log_handler)
-        try:
-            chromiumPage = self.chromium.new_page()
-            chromiumPage.goto(f"{self.live_server_url}/discover")
-            chromiumPage.locator("#find-bulbs-button").wait_for(timeout=0, state="attached")
-            chromiumPage.locator("#home-link").click()
-            chromiumPage.locator("#find-bulbs-button").wait_for(timeout=0, state="attached")
-            url = chromiumPage.url
+        for browser in self.browser:
+            page = browser.new_page()
+            page.goto(f"{self.live_server_url}/discover")
+            page.locator("#find-bulbs-button").wait_for(state="attached")
+            if page.locator(".navbar-toggler-icon").is_visible():
+                page.locator(".navbar-toggler-icon").click()
+            page.locator("#home-link").click()
+            page.locator("#find-bulbs-button").wait_for(state="attached")
+            if page.locator(".navbar-toggler-icon").is_visible():
+                page.locator(".navbar-toggler-icon").click()
+            url = page.url
             self.assertNotIn("discover", url)
             LOGGER.debug("URL does not contain discover")
-            self.assertEqual(chromiumPage.title(), "Bulb Bop")
-            LOGGER.debug("Page title is Bulb Bop")
-            if chromiumPage.locator(".bulb-icon"):
-                expect(chromiumPage.locator("#error-toast")).to_have_count(0)
-                LOGGER.debug("No error toast visible")
-            else:
-                expect(chromiumPage.locator("#error-toast")).to_be_visible()
-                LOGGER.debug("Error toast is visible")
-            expect(chromiumPage.locator("#main-title")).to_be_visible()
+            self.assertEqual(page.title(), "Bulb Bop")
+            LOGGER.debug("Page title is: %s", page.title())
+            expect(page.locator("#main-title")).to_be_visible()
             LOGGER.debug("Main title is visible")
-            expect(chromiumPage.locator("#find-bulbs-button")).to_be_visible()
+            expect(page.locator("#find-bulbs-button")).to_be_visible()
             LOGGER.debug("Find bulbs button is visible")
-            expect(chromiumPage.locator("#home-link")).to_be_visible()
+            expect(page.locator("#home-link")).to_be_visible()
             LOGGER.debug("Home link is visible")
-            expect(chromiumPage.locator("#faq-link")).to_be_visible()
+            expect(page.locator("#faq-link")).to_be_visible()
             LOGGER.debug("FAQ link is visible")
-            expect(chromiumPage.locator("#about-link")).to_be_visible()
+            expect(page.locator("#about-link")).to_be_visible()
             LOGGER.debug("About link is visible")
-        except Exception as e:
-            LOGGER.error("An error occurred in test_from_discover_to_index: %s", e)

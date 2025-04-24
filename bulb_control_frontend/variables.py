@@ -1,3 +1,4 @@
+# pylint: disable=unused-import, global-statement, global-variable-undefined, unused-variable, redefined-outer-name
 """A series of variables to be used globally across the system"""
 
 __author__ = "Ryan Urquhart"
@@ -6,32 +7,32 @@ __contact__ = "https://github.com/RyanMcClean"
 import json
 import os
 import logging
+import sys
 
 try:
-    from .models import wizbulb
-    from .forms import bulbForm
+    from .models import Wizbulb
+    from .forms import BulbForm
     from .helpers import NetworkHandler
     from .audio_testing import get_working_device_list
-except:
-    from models import wizbulb
-    from forms import bulbForm
+except ImportError:
+    from models import Wizbulb
+    from forms import BulbForm
     from helpers import NetworkHandler
     from audio_testing import get_working_device_list
 
-ready = False
-
+READY = False
 
 def init():
-    """Initiate the """
+    """Initiate the module"""
     # Global variables
-    global client, context, logger, bulbs, ready, musicSync
+    global client, context, logger, bulbs, READY, music_sync
     # Global functions
-    global separator, messageLoud, messageQuiet, update_bulb_objects, setup_logger, update_working_audio_devices
+    global separator, message_loud, update_bulb_objects, setup_logger, update_working_audio_devices
     # Global classes
-    global color
+    global Colour
 
-    ready = False
-    musicSync = False
+    READY = False
+    music_sync = False
 
     def separator() -> None:
         """Prints a line of dashes the width of the terminal, or 5 is no width can be found"""
@@ -40,38 +41,39 @@ def init():
         except OSError:
             print("-" * 5)
 
-    def messageLoud(text, type="text"):
+    def message_loud(text, display="text"):
         """Prints a message to the console and logs it to the file"""
-        match type:
+        match display:
             case "text":
                 print(str(text))
                 logger.info(str(text))
             case "percentage":
                 print(str(text), end="\r")
             case "error":
-                print(color.RED + str(text) + color.END)
+                print(Colour.RED + str(text) + Colour.END)
                 logger.error(str(text))
             case "fatal error":
-                print(color.RED + str(text) + color.END)
+                print(Colour.RED + str(text) + Colour.END)
                 logger.error(str(text))
-                exit(1)
+                sys.exit(1)
 
     def update_bulb_objects():
         """Updates the bulb objects in the database and the context dictionary"""
         # To add a limit to the returned bulb objects the line would read:
-        # bulbs = wizbulb.objects.all()[x]
+        # bulbs = Wizbulb.objects.all()[x]
         # where x is the number of bulb objects returned
-        bulbs = wizbulb.objects.all()
-        if len(bulbs) > 0 and ready:
+        bulbs = Wizbulb.objects.all()
+        if len(bulbs) > 0 and READY:
             for x in bulbs:
                 client.update_bulb_db(x)
-                if x.bulbIp not in [y["bulbIp"] for y in context["bulbs"]]:
-                    context["bulbs"].append(x.returnJSON())
-                if x.bulbIp in context["ips"]:
-                    context["ips"].remove(x.bulbIp)
+                if x.bulb_ip not in [y["bulb_ip"] for y in context["bulbs"]]:
+                    context["bulbs"].append(x.return_json())
+                if x.bulb_ip in context["ips"]:
+                    context["ips"].remove(x.bulb_ip)
         else:
             context["bulbs"] = []
-        # Oneliner to remove duplicates from list of dicts https://stackoverflow.com/questions/9427163/remove-duplicate-dict-in-list-in-python
+        # One-liner to remove duplicates from list of dicts
+        # https://stackoverflow.com/questions/9427163/remove-duplicate-dict-in-list-in-python
         context["bulbs"] = [dict(x) for x in {tuple(y.items()) for y in context["bulbs"]}]
         context["numBulbs"] = len(context["bulbs"])
 
@@ -98,7 +100,7 @@ def init():
 
         return logger
 
-    class color:
+    class Colour:
         """Used to select a colour for printing to screen"""
         PURPLE = "\033[1;35;48m"
         CYAN = "\033[1;36;48m"
@@ -113,7 +115,7 @@ def init():
 
     client = NetworkHandler()
     context = {
-        "regForm": bulbForm(),
+        "regForm": BulbForm(),
         "ips": [],
         "count": 0,
         "bulbs": [],
@@ -123,10 +125,10 @@ def init():
         "errorMessage": "No error",
         "success": False,
         "successMessage": "No success",
-        "musicSync": musicSync,
+        "music_sync": music_sync,
     }
     logger = setup_logger("Main Logger", "./test_logs/django_server.log", logging.DEBUG)
-    bulbs = wizbulb.objects.all()
+    bulbs = Wizbulb.objects.all()
 
     def update_working_audio_devices():
         """Updates context with working tested audio devices from the host machine"""
@@ -139,4 +141,4 @@ def init():
             dict(x) for x in {tuple(y.items()) for y in context["audioDevices"]}
         ]
 
-    ready = True
+    READY = True

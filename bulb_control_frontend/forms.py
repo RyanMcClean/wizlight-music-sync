@@ -1,31 +1,33 @@
 """Django form, used for html form submission"""
 
 from django import forms
-from .models import wizbulb
+from .models import Wizbulb
 
 
-class bulbForm(forms.ModelForm):
-    bulbName = forms.CharField(max_length=50)
-    bulbIp = forms.CharField(max_length=16)
-    bulbState = forms.BooleanField(required=False)
-    bulbRed = forms.IntegerField(required=False)
-    bulbGreen = forms.IntegerField(required=False)
-    bulbBlue = forms.IntegerField(required=False)
-    bulbTemp = forms.IntegerField(required=False)
+class BulbForm(forms.ModelForm):
+    """"Form used to create and edit bulbs in the database"""
+    bulb_name = forms.CharField(max_length=50)
+    bulb_ip = forms.CharField(max_length=16)
+    bulb_state = forms.BooleanField(required=False)
+    bulb_red = forms.IntegerField(required=False)
+    bulb_green = forms.IntegerField(required=False)
+    bulb_blue = forms.IntegerField(required=False)
+    bulb_temp = forms.IntegerField(required=False)
 
     def __init__(self, *args, **kwargs):
-        super(bulbForm, self).__init__(*args, **kwargs)
+        super(BulbForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "form-control"
 
     class Meta:
-        model = wizbulb
+        """Meta class for the form, used to set the model and fields"""
+        model = Wizbulb
         fields = "__all__"
         widgets = {
-            "bulbIp": forms.HiddenInput(),
-            "bulbState": forms.HiddenInput(),
-            "bulbRed": forms.HiddenInput(),
-            "bulbGreen": forms.HiddenInput(),
-            "bulbBlue": forms.HiddenInput(),
-            "bulbTemp": forms.HiddenInput(),
+            "bulb_ip": forms.HiddenInput(),
+            "bulb_state": forms.HiddenInput(),
+            "bulb_red": forms.HiddenInput(),
+            "bulb_green": forms.HiddenInput(),
+            "bulb_blue": forms.HiddenInput(),
+            "bulb_temp": forms.HiddenInput(),
         }

@@ -1,3 +1,4 @@
+# pylint: disable=E1101
 """Django APP config, has init calls that only occur when bulb model table is present in database"""
 
 from django.apps import AppConfig
@@ -10,8 +11,8 @@ class BulbControlFrontendConfig(AppConfig):
     name = "bulb_control_frontend"
 
     def ready(self):
-        from bulb_control_frontend import variables as variables
-        from django.db import models
+        from . import variables # pylint: disable=C0415
+        from django.db import models # pylint: disable=C0415, W0611
 
         if "bulb_control_frontend_wizbulb" in connections["default"].introspection.table_names():
             variables.init()

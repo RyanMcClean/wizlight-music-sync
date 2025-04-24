@@ -1,3 +1,4 @@
+# pylint: disable=E1101, not-callable
 """File for synchronising the audio beat with the music
 being played through the specified audio device
 """
@@ -39,8 +40,10 @@ def get_working_device_list():
     return devices
 
 
-def valid_low_rate(pa, device, test_rates=[96000, 48000, 44100, 22050, 11025], test_rate=None):
+def valid_low_rate(pa, device, test_rates=None, test_rate=None):
     """Set the rate to the lowest supported audio rate."""
+    if test_rates is None:
+        test_rates = [96000, 48000, 44100, 22050, 11025]
     test_rates.append(test_rate)
     for testrate in test_rates:
         if test_device(pa, device, rate=testrate):
@@ -69,7 +72,7 @@ def test_device(pa, device, rate=None):
                 time.sleep(1)
                 stream.stop_stream()
                 stream.close()
-            except:
+            except OSError:
                 stream = pa.open(
                     format=pyaudio.paInt8,
                     channels=2,
@@ -82,19 +85,15 @@ def test_device(pa, device, rate=None):
                 stream.stop_stream()
                 stream.close()
 
-        except Exception as err:
-            # print(err)
+        except OSError:
             return False
 
         return True
-    except Exception as e:
-        print("\n\n\n\n")
+    except OSError as e:
         print(e)
-        import traceback
-
+        import traceback # pylint: disable=C0415
         traceback.print_exc()
         time.sleep(3)
-        print("\n\n\n\n")
         return False
 
 
@@ -105,11 +104,13 @@ except ImportError:
 
 
 def beat(ip, packet):
-    variables.messageLoud("\nbeat\n")
+    """Send a beat packet to the bulb"""
+    variables.message_loud("\nbeat\n")
     variables.client.sender(ip, packet, expected_results=-1)
 
 
 def main(device=None):
+    """Main function to run the audio sync"""
     packet = "turn_to_full"
 
     ear = Stream_Analyzer(
@@ -124,24 +125,24 @@ def main(device=None):
         verbose=True,
     )
     for bulb in variables.bulbs:
-        ip = bulb.bulbIp
+        ip = bulb.bulb_ip
         variables.client.sender(ip, "turn_on", attempts=5)
 
-    bufferSize = 100
+    buffer_size = 100
 
-    freqArray = {}
+    freq_array = {}
 
-    tempLow = []
-    tempMid = []
-    tempHigh = []
+    temp_low = []
+    temp_mid = []
+    temp_high = []
 
     # Get the initial values for the low, mid and high frequencies
-    for x in range(bufferSize):
-        fftx, fft, freqBins, freqAmp = ear.get_audio_features()
+    for x in range(buffer_size):
+        _, _, freq_bins, freq_amp = ear.get_audio_features()
         low = 0
         mid = 0
         high = 0
-        for i, x in enumerate(freqBins):
+        for i, x in enumerate(freq_bins):
             if x.item() < 50:
                 low += x.item()
             elif x.item() < 100:
@@ -150,57 +151,57 @@ def main(device=None):
                 high += x.item()
             else:
                 break
-        tempLow.append(low)
-        tempMid.append(mid)
-        tempHigh.append(high)
+        temp_low.append(low)
+        temp_mid.append(mid)
+        temp_high.append(high)
 
-    freqArray.setdefault("lowArray", tempLow)
-    freqArray.setdefault("midArray", tempMid)
-    freqArray.setdefault("highArray", tempHigh)
-    for key in list(freqArray.keys()):
-        freqArray[str(key) + "_avg"] = max(freqArray[key])
+    freq_array.setdefault("lowArray", temp_low)
+    freq_array.setdefault("midArray", temp_mid)
+    freq_array.setdefault("highArray", temp_high)
+    for key in list(freq_array.keys()):
+        freq_array[str(key) + "_avg"] = max(freq_array[key])
 
     # Set initial values for variance, this will be changed by the equations later
     variance = 1
-    while variables.musicSync:
-        for num in range(bufferSize):
-            fftx, fft, freqBins, freqAmp = ear.get_audio_features()
-            for i, x in enumerate(freqBins):
+    while variables.music_sync:
+        for num in range(buffer_size):
+            _, _, freq_bins, freq_amp = ear.get_audio_features()
+            for i, x in enumerate(freq_bins):
                 # the 'else 1' is to prevent division by zero errors
                 if x.item() < 50:
-                    freqArray["lowArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+                    freq_array["lowArray"][num] = freq_amp[i].item() if freq_amp[i].item() != 0 else 1
                 elif x.item() < 100:
-                    freqArray["midArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+                    freq_array["midArray"][num] = freq_amp[i].item() if freq_amp[i].item() != 0 else 1
                 elif x.item() < 150:
-                    freqArray["highArray"][num] = freqAmp[i].item() if freqAmp[i].item() != 0 else 1
+                    freq_array["highArray"][num] = freq_amp[i].item() if freq_amp[i].item() != 0 else 1
                     break
 
-            for key in list(freqArray.keys()):
+            for key in list(freq_array.keys()):
                 if "_avg" not in str(key):
-                    beat_limit = freqArray[str(key) + "_avg"] + (
-                        freqArray[str(key) + "_avg"] * variance
+                    beat_limit = freq_array[str(key) + "_avg"] + (
+                        freq_array[str(key) + "_avg"] * variance
                     )
-                    freq = freqArray[key][num]
+                    freq = freq_array[key][num]
                     if freq > beat_limit:
-                        variables.messageLoud(key)
+                        variables.message_loud(key)
                         for bulb in variables.bulbs:
-                            ip = bulb.bulbIp
+                            ip = bulb.bulb_ip
                             beat_thread = Thread(target=beat, args=(ip, packet))
                             beat_thread.start()
                         packet = "turn_to_half" if packet == "turn_to_full" else "turn_to_full"
                         time.sleep(0.01)
                         break
 
-            for key in list(freqArray.keys()):
+            for key in list(freq_array.keys()):
                 if "_avg" not in str(key):
-                    freqArray[str(key) + "_avg"] = (sum(freqArray[key])) / len(freqArray[key])
+                    freq_array[str(key) + "_avg"] = (sum(freq_array[key])) / len(freq_array[key])
                     per_diff = 0
-                    for x in freqArray[key]:
-                        per_diff += freqArray[key + "_avg"] / x
+                    for x in freq_array[key]:
+                        per_diff += freq_array[key + "_avg"] / x
                     if per_diff > 1:
-                        variance = per_diff / len(freqArray[key])
+                        variance = per_diff / len(freq_array[key])
                     else:
-                        variance = pow(per_diff, -1) / len(freqArray[key])
+                        variance = pow(per_diff, -1) / len(freq_array[key])
 
     ear.stream_reader.terminate()
 

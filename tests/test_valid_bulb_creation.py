@@ -3,7 +3,7 @@
 import string
 from random import randint, choice, getrandbits
 
-from bulb_control_frontend.models import wizbulb
+from bulb_control_frontend.models import Wizbulb
 from django.test import TestCase
 
 
@@ -58,14 +58,14 @@ class DB_Bulb_Creation_Tests(TestCase):
             cls.tempArray,
             cls.stateArray,
         ):
-            bulb = wizbulb()
-            bulb.bulbName = name
-            bulb.bulbIp = ip
-            bulb.bulbRed = red
-            bulb.bulbBlue = blue
-            bulb.bulbGreen = green
-            bulb.bulbTemp = temp
-            bulb.bulbState = state
+            bulb = Wizbulb()
+            bulb.bulb_name = name
+            bulb.bulb_ip = ip
+            bulb.bulb_red = red
+            bulb.bulb_blue = blue
+            bulb.bulb_green = green
+            bulb.bulb_temp = temp
+            bulb.bulb_state = state
             bulb.save()
 
     def test_bulb_creation(self):
@@ -80,13 +80,13 @@ class DB_Bulb_Creation_Tests(TestCase):
             self.tempArray,
             self.stateArray,
         ):
-            bulb = wizbulb.objects.get(bulbName=name)
-            self.assertEqual(bulb.bulbName, name)
-            self.assertEqual(bulb.bulbIp, ip)
-            self.assertEqual(bulb.bulbRed, red)
-            self.assertEqual(bulb.bulbBlue, blue)
-            self.assertEqual(bulb.bulbGreen, green)
-            self.assertEqual(bulb.bulbTemp, temp)
-            self.assertEqual(bulb.bulbState, state)
+            bulb = Wizbulb.objects.get(bulb_name=name)
+            self.assertEqual(bulb.bulb_name, name)
+            self.assertEqual(bulb.bulb_ip, ip)
+            self.assertEqual(bulb.bulb_red, red)
+            self.assertEqual(bulb.bulb_blue, blue)
+            self.assertEqual(bulb.bulb_green, green)
+            self.assertEqual(bulb.bulb_temp, temp)
+            self.assertEqual(bulb.bulb_state, state)
 
         print(f"{len(self.nameArray)} bulbs: Passed!", self)
