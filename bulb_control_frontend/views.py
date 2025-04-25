@@ -88,7 +88,7 @@ def index(request) -> HttpResponse:
 
 
 def discover(request) -> HttpResponse:
-    """Renders index, before rendering index it does a search for bulbs on the local network, 
+    """Renders index, before rendering index it does a search for bulbs on the local network,
        this changes depending on the type of request, and the contents of the request
 
     Args:

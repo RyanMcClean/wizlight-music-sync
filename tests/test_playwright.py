@@ -99,6 +99,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
             LOGGER.debug("Page closed")
 
     def test_from_discover_to_index(self):
+        """Test navigation from discover page to index page"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_discover_to_index.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -143,6 +144,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
 
 def faq_tests(page):
+    """Test FAQ page, useful helper to reduce code duplication"""
     expect(page.get_by_text("Frequently Asked Questions")).to_be_visible()
     LOGGER.debug("FAQ title is visible")
     expect(page.get_by_text("Technical Questions")).to_be_visible()
