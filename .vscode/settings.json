@@ -8,7 +8,7 @@
         "diffEditor.ignoreTrimWhitespace": false,
         "editor.formatOnType": true,
         "editor.wordBasedSuggestions": "off",
-        "editor.defaultFormatter": "mikoz.black-py",
+        "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnPaste": true,
         "editor.formatOnSave": true,
         "editor.maxTokenizationLineLength": 20000
