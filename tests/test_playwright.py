@@ -119,7 +119,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
             LOGGER.debug("Page title is Bulb Bop")
             expect(page.locator("#main-title")).to_be_visible()
             LOGGER.debug("Main title is visible")
-            expect(page.locator("#find-bulbs-button")).to_be_visible()
+            expect(find_button).to_be_visible()
             LOGGER.debug("Find bulbs button is visible")
             expect(page.locator("#home-link")).to_be_visible()
             LOGGER.debug("Home link is visible")

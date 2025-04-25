@@ -1,5 +1,5 @@
 name: Django CI
-
+permissions: write-all
 on:
     push:
         branches: ['main']
