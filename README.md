@@ -2,6 +2,8 @@
 ![Last Commit](https://img.shields.io/github/last-commit/RyanMcClean/wizlight-music-sync)
 ![Top Language](https://img.shields.io/github/languages/top/RyanMcClean/wizlight-music-sync)
 ![Github Actions Status](https://img.shields.io/github/actions/workflow/status/RyanMcClean/wizlight-music-sync/django.yml)
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
+![pylint]()
 
 # Wizlight Bulb Audio Sync Project
 

@@ -41,6 +41,12 @@ jobs:
               run: |
                   python manage.py makemigrations bulb_control_frontend --noinput 
                   python manage.py migrate --noinput --run-syncdb
+            - name: Lint
+              id: lint
+              uses: Silleellie/pylint-github-action@v2.1
+              with:
+                  python-version: ${{ matrix.python-version }}
+                  lint-path: ./bulb_control_frontend
             - name: Run Tests
               id: run_tests
               run: |
