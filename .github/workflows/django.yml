@@ -1,5 +1,5 @@
 name: Django CI
-
+permissions: write-all
 on:
     push:
         branches: ['main']
@@ -44,7 +44,7 @@ jobs:
             - name: Run Tests
               id: run_tests
               run: |
-                  pytest
+                  pytest -s
             - name: Creating coverage folder
               run: |
                   mkdir -p coverage
