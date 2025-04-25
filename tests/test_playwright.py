@@ -31,7 +31,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
         cls.playwright.stop()
         return super().tearDownClass()
 
-    @pytest.mark.django_db
+
     def test_load_index(self):
         """Load index page, and check that telltale elements are visible"""
         # Set up logging for the test
@@ -64,7 +64,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
             page.close()
             LOGGER.debug("Page closed")
 
-    @pytest.mark.django_db
+
     def test_load_discover(self):
         """Load discover page, and check that all telltale elements are visible"""
         # Set up logging for the test
@@ -108,6 +108,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
         for browser in self.browser:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}")
+            LOGGER.debug("Page URL is: %s", page.url)
             find_button = page.locator("#find-bulbs-button")
             find_button.wait_for(state="attached")
             if page.locator(".navbar-toggler-icon").is_visible():
@@ -136,7 +137,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
             page.close()
             LOGGER.debug("Page closed")
 
-    @pytest.mark.django_db
+
     def test_from_discover_to_index(self):
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_discover_to_index.log"
