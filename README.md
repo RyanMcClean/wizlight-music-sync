@@ -1,5 +1,6 @@
 ![Code Coverage](https://img.shields.io/badge/Coverage-75%25-yellowgreen.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/RyanMcClean/wizlight-music-sync)
+![Language Count](https://img.shields.io/github/languages/count/RyanMcClean/wizlight-music-sync)
 
 # Wizlight Bulb Audio Sync Project
 
