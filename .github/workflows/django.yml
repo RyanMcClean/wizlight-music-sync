@@ -55,5 +55,5 @@ jobs:
             - name: Publish coverage report to coverage-badge branch
               uses: JamesIves/github-pages-deploy-action@v4
               with:
-                  branch: dev
-                  folder: .
+                  branch: cov-badge
+                  folder: coverage
