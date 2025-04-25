@@ -91,8 +91,8 @@ class PlaywrightTests(StaticLiveServerTestCase):
             expect(page.locator("#about-link")).to_be_visible()
             LOGGER.debug("About link is visible")
 
-    @pytest.mark.django_db
     def test_from_index_to_discover(self):
+        """Test navigation from index page to discover page"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_index_to_discover.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -108,8 +108,10 @@ class PlaywrightTests(StaticLiveServerTestCase):
             find_button.wait_for(state="attached")
             if page.locator(".navbar-toggler-icon").is_visible():
                 page.locator(".navbar-toggler-icon").click()
+                LOGGER.debug("Clicking navbar toggler")
             find_button.click()
-            find_button.wait_for(state="attached")
+            LOGGER.info(page.url)
+            page.wait_for_url(f"{self.live_server_url}/discover/", wait_until="domcontentloaded")
             url = page.url
             self.assertIn("discover", url)
             LOGGER.debug("URL is: %s", url)
