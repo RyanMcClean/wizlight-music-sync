@@ -43,11 +43,8 @@ jobs:
                   python manage.py migrate --noinput --run-syncdb
             - name: Lint
               id: lint
-              uses: Silleellie/pylint-github-action@v2.1
-              with:
-                  python-version: ${{ matrix.python-version }}
-                  lint-path: ./bulb_control_frontend
-                  requirements-path: ../
+              run: |
+                  pylint ./ | grep -oh 'Your code has been rated at \([-0-9.]*\)\/.*/\1/p'
             - name: Run Tests
               id: run_tests
               run: |
