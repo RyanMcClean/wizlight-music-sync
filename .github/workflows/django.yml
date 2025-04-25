@@ -47,10 +47,10 @@ jobs:
               run: |
                   pytest
             - env:
-                COVERALLS_PARALLEN: true
-                COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN}}
-            name: Submit to Coveralls
-            run: coveralls
+                  COVERALLS_PARALLEL: true
+                  COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+              name: Submit to Coveralls
+              run: coveralls
     coveralls:
         name: Get Coverage Report
         runs-on: ubuntu-latest
