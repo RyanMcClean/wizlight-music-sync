@@ -1,6 +1,7 @@
 ![Code Coverage](https://img.shields.io/badge/Coverage-75%25-yellowgreen.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/RyanMcClean/wizlight-music-sync)
 ![Top Language](https://img.shields.io/github/languages/top/RyanMcClean/wizlight-music-sync)
+![Github Actions Status](https://img.shields.io/github/actions/workflow/status/RyanMcClean/wizlight-music-sync/django.yml)
 
 # Wizlight Bulb Audio Sync Project
 
