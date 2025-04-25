@@ -44,7 +44,10 @@ jobs:
             - name: Lint
               id: lint
               run: |
-                  pylint ./ | grep -oh 'Your code has been rated at \([-0-9.]*\)\/.*/\1/p'
+                  pylint ./ | tee pylint.txt
+                  score=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint.txt)
+                  echo "Pylint score was $score"
+                  anybadge --value=$score --file=public/pylint.svg pylint
             - name: Run Tests
               id: run_tests
               run: |
