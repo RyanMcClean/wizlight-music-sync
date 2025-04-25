@@ -28,7 +28,7 @@ def get_working_device_list():
     device_count = pa.get_device_count()
     for num in range(device_count):
         device = pa.get_device_info_by_index(num)
-        if valid_low_rate(pa, device["index"]):
+        if device["index"] is not None and valid_low_rate(pa, device["index"]):
             devices.append(
                 {
                     "num": device["index"],
@@ -51,7 +51,7 @@ def valid_low_rate(pa, device, test_rates=None, test_rate=None):
     return False
 
 
-def test_device(pa, device, rate=None):
+def test_device(pa, device: int, rate=None):
     """given a device ID and a rate, return True/False if it's valid."""
     try:
         info = pa.get_device_info_by_index(device)
@@ -91,7 +91,8 @@ def test_device(pa, device, rate=None):
         return True
     except OSError as e:
         print(e)
-        import traceback # pylint: disable=C0415
+        import traceback  # pylint: disable=C0415
+
         traceback.print_exc()
         time.sleep(3)
         return False
@@ -169,11 +170,17 @@ def main(device=None):
             for i, x in enumerate(freq_bins):
                 # the 'else 1' is to prevent division by zero errors
                 if x.item() < 50:
-                    freq_array["lowArray"][num] = freq_amp[i].item() if freq_amp[i].item() != 0 else 1
+                    freq_array["lowArray"][num] = (
+                        freq_amp[i].item() if freq_amp[i].item() != 0 else 1
+                    )
                 elif x.item() < 100:
-                    freq_array["midArray"][num] = freq_amp[i].item() if freq_amp[i].item() != 0 else 1
+                    freq_array["midArray"][num] = (
+                        freq_amp[i].item() if freq_amp[i].item() != 0 else 1
+                    )
                 elif x.item() < 150:
-                    freq_array["highArray"][num] = freq_amp[i].item() if freq_amp[i].item() != 0 else 1
+                    freq_array["highArray"][num] = (
+                        freq_amp[i].item() if freq_amp[i].item() != 0 else 1
+                    )
                     break
 
             for key in list(freq_array.keys()):
