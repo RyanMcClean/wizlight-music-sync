@@ -280,4 +280,3 @@ class DBValidationTests(TestCase):
                 bulb.save()
         print(str(len(invalid_ip_bulb_array)) + " Tests Passed!", self)
         LOGGER.debug("Bulb creations with invalid IPs failed as expected")
-

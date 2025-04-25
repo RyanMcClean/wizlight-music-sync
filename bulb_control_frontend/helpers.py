@@ -10,6 +10,7 @@ import json
 # This class is used to send and receive UDP packets to WizBulbs
 class NetworkHandler:
     """NetworkHandler class, used to send and receive UDP packets to WizBulbs"""
+
     def __init__(self):
         # These are the packets defining specific functions for the bulbs
         self.bulb_packets = {

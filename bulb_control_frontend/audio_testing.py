@@ -96,6 +96,9 @@ def test_device(pa, device: int, rate=None):
         traceback.print_exc()
         time.sleep(3)
         return False
+    # This is needed as the device detection is not stable, and can throw errors
+    except TypeError:
+        return False
 
 
 try:

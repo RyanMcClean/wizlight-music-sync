@@ -74,6 +74,7 @@ class IndexClientTest(TestCase):
 
 class BulbFunctionsTest(TestCase):
     """Test class for testing bulb functions via API"""
+
     def test_get_discover(self):
         """test get discover page"""
         # Set up logging for the test

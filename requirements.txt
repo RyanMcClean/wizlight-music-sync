@@ -16,5 +16,6 @@ pytest-cov
 pytest-xdist
 playwright
 pylint
+black
 anybadge
 

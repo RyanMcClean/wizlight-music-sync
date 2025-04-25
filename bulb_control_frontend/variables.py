@@ -22,6 +22,7 @@ except ImportError:
 
 READY = False
 
+
 def init():
     """Initiate the module"""
     # Global variables
@@ -102,6 +103,7 @@ def init():
 
     class Colour:
         """Used to select a colour for printing to screen"""
+
         PURPLE = "\033[1;35;48m"
         CYAN = "\033[1;36;48m"
         BOLD = "\033[1;37;48m"

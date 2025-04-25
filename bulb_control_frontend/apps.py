@@ -6,13 +6,14 @@ from django.db import connections
 
 
 class BulbControlFrontendConfig(AppConfig):
-    """"Django app config, used to initialize the app and set up the database connection"""
+    """ "Django app config, used to initialize the app and set up the database connection"""
+
     default_auto_field = "django.db.models.BigAutoField"
     name = "bulb_control_frontend"
 
     def ready(self):
-        from . import variables # pylint: disable=C0415
-        from django.db import models # pylint: disable=C0415, W0611
+        from . import variables  # pylint: disable=C0415
+        from django.db import models  # pylint: disable=C0415, W0611
 
         if "bulb_control_frontend_wizbulb" in connections["default"].introspection.table_names():
             variables.init()

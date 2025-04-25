@@ -139,12 +139,44 @@ class PlaywrightTests(StaticLiveServerTestCase):
             page.wait_for_url("**", wait_until="domcontentloaded")
             navbar_tests(page)
             LOGGER.debug("Navbar tests passed")
-            faq_tests(page)
+            faq_tests(self, page)
             LOGGER.debug("FAQ tests passed")
 
+    def test_load_about(self):
+        """Load about page, ensure that the telltale elements are visible"""
+        # Set up logging for the test
+        log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_discover_to_index.log"
+        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
+        log_handler = logging.FileHandler(log_filename, "w")
+        log_handler.setFormatter(formatter)
+        for handler in LOGGER.handlers[:]:
+            LOGGER.removeHandler(handler)
+        for browser in self.browsers:
+            page = browser.new_page()
+            page.goto(f"{self.live_server_url}/about")
+            page.wait_for_url("**", wait_until="domcontentloaded")
+            navbar_tests(page)
+            LOGGER.debug("Navbar tests passed")
+            about_tests(self, page)
+            LOGGER.debug("About tests passed")
 
-def faq_tests(page):
+
+def about_tests(self, page):
+    """Test about page, useful helper to reduce code duplication"""
+    self.assertIn("about", page.url)
+    LOGGER.debug("URL is: %s", page.url)
+    expect(page.locator("h1").get_by_text("About")).to_be_visible()
+    LOGGER.debug("About title is visible")
+    expect(page.get_by_text("The Project")).to_be_visible()
+    LOGGER.debug("The Project subtitle is visible")
+    expect(page.get_by_text("The Author")).to_be_visible()
+    LOGGER.debug("The Author subtitle is visible")
+
+
+def faq_tests(self, page):
     """Test FAQ page, useful helper to reduce code duplication"""
+    self.assertIn("faq", page.url)
+    LOGGER.debug("URL is: %s", page.url)
     expect(page.get_by_text("Frequently Asked Questions")).to_be_visible()
     LOGGER.debug("FAQ title is visible")
     expect(page.get_by_text("Technical Questions")).to_be_visible()

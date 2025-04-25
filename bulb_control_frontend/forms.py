@@ -5,7 +5,8 @@ from .models import Wizbulb
 
 
 class BulbForm(forms.ModelForm):
-    """"Form used to create and edit bulbs in the database"""
+    """ "Form used to create and edit bulbs in the database"""
+
     bulb_name = forms.CharField(max_length=50)
     bulb_ip = forms.CharField(max_length=16)
     bulb_state = forms.BooleanField(required=False)
@@ -21,6 +22,7 @@ class BulbForm(forms.ModelForm):
 
     class Meta:
         """Meta class for the form, used to set the model and fields"""
+
         model = Wizbulb
         fields = "__all__"
         widgets = {
