@@ -12,6 +12,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 class PlaywrightTests(StaticLiveServerTestCase):
+    """Test class for testing using playwright"""
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -62,6 +64,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     @pytest.mark.django_db
     def test_load_discover(self):
+        """Load discover page, and check that all telltale elements are visible"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_load_discover.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -101,12 +104,12 @@ class PlaywrightTests(StaticLiveServerTestCase):
         for browser in self.browser:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}")
-            chromiumFindButton = page.locator("#find-bulbs-button")
-            chromiumFindButton.wait_for(state="attached")
+            find_button = page.locator("#find-bulbs-button")
+            find_button.wait_for(state="attached")
             if page.locator(".navbar-toggler-icon").is_visible():
                 page.locator(".navbar-toggler-icon").click()
-            chromiumFindButton.click()
-            chromiumFindButton.wait_for(state="attached")
+            find_button.click()
+            find_button.wait_for(state="attached")
             url = page.url
             self.assertIn("discover", url)
             if page.locator(".navbar-toggler-icon").is_visible():

@@ -1,4 +1,5 @@
 ![Code Coverage](https://img.shields.io/badge/Coverage-75%25-yellowgreen.svg)
+![Last Commit](https://img.shields.io/github/last-commit/RyanMcClean/wizlight-music-sync)
 
 # Wizlight Bulb Audio Sync Project
 
@@ -28,7 +29,7 @@ did not work).
 
     -   `django` for website design and management
     -   `pyaudio` (linux) or `pyaudiowpatch` (windows) for audio input
-    -   `sounddevice` as a dependacny of `pyaudio`
+    -   `sounddevice` as a dependency of `pyaudio`
     -   `numpy`, `scipy` for signal processing
     -   `pytest`, `pytest-django` to convert django tests to pytest for running
         in vscode
@@ -38,3 +39,5 @@ did not work).
 
 -   **Hardware**: Wiz light bulbs and a computer (Windows, or Linux) with a
     microphone.
+
+-   **Installation**:

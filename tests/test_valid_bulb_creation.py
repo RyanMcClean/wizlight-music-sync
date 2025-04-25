@@ -2,12 +2,12 @@
 
 import string
 from random import randint, choice, getrandbits
-
-from bulb_control_frontend.models import Wizbulb
 from django.test import TestCase
+from bulb_control_frontend.models import Wizbulb
 
 
-class DB_Bulb_Creation_Tests(TestCase):
+class DBBulbCreationTests(TestCase):
+    """Test class for bulb creation in database"""
 
     @classmethod
     def setUpTestData(cls):
@@ -20,33 +20,33 @@ class DB_Bulb_Creation_Tests(TestCase):
         cls.stateArray = []
 
         # Populate nameArray
-        for x in range(randint(100, 1000)):
+        for _ in range(randint(100, 1000)):
             name = "".join(choice(string.ascii_letters) for i in range(randint(3, 15)))
             if name not in cls.nameArray:
                 cls.nameArray.append(name)
 
         # Populate ipArray
-        for x in range(len(cls.nameArray)):
+        for _ in range(len(cls.nameArray)):
             cls.ipArray.append(".".join(str(randint(1, 254)) for _ in range(4)))
 
         # Populate redArray
-        for x in range(len(cls.nameArray)):
+        for _ in range(len(cls.nameArray)):
             cls.redArray.append(randint(0, 255))
 
         # Populate blueArray
-        for x in range(len(cls.nameArray)):
+        for _ in range(len(cls.nameArray)):
             cls.blueArray.append(randint(0, 255))
 
         # Populate greenArray
-        for x in range(len(cls.nameArray)):
+        for _ in range(len(cls.nameArray)):
             cls.greenArray.append(randint(0, 255))
 
         # Populate tempArray
-        for x in range(len(cls.nameArray)):
+        for _ in range(len(cls.nameArray)):
             cls.tempArray.append(randint(0, 100))
 
         # Populate stateArray
-        for x in range(len(cls.nameArray)):
+        for _ in range(len(cls.nameArray)):
             cls.stateArray.append(bool(getrandbits(1)))
 
         for name, ip, red, blue, green, temp, state in zip(
