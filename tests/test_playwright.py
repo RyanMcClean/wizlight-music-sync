@@ -112,9 +112,9 @@ class PlaywrightTests(StaticLiveServerTestCase):
             find_button.wait_for(state="attached")
             url = page.url
             self.assertIn("discover", url)
+            LOGGER.debug("URL is: %s", url)
             if page.locator(".navbar-toggler-icon").is_visible():
                 page.locator(".navbar-toggler-icon").click()
-            LOGGER.debug("URL is: %s", url)
             self.assertEqual(page.title(), "Bulb Bop")
             LOGGER.debug("Page title is Bulb Bop")
             expect(page.locator("#main-title")).to_be_visible()

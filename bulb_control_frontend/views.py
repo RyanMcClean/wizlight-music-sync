@@ -105,7 +105,7 @@ def discover(request) -> HttpResponse:
 
     for bulb_response in m:
         if [True for bulb in variables.context["bulbs"] if bulb_response["ip"] in bulb["bulb_ip"]]:
-            variables.message_loud("Hiding alREADY saved bulb")
+            variables.message_loud("Hiding already saved bulb")
         elif bulb_response["ip"] not in variables.context["ips"]:
             variables.context["ips"].append(bulb_response["ip"])
 
