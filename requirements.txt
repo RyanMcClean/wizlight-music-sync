@@ -15,4 +15,6 @@ pytest-django
 pytest-cov
 pytest-xdist
 playwright
+pylint
+anybadge
 
