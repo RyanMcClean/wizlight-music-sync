@@ -61,6 +61,8 @@ class PlaywrightTests(StaticLiveServerTestCase):
             LOGGER.debug("FAQ link is visible")
             expect(page.locator("#about-link")).to_be_visible()
             LOGGER.debug("About link is visible")
+            page.close()
+            LOGGER.debug("Page closed")
 
     @pytest.mark.django_db
     def test_load_discover(self):
@@ -90,6 +92,8 @@ class PlaywrightTests(StaticLiveServerTestCase):
             LOGGER.debug("FAQ link is visible")
             expect(page.locator("#about-link")).to_be_visible()
             LOGGER.debug("About link is visible")
+            page.close()
+            LOGGER.debug("Page closed")
 
     def test_from_index_to_discover(self):
         """Test navigation from index page to discover page"""
@@ -129,6 +133,8 @@ class PlaywrightTests(StaticLiveServerTestCase):
             LOGGER.debug("FAQ link is visible")
             expect(page.locator("#about-link")).to_be_visible()
             LOGGER.debug("About link is visible")
+            page.close()
+            LOGGER.debug("Page closed")
 
     @pytest.mark.django_db
     def test_from_discover_to_index(self):
@@ -165,3 +171,5 @@ class PlaywrightTests(StaticLiveServerTestCase):
             LOGGER.debug("FAQ link is visible")
             expect(page.locator("#about-link")).to_be_visible()
             LOGGER.debug("About link is visible")
+            page.close()
+            LOGGER.debug("Page closed")
