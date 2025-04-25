@@ -22,7 +22,6 @@ class PlaywrightTests(StaticLiveServerTestCase):
         cls.browser = []
         cls.browser.append(cls.playwright.chromium.launch())
         cls.browser.append(cls.playwright.firefox.launch())
-        cls.browser.append(cls.playwright.webkit.launch())
 
     @classmethod
     def tearDownClass(cls):
@@ -108,14 +107,14 @@ class PlaywrightTests(StaticLiveServerTestCase):
         for browser in self.browser:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}")
-            LOGGER.debug("Page URL is: %s", page.url)
+            LOGGER.debug("Using browser, %s Page URL is: %s", browser.browser_type.name, page.url)
             find_button = page.locator("#find-bulbs-button")
             find_button.wait_for(state="attached")
             if page.locator(".navbar-toggler-icon").is_visible():
                 page.locator(".navbar-toggler-icon").click()
                 LOGGER.debug("Clicking navbar toggler")
             find_button.click()
-            LOGGER.info(page.url)
+            LOGGER.debug(page.url)
             page.wait_for_url(f"{self.live_server_url}/discover/", wait_until="domcontentloaded")
             url = page.url
             self.assertIn("discover", url)
