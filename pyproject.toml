@@ -2,7 +2,7 @@
 
 DJANGO_SETTINGS_MODULE = "bulb_control.settings"
 
-addopts = "-rP -v -p no:warnings --cov=./bulb_control_frontend --no-cov-on-fail --cov-report=html:test_logs/cov.html -n auto"
+addopts = "-rP -v -p no:warnings --cov=./bulb_control_frontend --no-cov-on-fail -n auto"
 
 django_debug_mode = "false"
 
