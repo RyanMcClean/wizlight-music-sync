@@ -6,7 +6,7 @@ requests
 # Audio processing dependencies
 numpy
 sounddevice
-PyAudio == 0.2.14
+PyAudio
 PyAudioWPatch
 scipy
 # Testing dependencies
@@ -15,5 +15,4 @@ pytest-django
 pytest-cov
 pytest-xdist
 playwright
-# Miscellaneous dependencies
-readme-coverage-badger
+
