@@ -46,7 +46,7 @@ jobs:
             - name: Run Tests
               id: run_tests
               run: |
-                  coverage run -m pytest
+                  python -m coverage run -m pytest
             - env:
                   COVERALLS_PARALLEL: true
                   COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN}}
