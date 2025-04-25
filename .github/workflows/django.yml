@@ -47,6 +47,7 @@ jobs:
               with:
                   python-version: ${{ matrix.python-version }}
                   lint-path: ./bulb_control_frontend
+                  requirements-path: ../
             - name: Run Tests
               id: run_tests
               run: |
