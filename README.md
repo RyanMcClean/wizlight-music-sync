@@ -1,9 +1,8 @@
-<div align="center">
-<a href="">![Code Coverage](https://raw.githubusercontent.com/RyanMcClean/wizlight-music-sync/badges/coverage.svg?raw=true)</a>
-<a href="">![Last Commit](https://img.shields.io/github/last-commit/RyanMcClean/wizlight-music-sync)</a>
-<a href="">![Github Actions Status](https://img.shields.io/github/actions/workflow/status/RyanMcClean/wizlight-music-sync/django.yml)</a>
-<a href="">![PyLint Score](https://raw.githubusercontent.com/RyanMcClean/wizlight-music-sync/badges/pylint.svg?raw=true)</a>
-</div>
+![Code Coverage](https://raw.githubusercontent.com/RyanMcClean/wizlight-music-sync/badges/coverage.svg?raw=true)
+![Last Commit](https://img.shields.io/github/last-commit/RyanMcClean/wizlight-music-sync)
+![Github Actions Status](https://img.shields.io/github/actions/workflow/status/RyanMcClean/wizlight-music-sync/django.yml)
+![PyLint Score](https://raw.githubusercontent.com/RyanMcClean/wizlight-music-sync/badges/pylint.svg?raw=true)
+
 # Wizlight Bulb Audio Sync Project
 
 Ryan Urquhart's QUB final year project.
