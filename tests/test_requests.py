@@ -1,26 +1,27 @@
 """Unit tests for API requests"""
 
-from django.test import TestCase
 import json
-import logging, os
-try:
-    from test_helper import formatter
-except ImportError:
-    from .test_helper import formatter
+import logging
+import os
+from django.test import TestCase
+from test_helper import formatter
 
-bulbQueryErrorMessage = {"error": "could not query bulb"}
-bulbDiscoveryErrorMessage = (
+BULB_QUERY_ERROR_MESSAGE = {"error": "could not query bulb"}
+BULB_DISCOVERY_ERROR_MESSAGE = (
     "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
 )
 
 LOGGER = logging.getLogger(__name__)
 
 # This IP is used in testing to prevent it actually querying a bulb
-localIp = "127.0.0.1"
+LOCAL_IP = "127.0.0.1"
 
 
 class IndexClientTest(TestCase):
+    """Test class for testing the api via python requests"""
+
     def test_get_index(self):
+        """Test get the index page"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_get_index.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -37,6 +38,7 @@ class IndexClientTest(TestCase):
         LOGGER.debug("Correct template used for index page")
 
     def test_bulb_registration_form(self):
+        """test bulb form submission"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_bulb_registration_form.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -46,13 +48,14 @@ class IndexClientTest(TestCase):
             LOGGER.removeHandler(handler)
         LOGGER.addHandler(log_handler)
 
-        form_data = {"bulb_ip": localIp}
+        form_data = {"bulb_ip": LOCAL_IP}
         response = self.client.post("/", form_data, "application/json")
         LOGGER.debug("Bulb registration form submitted successfully")
         self.assertEqual(response.status_code, 200)
         LOGGER.debug("Response status code is 200")
 
     def test_404_index(self):
+        """Test invalid index get for 404 page"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_404_index.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -70,7 +73,9 @@ class IndexClientTest(TestCase):
 
 
 class BulbFunctionsTest(TestCase):
+    """Test class for testing bulb functions via API"""
     def test_get_discover(self):
+        """test get discover page"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_get_discover.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -85,6 +90,7 @@ class BulbFunctionsTest(TestCase):
         LOGGER.debug("Discover page loaded successfully")
 
     def test_query_bulb(self):
+        """test query bulb"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_query_bulb.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -94,14 +100,15 @@ class BulbFunctionsTest(TestCase):
             LOGGER.removeHandler(handler)
         LOGGER.addHandler(log_handler)
 
-        post_data = {"ip": localIp}
+        post_data = {"ip": LOCAL_IP}
         response = self.client.post("/queryBulb/", post_data, "application/json")
         self.assertEqual(response.status_code, 200)
         LOGGER.debug("Query bulb response status code is 200")
-        self.assertDictEqual(json.loads(response.content.decode("utf-8")), bulbQueryErrorMessage)
+        self.assertDictEqual(json.loads(response.content.decode("utf-8")), BULB_QUERY_ERROR_MESSAGE)
         LOGGER.debug("Query bulb response is correct")
 
     def test_toggle_bulb(self):
+        """test toggle bulb"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_toggle_bulb.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -111,14 +118,15 @@ class BulbFunctionsTest(TestCase):
             LOGGER.removeHandler(handler)
         LOGGER.addHandler(log_handler)
 
-        post_data = {"ip": localIp}
+        post_data = {"ip": LOCAL_IP}
         response = self.client.post("/toggleBulb/", post_data, "application/json")
         self.assertEqual(response.status_code, 200)
         LOGGER.debug("Toggle bulb response status code is 200")
-        self.assertDictEqual(json.loads(response.content.decode("utf-8")), bulbQueryErrorMessage)
+        self.assertDictEqual(json.loads(response.content.decode("utf-8")), BULB_QUERY_ERROR_MESSAGE)
         LOGGER.debug("Toggle bulb response status code is 200")
 
     def test_color_bulb(self):
+        """test turn bulb to colour"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_color_bulb.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -127,14 +135,15 @@ class BulbFunctionsTest(TestCase):
         for handler in LOGGER.handlers[:]:
             LOGGER.removeHandler(handler)
         LOGGER.addHandler(log_handler)
-        post_data = {"ip": localIp, "r": "1", "g": "1", "b": "1", "brightness": "1"}
+        post_data = {"ip": LOCAL_IP, "r": "1", "g": "1", "b": "1", "brightness": "1"}
         response = self.client.post("/colorBulb/", post_data, "application/json")
         self.assertEqual(response.status_code, 200)
         LOGGER.debug("Color bulb response status code is 200")
-        self.assertDictEqual(json.loads(response.content.decode("utf-8")), bulbQueryErrorMessage)
+        self.assertDictEqual(json.loads(response.content.decode("utf-8")), BULB_QUERY_ERROR_MESSAGE)
         LOGGER.debug("Color bulb response status code is 200")
 
-    def test_toggle_bulb_invalid_POST(self):
+    def test_toggle_bulb_invalid_post(self):
+        """test toggle bulb with invalid POST request"""
         # Set up logging for the test
         log_filename = (
             f"test_logs/individual_test_logs/{__name__}/test_toggle_bulb_invalid_POST.log"
@@ -152,7 +161,8 @@ class BulbFunctionsTest(TestCase):
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-    def test_toggle_bulb_invalid_GET(self):
+    def test_toggle_bulb_invalid_get(self):
+        """test toggle bulb with invalid GET request"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_toggle_bulb_invalid_GET.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -168,6 +178,7 @@ class BulbFunctionsTest(TestCase):
         LOGGER.debug("Correct template used for 404 page")
 
     def test_start_audio_sync(self):
+        """test start audio sync"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_start_audio_sync.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
@@ -181,6 +192,7 @@ class BulbFunctionsTest(TestCase):
         LOGGER.debug("Start audio sync response status code is 200")
 
     def test_stop_audio_sync(self):
+        """test stop audio sync"""
         # Set up logging for the test
         log_filename = f"test_logs/individual_test_logs/{__name__}/test_stop_audio_sync.log"
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)

@@ -9,7 +9,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    job1:
+    build_and_test:
         name: Build and Test
 
         runs-on: ubuntu-latest
@@ -45,3 +45,15 @@ jobs:
               id: run_tests
               run: |
                   pytest
+            - name: Creating coverage folder
+              run: |
+                  mkdir -p coverage
+            - name: Coverage Bagdge
+              uses: tj-actions/coverage-badge-py@v1.8
+              with:
+                  output: coverage/coverage.svg
+            - name: Publish coverage report to coverage-badge branch
+              uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  branch: cov-badge
+                  folder: coverage
