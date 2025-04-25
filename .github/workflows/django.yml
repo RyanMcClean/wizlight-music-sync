@@ -36,7 +36,6 @@ jobs:
                   python -m pip install --upgrade pip
                   cat ./requirements.txt | sed -e '/^\\s*#.*$/d' -e '/^\\s*$/d' | xargs -n 1 python -m pip install || true 
                   pip install https://github.com/bboe/coveralls-python/archive/github_actions.zip
-                  pip install coverage
                   playwright install --with-deps
             - name: Run Migrations
               id: run_migrations
@@ -46,25 +45,16 @@ jobs:
             - name: Run Tests
               id: run_tests
               run: |
-                  python -m coverage run -m pytest
-            - env:
-                  COVERALLS_PARALLEL: true
-                  COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN}}
-              name: Submit to Coveralls
-              run: coveralls
-    coveralls:
-        name: Get Coverage Report
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            max-parallel: 4
-            matrix:
-                python-version: [3.11, 3.12]
-                os: [ubutnu-latest, windows-latest]
-        needs: build_and_test
-        steps:
-            - name: Coveralls Finished
-              uses: coverallsapp/github-action@master
+                  pytest
+            - name: Creating coverage folder
+              run: |
+                  mkdir -p coverage
+            - name: Coverage Bagdge
+              uses: tj-actions/coverage-badge-py@v1.8
               with:
-                  github-token: ${{ secrets.GITHUB_TOKEN}}
-                  parallel-finished: true
+                  output: coverage/coverage.svg
+            - name: Publish coverage report to coverage-badge branch
+              uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  branch: coverage-badge
+                  folder: coverage
