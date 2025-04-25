@@ -55,7 +55,7 @@ jobs:
               id: run_tests
               run: |
                   pytest -s | tee pytest.txt
-                  coverage=$(sed -n 's/.{3}//p' pytest.txt | sed 's/%//')
+                  coverage=$(sed -n 's/.{2}%//p' pytest.txt | sed 's/%//')
                   echo "Coverage was $coverage"
                   anybadge --value=$coverage --file=badges/coverage.svg -l coverage 0=red 50=orange 80=yellow 100=green
             - name: Publish badges to badges branch
