@@ -50,7 +50,7 @@ jobs:
                   pylint ./ | tee pylint.txt
                   score=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint.txt)
                   echo "Pylint score was $score"
-                  anybadge --value=$score --file=badges/pylint.svg pylint 2=red 4=orange 8=yellow 10=green
+                  anybadge --value=$score --file=badges/pylint.svg -l pylint 2=red 4=orange 8=yellow 10=green
             - name: Run Tests
               id: run_tests
               run: |
