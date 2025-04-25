@@ -45,7 +45,7 @@ jobs:
             - name: Run Tests
               id: run_tests
               run: |
-                  coverage run --source prawtools --module pytest
+                  coverage run --source wizlight-music-sync --module pytest
             - env:
                   COVERALLS_PARALLEL: true
                   COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN}}
