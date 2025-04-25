@@ -22,7 +22,10 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "dependsOn": "install_requirements"
+            "dependsOn": "install_requirements",
+            "problemMatcher": [
+                "$python"
+            ]
         },
         {
             "label": "Runtime_Setup_Part_1",
