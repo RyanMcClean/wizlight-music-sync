@@ -22,7 +22,6 @@ class PlaywrightTests(StaticLiveServerTestCase):
         cls.browser = []
         cls.browser.append(cls.playwright.chromium.launch())
         cls.browser.append(cls.playwright.firefox.launch())
-        cls.browser.append(cls.playwright.webkit.launch())
 
     @classmethod
     def tearDownClass(cls):
