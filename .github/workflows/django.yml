@@ -41,26 +41,26 @@ jobs:
               run: |
                   python manage.py makemigrations bulb_control_frontend --noinput 
                   python manage.py migrate --noinput --run-syncdb
+            - name: Creating badges folder
+              run: |
+                  mkdir -p badges
             - name: Lint
               id: lint
               run: |
                   pylint ./ | tee pylint.txt
                   score=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint.txt)
                   echo "Pylint score was $score"
-                  anybadge --value=$score --file=public/pylint.svg pylint
+                  anybadge --value=$score --file=badges/pylint.svg pylint
             - name: Run Tests
               id: run_tests
               run: |
                   pytest -s
-            - name: Creating coverage folder
-              run: |
-                  mkdir -p coverage
             - name: Coverage Badge
               uses: tj-actions/coverage-badge-py@v1.8
               with:
-                  output: coverage/coverage.svg
-            - name: Publish coverage report to coverage-badge branch
+                  output: badges/coverage.svg
+            - name: Publish badges to badges branch
               uses: JamesIves/github-pages-deploy-action@v4
               with:
-                  branch: cov-badge
-                  folder: coverage
+                  branch: badges
+                  folder: badges
