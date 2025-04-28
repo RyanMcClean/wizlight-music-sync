@@ -4,10 +4,9 @@
 import string
 from random import randint, choice, getrandbits
 import logging
-import os
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from test_helper import formatter
+from test_helper import setup_logger
 from bulb_control_frontend.models import Wizbulb
 
 LOGGER = logging.getLogger(__name__)
@@ -18,14 +17,7 @@ class DBValidationTests(TestCase):
 
     def test_invalid_bulb_creation(self):
         """Set invalid bulb name and ip and ensure it raises an appropriate error"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_invalid_bulb_creation.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         bulb_array = []
         ip_array = []
@@ -61,14 +53,7 @@ class DBValidationTests(TestCase):
 
     def test_set_null_bulb_ip(self):
         """Set null bulb ip and ensure it raises an appropriate error"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_set_null_bulb_ip.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         # Step 1, attempt to create bulb with only a name
         with self.assertRaisesRegex(
@@ -132,14 +117,7 @@ class DBValidationTests(TestCase):
 
     def test_set_null_bulb_name(self):
         """Set null bulb name and ensure it raises the appropriate error"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_set_null_bulb_name.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         # Step 1, attempt to create bulb with only an ip
         with self.assertRaisesRegex(
@@ -203,14 +181,7 @@ class DBValidationTests(TestCase):
 
     def test_set_int_value_invalid(self):
         """Set invalid int values for bulb and ensure appropriate errors are raised"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_set_int_value_invalid.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         bulb_array = []
         # Step 1, Create array of bulbs that have invalid int attribute values
@@ -256,14 +227,7 @@ class DBValidationTests(TestCase):
 
     def test_set_invalid_ip(self):
         """Set invalid ip values for bulb and ensure appropriate errors are raised"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_set_invalid_ip.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         invalid_ip_bulb_array = []
         for _ in range(randint(100, 1000)):

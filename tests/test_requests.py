@@ -2,9 +2,8 @@
 
 import json
 import logging
-import os
 from django.test import TestCase
-from test_helper import formatter
+from test_helper import setup_logger
 
 BULB_QUERY_ERROR_MESSAGE = {"error": "could not query bulb"}
 BULB_DISCOVERY_ERROR_MESSAGE = (
@@ -22,14 +21,7 @@ class IndexClientTest(TestCase):
 
     def test_get_index(self):
         """Test get the index page"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_get_index.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -39,14 +31,7 @@ class IndexClientTest(TestCase):
 
     def test_bulb_registration_form(self):
         """test bulb form submission"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_bulb_registration_form.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         form_data = {"bulb_ip": LOCAL_IP}
         response = self.client.post("/", form_data, "application/json")
@@ -56,14 +41,7 @@ class IndexClientTest(TestCase):
 
     def test_404_index(self):
         """Test invalid index get for 404 page"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_404_index.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         response = self.client.delete("/")
         self.assertEqual(response.status_code, 404)
@@ -77,14 +55,7 @@ class BulbFunctionsTest(TestCase):
 
     def test_get_discover(self):
         """test get discover page"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_get_discover.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         response = self.client.get("/discover/")
         self.assertEqual(response.status_code, 200)
@@ -92,14 +63,7 @@ class BulbFunctionsTest(TestCase):
 
     def test_query_bulb(self):
         """test query bulb"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_query_bulb.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         post_data = {"ip": LOCAL_IP}
         response = self.client.post("/queryBulb/", post_data, "application/json")
@@ -110,14 +74,7 @@ class BulbFunctionsTest(TestCase):
 
     def test_toggle_bulb(self):
         """test toggle bulb"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_toggle_bulb.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         post_data = {"ip": LOCAL_IP}
         response = self.client.post("/toggleBulb/", post_data, "application/json")
@@ -128,14 +85,8 @@ class BulbFunctionsTest(TestCase):
 
     def test_color_bulb(self):
         """test turn bulb to colour"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_color_bulb.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
+
         post_data = {"ip": LOCAL_IP, "r": "1", "g": "1", "b": "1", "brightness": "1"}
         response = self.client.post("/colorBulb/", post_data, "application/json")
         self.assertEqual(response.status_code, 200)
@@ -145,16 +96,8 @@ class BulbFunctionsTest(TestCase):
 
     def test_toggle_bulb_invalid_post(self):
         """test toggle bulb with invalid POST request"""
-        # Set up logging for the test
-        log_filename = (
-            f"test_logs/individual_test_logs/{__name__}/test_toggle_bulb_invalid_POST.log"
-        )
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
+
         post_data = {}
         response = self.client.post("/toggleBulb/", post_data, "application/json")
         self.assertEqual(response.status_code, 404)
@@ -164,14 +107,8 @@ class BulbFunctionsTest(TestCase):
 
     def test_toggle_bulb_invalid_get(self):
         """test toggle bulb with invalid GET request"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_toggle_bulb_invalid_GET.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
+
         response = self.client.get("/toggleBulb/")
         self.assertEqual(response.status_code, 404)
         LOGGER.debug("Toggle bulb invalid GET response status code is 404")
@@ -180,28 +117,16 @@ class BulbFunctionsTest(TestCase):
 
     def test_start_audio_sync(self):
         """test start audio sync"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_start_audio_sync.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
+
         response = self.client.post("/activateSync/", content_type="text/xml", data="0")
         self.assertEqual(response.status_code, 200)
         LOGGER.debug("Start audio sync response status code is 200")
 
     def test_stop_audio_sync(self):
         """test stop audio sync"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_stop_audio_sync.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
+
         response = self.client.get("/stopSync/")
         self.assertEqual(response.status_code, 200)
         LOGGER.debug("Stop audio sync response status code is 200")

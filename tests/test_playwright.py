@@ -5,7 +5,7 @@ import os
 import logging
 from playwright.sync_api import sync_playwright, expect
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from test_helper import formatter
+from test_helper import setup_logger
 
 LOGGER = logging.getLogger(__name__)
 
@@ -31,14 +31,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_load_index(self):
         """Load index page, and check that telltale elements are visible"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_load_index.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
         for browser in self.browsers:
             LOGGER.info("Running tests on: %s", browser.browser_type.name)
             page = browser.new_page()
@@ -51,14 +44,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_load_discover(self):
         """Load discover page, and check that all telltale elements are visible"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_load_discover.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}/discover")
@@ -71,14 +57,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_from_index_to_discover(self):
         """Test navigation from index page to discover page"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_index_to_discover.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}")
@@ -100,14 +79,8 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_from_discover_to_index(self):
         """Test navigation from discover page to index page"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_discover_to_index.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
+
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}/discover")
@@ -125,14 +98,8 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_load_faq(self):
         """Load FAQ page, ensure that telltale elements are visible"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_discover_to_index.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
+
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}/faq")
@@ -144,13 +111,8 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_load_about(self):
         """Load about page, ensure that the telltale elements are visible"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_from_discover_to_index.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
+        setup_logger(__name__, LOGGER)
+
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}/about")

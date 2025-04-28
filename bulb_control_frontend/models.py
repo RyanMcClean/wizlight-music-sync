@@ -11,8 +11,6 @@ from django.core.validators import (
 )
 from django.db import models
 
-# Create your models here.
-
 
 class Wizbulb(models.Model):
     """Wizbulb object"""
@@ -46,7 +44,6 @@ class Wizbulb(models.Model):
 
     def __str__(self) -> str:
         """Returns a summary of wizbulb object
-
         Returns:
             str: summary of wizbulb object
         """
@@ -66,7 +63,6 @@ class Wizbulb(models.Model):
 
     def return_json(self) -> dict:
         """JSON dict of fields and values in the object
-
         Returns:
             dict: JSON dict of fields and values in the object
         """

@@ -12,6 +12,7 @@ import threading
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
+from django.core.exceptions import ValidationError
 
 from .forms import BulbForm
 from .models import Wizbulb
@@ -63,7 +64,7 @@ def index(request) -> HttpResponse:
             model.bulb_blue = m["b"] if "b" in m.keys() else 0
             model.bulb_temp = m["temp"] if "temp" in m.keys() else 0
             model.save()
-            variables.context["bulbs"].append(model.returnJSON())
+            variables.context["bulbs"].append(model.return_json())
             variables.context["numBulbs"] = len(variables.context["bulbs"])
             variables.context["ips"].remove(model.bulb_ip)
             variables.context["success"] = True
@@ -89,7 +90,7 @@ def index(request) -> HttpResponse:
 
 def discover(request) -> HttpResponse:
     """Renders index, before rendering index it does a search for bulbs on the local network,
-       this changes depending on the type of request, and the contents of the request
+        this changes depending on the type of request, and the contents of the request
 
     Args:
         request HttpRequest: HttpRequest object supplied by Django
@@ -255,7 +256,7 @@ def activate_music_sync(request) -> JsonResponse:
             variables.music_sync = True
             audio_sync_thread.start()
             pass
-        except Exception:
+        except RuntimeError:
             pass
 
         sleep(30)
@@ -322,7 +323,7 @@ def delete_bulb(request, ip):
         variables.context["bulbs"] = [x for x in variables.context["bulbs"] if x["bulb_ip"] != ip]
         variables.context["success"] = True
         variables.context["successMessage"] = f"Deleted bulb at {ip}"
-    except Exception as e:
+    except ValueError as e:
         print(e)
 
     bulbs = Wizbulb.objects.all()
@@ -334,6 +335,7 @@ def delete_bulb(request, ip):
 
 
 def edit_bulb(request, ip):
+    """Render the edit bulb page"""
     variables.separator()
     if request.method == "POST":
         variables.message_loud(f"Editing bulb at {ip}")
@@ -351,7 +353,7 @@ def edit_bulb(request, ip):
             variables.context["success"] = True
             variables.context["successMessage"] = f"Successfully edited bulb at {ip}"
 
-        except Exception as e:
+        except ValidationError as e:
             print(e)
             variables.context["error"] = True
             variables.context["errorMessage"] = "There was an error editing the bulb"
@@ -361,12 +363,14 @@ def edit_bulb(request, ip):
 
 
 def clear_error(_) -> JsonResponse:
+    """Clears the error message from the context"""
     variables.context["error"] = False
     variables.context["errorMessage"] = ""
     return JsonResponse({"result": True})
 
 
 def clear_success(_) -> JsonResponse:
+    """Clears the success message from the context"""
     variables.context["success"] = False
     variables.context["successMessage"] = ""
     return JsonResponse({"result": True})
@@ -386,6 +390,7 @@ def faqs(request) -> HttpResponse:
         variables.message_loud("load FAQ page")
         variables.separator()
         return render(request, "faq.html", variables.context)
+    return render(request, "404.html", status=404)
 
 
 def about(request) -> HttpResponse:
@@ -402,3 +407,4 @@ def about(request) -> HttpResponse:
         variables.message_loud("load ABOUT page")
         variables.separator()
         return render(request, "about.html", variables.context)
+    return render(request, "404.html", status=404)

@@ -5,7 +5,7 @@ from .models import Wizbulb
 
 
 class BulbForm(forms.ModelForm):
-    """ "Form used to create and edit bulbs in the database"""
+    """Form used to create and edit bulbs in the database"""
 
     bulb_name = forms.CharField(max_length=50)
     bulb_ip = forms.CharField(max_length=16)
@@ -16,7 +16,7 @@ class BulbForm(forms.ModelForm):
     bulb_temp = forms.IntegerField(required=False)
 
     def __init__(self, *args, **kwargs):
-        super(BulbForm, self).__init__(*args, **kwargs)
+        super(BulbForm, self).__init__(*args, **kwargs)  # pylint: disable=super-with-arguments
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "form-control"
 

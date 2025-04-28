@@ -37,3 +37,7 @@ ignore = ["Realtime_PyAudio_FFT", "migrations", "bulb_control", "env", ".github"
 ignore-patterns = [".*logs"]
 jobs = 1
 reports = true
+disable = [
+    "import-error",
+    ]
+
