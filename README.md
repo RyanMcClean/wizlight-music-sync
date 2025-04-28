@@ -73,7 +73,7 @@ For now the way to install the system is to follow these steps:
         -   `cat ./requirements.txt | grep -Eo '(^[^#]+)' | xargs -n 1 pip3 install`
         -   This extra script prevents an error when installing pyaudiowpatch,
             which is only available on windows
-    -   ## **_Windows_**:
+    -   **_Windows_**:
         -   `pip install -r ./requirements.txt`
 
 -   **Make Django Migrations**:
