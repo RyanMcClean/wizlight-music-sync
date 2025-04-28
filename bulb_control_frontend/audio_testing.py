@@ -96,6 +96,9 @@ def test_device(pa, device: int, rate=None):
         traceback.print_exc()
         time.sleep(3)
         return False
+    # This is needed as the device detection is not stable, and can throw errors
+    except TypeError:
+        return False
 
 
 try:
@@ -138,12 +141,12 @@ def main(device=None):
     temp_high = []
 
     # Get the initial values for the low, mid and high frequencies
-    for x in range(buffer_size):
+    for _ in range(buffer_size):
         _, _, freq_bins, freq_amp = ear.get_audio_features()
         low = 0
         mid = 0
         high = 0
-        for i, x in enumerate(freq_bins):
+        for _, x in enumerate(freq_bins):
             if x.item() < 50:
                 low += x.item()
             elif x.item() < 100:
@@ -181,6 +184,7 @@ def main(device=None):
                     freq_array["highArray"][num] = (
                         freq_amp[i].item() if freq_amp[i].item() != 0 else 1
                     )
+                else:
                     break
 
             for key in list(freq_array.keys()):
@@ -199,8 +203,6 @@ def main(device=None):
                         time.sleep(0.01)
                         break
 
-            for key in list(freq_array.keys()):
-                if "_avg" not in str(key):
                     freq_array[str(key) + "_avg"] = (sum(freq_array[key])) / len(freq_array[key])
                     per_diff = 0
                     for x in freq_array[key]:

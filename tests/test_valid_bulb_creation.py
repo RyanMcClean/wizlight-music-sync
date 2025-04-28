@@ -1,9 +1,13 @@
 """Unit tests to ensure that bulbs are created correctly in the database"""
 
 import string
+import logging
 from random import randint, choice, getrandbits
 from django.test import TestCase
+from test_helper import setup_logger
 from bulb_control_frontend.models import Wizbulb
+
+LOGGER = logging.getLogger(__name__)
 
 
 class DBBulbCreationTests(TestCase):
@@ -43,7 +47,7 @@ class DBBulbCreationTests(TestCase):
 
         # Populate tempArray
         for _ in range(len(cls.nameArray)):
-            cls.tempArray.append(randint(0, 100))
+            cls.tempArray.append(randint(2000, 6500))
 
         # Populate stateArray
         for _ in range(len(cls.nameArray)):
@@ -66,10 +70,12 @@ class DBBulbCreationTests(TestCase):
             bulb.bulb_green = green
             bulb.bulb_temp = temp
             bulb.bulb_state = state
+            bulb.full_clean()
             bulb.save()
 
     def test_bulb_creation(self):
         """Test if the bulbs are created correctly"""
+        setup_logger(__name__, LOGGER)
 
         for name, ip, red, blue, green, temp, state in zip(
             self.nameArray,
@@ -89,4 +95,4 @@ class DBBulbCreationTests(TestCase):
             self.assertEqual(bulb.bulb_temp, temp)
             self.assertEqual(bulb.bulb_state, state)
 
-        print(f"{len(self.nameArray)} bulbs: Passed!", self)
+        LOGGER.debug("All bulbs created successfully")

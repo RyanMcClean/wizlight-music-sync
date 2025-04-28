@@ -2,9 +2,8 @@
 """Unit tests for WizBulb models, tests that their user created functions work as expected."""
 
 import logging
-import os
 from django.test import TestCase
-from test_helper import formatter
+from test_helper import setup_logger
 from bulb_control_frontend.models import Wizbulb
 
 
@@ -27,14 +26,7 @@ class ModelFunctionTests(TestCase):
 
     def test_str_method(self):
         """Test the __str__ method of Wizbulb"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_invalid_bulb_creation.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         self.assertRegex(
             str(self.bulb),
@@ -47,14 +39,7 @@ class ModelFunctionTests(TestCase):
 
     def test_json_method(self):
         """Test the returnJSON method of Wizbulb"""
-        # Set up logging for the test
-        log_filename = f"test_logs/individual_test_logs/{__name__}/test_invalid_bulb_creation.log"
-        os.makedirs(os.path.dirname(log_filename), exist_ok=True)
-        log_handler = logging.FileHandler(log_filename, "w")
-        log_handler.setFormatter(formatter)
-        for handler in LOGGER.handlers[:]:
-            LOGGER.removeHandler(handler)
-        LOGGER.addHandler(log_handler)
+        setup_logger(__name__, LOGGER)
 
         expected_json = {
             "bulb_ip": self.bulb.bulb_ip,

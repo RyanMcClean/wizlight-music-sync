@@ -1,8 +1,6 @@
 ![Code Coverage](https://raw.githubusercontent.com/RyanMcClean/wizlight-music-sync/badges/coverage.svg?raw=true)
 ![Last Commit](https://img.shields.io/github/last-commit/RyanMcClean/wizlight-music-sync)
-![Top Language](https://img.shields.io/github/languages/top/RyanMcClean/wizlight-music-sync)
 ![Github Actions Status](https://img.shields.io/github/actions/workflow/status/RyanMcClean/wizlight-music-sync/django.yml)
-[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
 ![PyLint Score](https://raw.githubusercontent.com/RyanMcClean/wizlight-music-sync/badges/pylint.svg?raw=true)
 
 # Wizlight Bulb Audio Sync Project
@@ -44,4 +42,54 @@ did not work).
 -   **Hardware**: Wiz light bulbs and a computer (Windows, or Linux) with a
     microphone.
 
--   **Installation**:
+# Installation:
+
+Currently there is no easily packaged way to install the system, this will be
+implemented as soon as it can be figured out.
+
+For now the way to install the system is to follow these steps:
+
+-   **Download the repository**:
+
+    -   clone this repository locally on your machine
+
+-   **Create a virtual enviroment**:
+
+    -   **_Linux_**:
+        -   `python3 -m venv {directory_name_to_place_virtual_enviroment}`
+    -   **_Windows_**:
+        -   `py -m venv {directory_name_to_place_virtual_enviroment}`
+
+-   **Start the virtual enviroment**
+
+    -   **_Linux_**:
+        -   `source ./{directory_name_to_place_virtual_enviroment}/bin/activate`
+    -   **_Windows_**:
+        -   `./{directory_name_to_place_virtual_enviroment}/Scripts/Active.ps1`
+
+-   **Install requirements**
+
+    -   **_Linux_**:
+        -   `cat ./requirements.txt | grep -Eo '(^[^#]+)' | xargs -n 1 pip3 install`
+        -   This extra script prevents an error when installing pyaudiowpatch,
+            which is only available on windows
+    -   ## **_Windows_**:
+        -   `pip install -r ./requirements.txt`
+
+-   **Make Django Migrations**:
+
+    -   `python ./manage.py makemigrations bulb_control_frontend`
+
+-   **Apply Django Migrations**:
+
+    -   `python ./manage.py migrate`
+
+-   **Start Server**:
+
+    -   `python ./manage.py runserver 0.0.0.0:8000`
+    -   This runs the server and makes it available to all connections, if you
+        want to only be able to access it from the local machine change
+        `0.0.0.0` to `127.0.0.1`
+
+-   **Load WebApp**:
+    -   Open a browser and navigate to `localhost:8000` or `127.0.0.1:8000`
