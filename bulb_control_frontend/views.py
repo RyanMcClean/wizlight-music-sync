@@ -103,7 +103,7 @@ def discover(request) -> HttpResponse:
     ip = "255.255.255.255"
     variables.message_loud("discover")
     m = variables.client.sender(ip, packet="discover", attempts=5)
-
+    variables.context["ips"] = []
     for bulb_response in m:
         if [True for bulb in variables.context["bulbs"] if bulb_response["ip"] in bulb["bulb_ip"]]:
             variables.message_loud("Hiding already saved bulb")
