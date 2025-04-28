@@ -41,6 +41,7 @@
         "pyaudio",
         "pyaudiowpatch",
         "pylint",
+        "runserver",
         "samplerate",
         "scipy",
         "sounddevice",

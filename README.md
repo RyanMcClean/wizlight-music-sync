@@ -56,16 +56,16 @@ For now the way to install the system is to follow these steps:
 -   **Create a virtual enviroment**:
 
     -   **_Linux_**:
-        -   `python3 -m venv {directory_name_to_place_virtual_enviroment}`
+        -   `python3 -m venv {directory_name_to_place_virtual_environment}`
     -   **_Windows_**:
-        -   `py -m venv {directory_name_to_place_virtual_enviroment}`
+        -   `py -m venv {directory_name_to_place_virtual_environment}`
 
 -   **Start the virtual enviroment**
 
     -   **_Linux_**:
-        -   `source ./{directory_name_to_place_virtual_enviroment}/bin/activate`
+        -   `source ./{directory_name_to_place_virtual_environment}/bin/activate`
     -   **_Windows_**:
-        -   `./{directory_name_to_place_virtual_enviroment}/Scripts/Active.ps1`
+        -   `./{directory_name_to_place_virtual_environment}/Scripts/Active.ps1`
 
 -   **Install requirements**
 
