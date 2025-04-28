@@ -41,6 +41,11 @@ class Wizbulb(models.Model):
         blank=True,
         validators=[MinValueValidator(2000), MaxValueValidator(6500)],
     )
+    bulb_brightness = models.IntegerField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
 
     def __str__(self) -> str:
         """Returns a summary of wizbulb object
@@ -52,13 +57,14 @@ class Wizbulb(models.Model):
                 "-" * os.get_terminal_size()[0]
                 + f"\nBulb Ip: {self.bulb_ip}\nBulb Name: {self.bulb_name}\nBulb State: {self.bulb_state}"
                 f"\nBulb Red: {self.bulb_red}\nBulb Green {self.bulb_green}\nBulb Blue: {self.bulb_blue}"
-                f"\nBulb Temp: {self.bulb_temp}\n" + "-" * os.get_terminal_size()[0]
+                f"\nBulb Temp: {self.bulb_temp}\nBulb Brightness: {self.bulb_brightness}"
+                + "-" * os.get_terminal_size()[0]
             )
         except OSError:
             return (
                 f"Bulb Ip: {self.bulb_ip}\nBulb Name: {self.bulb_name}\nBulb State: {self.bulb_state}"
                 f"\nBulb Red: {self.bulb_red}\nBulb Green {self.bulb_green}\nBulb Blue: {self.bulb_blue}"
-                f"\nBulb Temp: {self.bulb_temp}\n"
+                f"\nBulb Temp: {self.bulb_temp}\nBulb Brightness: {self.bulb_brightness}"
             )
 
     def return_json(self) -> dict:
@@ -74,6 +80,7 @@ class Wizbulb(models.Model):
             "bulb_green": self.bulb_green,
             "bulb_blue": self.bulb_blue,
             "bulb_temp": self.bulb_temp,
+            "bulb_brightness": self.bulb_brightness,
         }
 
     objects = models.Manager()
