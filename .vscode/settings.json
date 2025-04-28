@@ -37,6 +37,7 @@
         "noinput",
         "novalidate",
         "onclick",
+        "Ooops",
         "portaudio",
         "pyaudio",
         "pyaudiowpatch",
