@@ -13,6 +13,7 @@ import threading
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import ValidationError
+from bulb_control_frontend import models
 
 from .forms import BulbForm
 from .models import Wizbulb
@@ -186,20 +187,25 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
     if request.method == "POST":
         request = request.POST if request.body is None else json.loads(request.body.decode("utf-8"))
         ip = request["ip"]
-        bulb = Wizbulb.objects.get(bulb_ip=ip)
-        m = variables.client.sender(ip, "discover", expected_results=1, attempts=1)
-        if len(m) > 0 and "result" in m[0].keys():
-            m = m[0]
-            if "state" in m["result"].keys():
-                bulb.bulb_state = m["result"]["state"]
-                bulb.bulb_red = m["result"]["r"] if "r" in m["result"].keys() else 0
-                bulb.bulb_green = m["result"]["g"] if "g" in m["result"].keys() else 0
-                bulb.bulb_blue = m["result"]["b"] if "b" in m["result"].keys() else 0
-                bulb.bulb_temp = m["result"]["temp"]
-                bulb.bulb_brightness = m["result"]["dimming"]
-                bulb.save()
-                variables.separator()
-                return JsonResponse(m)
+        try:
+            bulb = Wizbulb.objects.get(bulb_ip=ip)
+            m = variables.client.sender(ip, "discover", expected_results=1, attempts=1)
+            if len(m) > 0 and "result" in m[0].keys():
+                m = m[0]
+                if "state" in m["result"].keys():
+                    bulb.bulb_state = m["result"]["state"]
+                    bulb.bulb_red = m["result"]["r"] if "r" in m["result"].keys() else 0
+                    bulb.bulb_green = m["result"]["g"] if "g" in m["result"].keys() else 0
+                    bulb.bulb_blue = m["result"]["b"] if "b" in m["result"].keys() else 0
+                    bulb.bulb_temp = m["result"]["temp"]
+                    bulb.bulb_brightness = m["result"]["dimming"]
+                    bulb.save()
+                    variables.separator()
+                    return JsonResponse(m)
+        except models.Wizbulb.DoesNotExist:
+            variables.message_loud(f"Bulb at {ip} does not exist", "error")
+            variables.separator()
+            return JsonResponse({"error": "bulb does not exist"})
     variables.message_loud("Query error", "error")
     variables.separator()
     return JsonResponse({"error": "could not query bulb"})
