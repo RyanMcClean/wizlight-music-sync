@@ -3,6 +3,7 @@
 
 import os
 import logging
+import inspect
 from playwright.sync_api import sync_playwright, expect
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from test_helper import setup_logger
@@ -31,7 +32,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_load_index(self):
         """Load index page, and check that telltale elements are visible"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
         for browser in self.browsers:
             LOGGER.info("Running tests on: %s", browser.browser_type.name)
             page = browser.new_page()
@@ -44,10 +45,11 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_load_discover(self):
         """Load discover page, and check that all telltale elements are visible"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}/discover")
+            LOGGER.debug("Using browser, %s Page URL is: %s", browser.browser_type.name, page.url)
             page.wait_for_url("**", wait_until="domcontentloaded")
             page.locator("#find-bulbs-button").wait_for(state="attached")
             navbar_tests(page)
@@ -57,7 +59,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_from_index_to_discover(self):
         """Test navigation from index page to discover page"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}")
@@ -65,13 +67,11 @@ class PlaywrightTests(StaticLiveServerTestCase):
             page.wait_for_url("**", wait_until="domcontentloaded")
             navbar_tests(page)
             LOGGER.debug("Navbar tests passed")
-            find_button = page.locator("#find-bulbs-button")
-            find_button.click()
+            page.locator("#find-bulbs-button").click()
             LOGGER.debug(page.url)
             page.wait_for_url("**", wait_until="domcontentloaded")
-            url = page.url
-            self.assertIn("discover", url)
-            LOGGER.debug("URL is: %s", url)
+            self.assertIn("discover", page.url)
+            LOGGER.debug("URL is: %s", page.url)
             navbar_tests(page)
             LOGGER.debug("Navbar tests passed")
             page.close()
@@ -79,11 +79,12 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_from_discover_to_index(self):
         """Test navigation from discover page to index page"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}/discover")
+            LOGGER.debug("Using browser, %s Page URL is: %s", browser.browser_type.name, page.url)
             page.wait_for_url("**", wait_until="domcontentloaded")
             navbar_tests(page)
             LOGGER.debug("Navbar tests passed")
@@ -98,29 +99,119 @@ class PlaywrightTests(StaticLiveServerTestCase):
 
     def test_load_faq(self):
         """Load FAQ page, ensure that telltale elements are visible"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}/faq")
+            LOGGER.debug("Using browser, %s Page URL is: %s", browser.browser_type.name, page.url)
             page.wait_for_url("**", wait_until="domcontentloaded")
             navbar_tests(page)
             LOGGER.debug("Navbar tests passed")
             faq_tests(self, page)
             LOGGER.debug("FAQ tests passed")
 
+    def test_from_index_to_faq(self):
+        """Test navigation from index page to faq page"""
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+
+        for browser in self.browsers:
+            page = browser.new_page()
+            page.goto(f"{self.live_server_url}")
+            LOGGER.debug("Using browser, %s Page URL is: %s", browser.browser_type.name, page.url)
+            page.wait_for_url("**", wait_until="domcontentloaded")
+            navbar_tests(page)
+            LOGGER.debug("Navbar tests passed")
+            page.locator("#faq-link").click()
+            page.wait_for_url("**", wait_until="domcontentloaded")
+            self.assertIn("faq", page.url)
+            LOGGER.debug("URL is: %s", page.url)
+            navbar_tests(page)
+            LOGGER.debug("Navbar tests passed")
+            faq_tests(self, page)
+            LOGGER.debug("About tests passed")
+            page.close()
+            LOGGER.debug("Page closed")
+
+    def test_from_faq_to_index(self):
+        """Test navigation from faq page to index page"""
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+
+        for browser in self.browsers:
+            page = browser.new_page()
+            page.goto(f"{self.live_server_url}/faq")
+            LOGGER.debug("Using browser, %s Page URL is: %s", browser.browser_type.name, page.url)
+            page.wait_for_url("**", wait_until="domcontentloaded")
+            navbar_tests(page)
+            LOGGER.debug("Navbar tests passed")
+            faq_tests(self, page)
+            LOGGER.debug("About tests passed")
+            page.locator("#home-link").click()
+            page.wait_for_url("**", wait_until="domcontentloaded")
+            self.assertNotIn("faq", page.url)
+            LOGGER.debug("URL is: %s", page.url)
+            navbar_tests(page)
+            LOGGER.debug("Navbar tests passed")
+            page.close()
+            LOGGER.debug("Page closed")
+
     def test_load_about(self):
         """Load about page, ensure that the telltale elements are visible"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         for browser in self.browsers:
             page = browser.new_page()
             page.goto(f"{self.live_server_url}/about")
+            LOGGER.debug("Using browser, %s Page URL is: %s", browser.browser_type.name, page.url)
             page.wait_for_url("**", wait_until="domcontentloaded")
             navbar_tests(page)
             LOGGER.debug("Navbar tests passed")
             about_tests(self, page)
             LOGGER.debug("About tests passed")
+
+    def test_from_index_to_about(self):
+        """Test navigation from index page to about page"""
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+
+        for browser in self.browsers:
+            page = browser.new_page()
+            page.goto(f"{self.live_server_url}")
+            LOGGER.debug("Using browser, %s Page URL is: %s", browser.browser_type.name, page.url)
+            page.wait_for_url("**", wait_until="domcontentloaded")
+            navbar_tests(page)
+            LOGGER.debug("Navbar tests passed")
+            page.locator("#about-link").click()
+            page.wait_for_url("**", wait_until="domcontentloaded")
+            self.assertIn("about", page.url)
+            LOGGER.debug("URL is: %s", page.url)
+            navbar_tests(page)
+            LOGGER.debug("Navbar tests passed")
+            about_tests(self, page)
+            LOGGER.debug("About tests passed")
+            page.close()
+            LOGGER.debug("Page closed")
+
+    def test_from_about_to_index(self):
+        """Test navigation from about page to index page"""
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+
+        for browser in self.browsers:
+            page = browser.new_page()
+            page.goto(f"{self.live_server_url}/about")
+            LOGGER.debug("Using browser, %s Page URL is: %s", browser.browser_type.name, page.url)
+            page.wait_for_url("**", wait_until="domcontentloaded")
+            navbar_tests(page)
+            LOGGER.debug("Navbar tests passed")
+            about_tests(self, page)
+            LOGGER.debug("About tests passed")
+            page.locator("#home-link").click()
+            page.wait_for_url("**", wait_until="domcontentloaded")
+            self.assertNotIn("about", page.url)
+            LOGGER.debug("URL is: %s", page.url)
+            navbar_tests(page)
+            LOGGER.debug("Navbar tests passed")
+            page.close()
+            LOGGER.debug("Page closed")
 
 
 def about_tests(self, page):

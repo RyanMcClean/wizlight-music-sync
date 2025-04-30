@@ -6,6 +6,7 @@ should pass or fail depending on table restrictions
 
 from random import randint
 import logging
+import inspect
 from django.db import IntegrityError
 from django.test import TestCase
 from test_helper import setup_logger
@@ -24,7 +25,7 @@ class DBIntegrityTests(TestCase):
 
     def test_set_null_object(self):
         """Test null bulb cannot be set"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         with self.assertRaisesRegex(
             IntegrityError,
@@ -35,7 +36,7 @@ class DBIntegrityTests(TestCase):
 
     def test_set_null_ip(self):
         """Test null ip cannot be set"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         with self.assertRaisesRegex(
             IntegrityError,
@@ -46,7 +47,7 @@ class DBIntegrityTests(TestCase):
 
     def test_set_null_name(self):
         """Test null name cannot be set"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         with self.assertRaisesRegex(
             IntegrityError,
@@ -57,7 +58,7 @@ class DBIntegrityTests(TestCase):
 
     def test_set_valid_bulb(self):
         """Test valid bulbs can be set, used as a control for the above tests"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         Wizbulb.objects.create(
             bulb_name="Test Bulb",
