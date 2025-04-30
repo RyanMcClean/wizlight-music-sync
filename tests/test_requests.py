@@ -17,207 +17,169 @@ LOGGER = logging.getLogger(__name__)
 LOCAL_IP = "127.0.0.1"
 
 
-class IndexClientTest(TestCase):
-    """Test class for testing the api via python requests"""
-
-    def test_get_index(self):
-        """Test get the index page"""
-        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
-
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
-        LOGGER.debug("Index page loaded successfully")
-        self.assertTemplateUsed(response, "index.html")
-        LOGGER.debug("Correct template used for index page")
-
-    def test_bulb_registration_form(self):
-        """test bulb form submission"""
-        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
-
-        form_data = {"bulb_ip": LOCAL_IP}
-        response = self.client.post("/", form_data, "application/json")
-        LOGGER.debug("Bulb registration form submitted successfully")
-        self.assertEqual(response.status_code, 200)
-        LOGGER.debug("Response status code is 200")
-
-    def test_404_index(self):
-        """Test invalid index get for 404 page"""
-        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
-
-        response = self.client.delete("/")
-        self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Index returned not found for DELETE request")
-        self.assertTemplateUsed(response, "404.html")
-        LOGGER.debug("Correct template used for 404 page")
-
-        response = self.client.put("/")
-        self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Index returned not found for PUT request")
-        self.assertTemplateUsed(response, "404.html")
-        LOGGER.debug("Correct template used for 404 page")
-
-        response = self.client.patch("/")
-        self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Index returned not found for PATCH request")
-        self.assertTemplateUsed(response, "404.html")
-        LOGGER.debug("Correct template used for 404 page")
-
-
 class BulbFunctionsTest(TestCase):
     """Test class for testing bulb functions via API"""
 
     def test_discover_rest_requests(self):
         """test get Discover page"""
         setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/discover/"
+        view = "Discover"
 
-        response = self.client.get("/discover/")
+        response = self.client.get(endpoint)
         self.assertEqual(response.status_code, 200)
-        LOGGER.debug("Discover page loaded successfully")
+        LOGGER.debug("%s page loaded successfully", view)
         self.assertTemplateUsed(response, "index.html")
-        LOGGER.debug("Correct template used for Discover page")
+        LOGGER.debug("Correct template used for %s page", view)
 
-        response = self.client.post("/discover/")
+        response = self.client.post(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Discover returned not found for POST request")
+        LOGGER.debug("%s returned not found for POST request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.delete("/discover/")
+        response = self.client.delete(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Discover returned not found for DELETE request")
+        LOGGER.debug("%s returned not found for DELETE request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.put("/discover/")
+        response = self.client.put(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Discover returned not found for PUT request")
+        LOGGER.debug("%s returned not found for PUT request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.patch("/discover/")
+        response = self.client.patch(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Discover returned not found for PATCH request")
+        LOGGER.debug("%s returned not found for PATCH request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
     def test_query_bulb(self):
         """test query bulb"""
         setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/queryBulb/"
+        view = "Query Bulb"
 
         post_data = {"ip": LOCAL_IP}
-        response = self.client.post("/queryBulb/", post_data, "application/json")
+        response = self.client.post(endpoint, post_data, "application/json")
         self.assertEqual(response.status_code, 200)
-        LOGGER.debug("Query bulb response status code is 200")
+        LOGGER.debug("%s response status code is 200", view)
         self.assertDictEqual(
             json.loads(response.content.decode("utf-8")), {"error": "bulb does not exist"}
         )
-        LOGGER.debug("Query bulb response is correct")
+        LOGGER.debug("%s response is correct", view)
 
         post_data = {}
-        response = self.client.post("/queryBulb/", post_data, "application/json")
+        response = self.client.post(endpoint, post_data, "application/json")
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Query bulb invalid POST response status code is 404")
+        LOGGER.debug("%s invalid POST response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.get("/queryBulb/")
+        response = self.client.get(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Query bulb invalid GET response status code is 404")
+        LOGGER.debug("%s invalid GET response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.put("/queryBulb/")
+        response = self.client.put(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Query bulb invalid PUT response status code is 404")
+        LOGGER.debug("%s invalid PUT response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.delete("/queryBulb/")
+        response = self.client.delete(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Query bulb invalid DELETE response status code is 404")
+        LOGGER.debug("%s invalid DELETE response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.patch("/queryBulb/")
+        response = self.client.patch(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Query bulb invalid PATCH response status code is 404")
+        LOGGER.debug("%s invalid PATCH response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
     def test_toggle_bulb(self):
         """test toggle bulb"""
         setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/toggleBulb/"
+        view = "Toggle Bulb"
 
         post_data = {"ip": LOCAL_IP}
-        response = self.client.post("/toggleBulb/", post_data, "application/json")
+        response = self.client.post(endpoint, post_data, "application/json")
         self.assertEqual(response.status_code, 200)
-        LOGGER.debug("Toggle bulb response status code is 200")
+        LOGGER.debug("%s response status code is 200", view)
         self.assertDictEqual(json.loads(response.content.decode("utf-8")), BULB_QUERY_ERROR_MESSAGE)
-        LOGGER.debug("Toggle bulb response status code is 200")
+        LOGGER.debug("%s response status code is 200", view)
 
         post_data = {}
-        response = self.client.post("/toggleBulb/", post_data, "application/json")
+        response = self.client.post(endpoint, post_data, "application/json")
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Toggle bulb invalid POST response status code is 404")
+        LOGGER.debug("%s invalid POST response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.get("/toggleBulb/")
+        response = self.client.get(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Toggle bulb invalid GET response status code is 404")
+        LOGGER.debug("%s invalid GET response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.put("/toggleBulb/")
+        response = self.client.put(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Toggle bulb invalid PUT response status code is 404")
+        LOGGER.debug("%s invalid PUT response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.delete("/toggleBulb/")
+        response = self.client.delete(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Toggle bulb invalid DELETE response status code is 404")
+        LOGGER.debug("%s invalid DELETE response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.patch("/toggleBulb/")
+        response = self.client.patch(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Toggle bulb invalid PATCH response status code is 404")
+        LOGGER.debug("%s invalid PATCH response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
     def test_color_bulb(self):
         """test turn bulb to colour"""
         setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/colorBulb/"
+        view = "Color Bulb"
 
         post_data = {"ip": LOCAL_IP, "r": "1", "g": "1", "b": "1", "brightness": "1"}
-        response = self.client.post("/colorBulb/", post_data, "application/json")
+        response = self.client.post(endpoint, post_data, "application/json")
         self.assertEqual(response.status_code, 200)
-        LOGGER.debug("Color bulb response status code is 200")
+        LOGGER.debug("%s response status code is 200", view)
         self.assertDictEqual(json.loads(response.content.decode("utf-8")), BULB_QUERY_ERROR_MESSAGE)
-        LOGGER.debug("Color bulb response status code is 200")
+        LOGGER.debug("%s response status code is 200", view)
 
-        response = self.client.get("/colorBulb/")
+        response = self.client.get(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Color bulb invalid GET response status code is 404")
+        LOGGER.debug("%s invalid GET response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.put("/colorBulb/")
+        response = self.client.put(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Color bulb invalid PUT response status code is 404")
+        LOGGER.debug("%s invalid PUT response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.delete("/colorBulb/")
+        response = self.client.delete(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Color bulb invalid DELETE response status code is 404")
+        LOGGER.debug("%s invalid DELETE response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.patch("/colorBulb/")
+        response = self.client.patch(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Color bulb invalid PATCH response status code is 404")
+        LOGGER.debug("%s invalid PATCH response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
@@ -293,69 +255,147 @@ class BulbFunctionsTest(TestCase):
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-    def test_start_audio_sync(self):
-        """test start audio sync"""
+    def test_activate_audio_sync(self):
+        """test activate audio sync"""
         setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/activateSync/"
+        view = "Activate Audio Sync"
 
-        response = self.client.post("/activateSync/", content_type="text/xml", data="0")
+        response = self.client.post(endpoint, content_type="text/xml", data="0")
         self.assertEqual(response.status_code, 200)
-        LOGGER.debug("Start audio sync response status code is 200")
+        LOGGER.debug("%s response status code is 200", view)
+        self.assertDictEqual(json.loads(response.content.decode("utf-8")), {"result": True})
+        LOGGER.debug("%s response is correct", view)
 
-        response = self.client.get("/activateSync/")
+        response = self.client.get(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Activate Sync invalid GET response status code is 404")
+        LOGGER.debug("%s invalid GET response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.put("/activateSync/")
+        response = self.client.put(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Activate Sync invalid PUT response status code is 404")
+        LOGGER.debug("%s invalid PUT response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.delete("/activateSync/")
+        response = self.client.delete(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Activate Sync invalid DELETE response status code is 404")
+        LOGGER.debug("%s invalid DELETE response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.patch("/activateSync/")
+        response = self.client.patch(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Activate Sync invalid PATCH response status code is 404")
+        LOGGER.debug("%s invalid PATCH response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
     def test_stop_audio_sync(self):
         """test stop audio sync"""
         setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/stopSync/"
+        view = "Stop Audio Sync"
 
-        response = self.client.post("/stopSync/")
+        response = self.client.post(endpoint)
         self.assertEqual(response.status_code, 200)
-        LOGGER.debug("Stop audio sync response status code is 200")
+        LOGGER.debug("%s response status code is 200", view)
         self.assertDictEqual(json.loads(response.content.decode("utf-8")), {"result": True})
-        LOGGER.debug("Stop audio sync response is correct")
+        LOGGER.debug("%s response is correct", view)
 
-        response = self.client.get("/stopSync/")
+        response = self.client.get(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Stop Sync invalid GET response status code is 404")
+        LOGGER.debug("%s invalid GET response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.put("/stopSync/")
+        response = self.client.put(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Stop Sync invalid PUT response status code is 404")
+        LOGGER.debug("%s invalid PUT response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.delete("/stopSync/")
+        response = self.client.delete(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Stop Sync invalid DELETE response status code is 404")
+        LOGGER.debug("%s invalid DELETE response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.patch("/stopSync/")
+        response = self.client.patch(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("Stop Sync invalid PATCH response status code is 404")
+        LOGGER.debug("%s invalid PATCH response status code is 404", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+    def test_clear_success(self):
+        """test clear success message"""
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/clearSuccess/"
+        view = "Clear Success Message"
+
+        response = self.client.post(endpoint)
+        self.assertEqual(response.status_code, 200)
+        LOGGER.debug("%s response status code is 200", view)
+        self.assertDictEqual(json.loads(response.content.decode("utf-8")), {"result": True})
+        LOGGER.debug("%s response is correct", view)
+
+        response = self.client.get(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s invalid GET response status code is 404", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+        response = self.client.put(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s invalid PUT response status code is 404", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+        response = self.client.delete(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s invalid DELETE response status code is 404", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+        response = self.client.patch(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s invalid PATCH response status code is 404", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+    def test_clear_error(self):
+        """test clear error message"""
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/clearError/"
+        view = "Clear Error Message"
+
+        response = self.client.post(endpoint)
+        self.assertEqual(response.status_code, 200)
+        LOGGER.debug("%s response status code is 200", view)
+        self.assertDictEqual(json.loads(response.content.decode("utf-8")), {"result": True})
+        LOGGER.debug("%s response is correct", view)
+
+        response = self.client.get(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s invalid GET response status code is 404", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+        response = self.client.put(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s invalid PUT response status code is 404", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+        response = self.client.delete(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s invalid DELETE response status code is 404", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+        response = self.client.patch(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s invalid PATCH response status code is 404", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
@@ -363,104 +403,149 @@ class BulbFunctionsTest(TestCase):
 class EndpointTests(TestCase):
     """Test class for testing api endpoints"""
 
+    def test_index_rest_requests(self):
+        """Test the index page"""
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/"
+        view = "Index"
+
+        response = self.client.get(endpoint)
+        self.assertEqual(response.status_code, 200)
+        LOGGER.debug("%s page loaded successfully", view)
+        self.assertTemplateUsed(response, "index.html")
+        LOGGER.debug("Correct template used for %s page", view)
+
+        form_data = {"bulb_ip": LOCAL_IP}
+
+        response = self.client.post(endpoint, form_data, "application/json")
+        LOGGER.debug("Bulb registration form submitted successfully")
+        self.assertEqual(response.status_code, 200)
+        LOGGER.debug("Response status code is 200")
+        self.assertTemplateUsed(response, "index.html")
+        LOGGER.debug("Correct template used for %s page", view)
+
+        response = self.client.delete(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s returned not found for DELETE request", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+        response = self.client.put(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s returned not found for PUT request", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
+        response = self.client.patch(endpoint)
+        self.assertEqual(response.status_code, 404)
+        LOGGER.debug("%s returned not found for PATCH request", view)
+        self.assertTemplateUsed(response, "404.html")
+        LOGGER.debug("Correct template used for 404 page")
+
     def test_crud_rest_requests(self):
         """test get crud page"""
         setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/crud/"
+        view = "CRUD"
 
-        response = self.client.get("/crud/")
+        response = self.client.get(endpoint)
         self.assertEqual(response.status_code, 200)
-        LOGGER.debug("CRUD page loaded successfully")
+        LOGGER.debug("%s page loaded successfully", view)
         self.assertTemplateUsed(response, "bulb_crud.html")
         LOGGER.debug("Correct template used for CRUD page")
 
-        response = self.client.post("/crud/")
+        response = self.client.post(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("CRUD returned not found for POST request")
+        LOGGER.debug("%s returned not found for POST request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.delete("/crud/")
+        response = self.client.delete(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("CRUD returned not found for DELETE request")
+        LOGGER.debug("%s returned not found for DELETE request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.put("/crud/")
+        response = self.client.put(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("CRUD returned not found for PUT request")
+        LOGGER.debug("%s returned not found for PUT request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.patch("/crud/")
+        response = self.client.patch(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("CRUD returned not found for PATCH request")
+        LOGGER.debug("%s returned not found for PATCH request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
     def test_about_rest_requests(self):
         """test get about page"""
         setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/about/"
+        view = "About"
 
-        response = self.client.get("/about/")
+        response = self.client.get(endpoint)
         self.assertEqual(response.status_code, 200)
-        LOGGER.debug("About page loaded successfully")
+        LOGGER.debug("%s page loaded successfully", view)
         self.assertTemplateUsed(response, "about.html")
         LOGGER.debug("Correct template used for CRUD page")
 
-        response = self.client.post("/about/")
+        response = self.client.post(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("About returned not found for POST request")
+        LOGGER.debug("%s returned not found for POST request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.delete("/about/")
+        response = self.client.delete(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("About returned not found for DELETE request")
+        LOGGER.debug("%s returned not found for DELETE request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.put("/about/")
+        response = self.client.put(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("About returned not found for PUT request")
+        LOGGER.debug("%s returned not found for PUT request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.patch("/about/")
+        response = self.client.patch(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("About returned not found for PATCH request")
+        LOGGER.debug("%s returned not found for PATCH request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
     def test_faq_rest_requests(self):
         """test get faq page"""
         setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
+        endpoint = "/faq/"
+        view = "FAQ"
 
-        response = self.client.get("/faq/")
+        response = self.client.get(endpoint)
         self.assertEqual(response.status_code, 200)
-        LOGGER.debug("FAQ page loaded successfully")
+        LOGGER.debug("%s page loaded successfully", view)
         self.assertTemplateUsed(response, "faq.html")
         LOGGER.debug("Correct template used for CRUD page")
 
-        response = self.client.post("/faq/")
+        response = self.client.post(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("FAQ returned not found for POST request")
+        LOGGER.debug("%s returned not found for POST request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.delete("/faq/")
+        response = self.client.delete(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("FAQ returned not found for DELETE request")
+        LOGGER.debug("%s returned not found for DELETE request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.put("/faq/")
+        response = self.client.put(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("FAQ returned not found for PUT request")
+        LOGGER.debug("%s returned not found for PUT request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")
 
-        response = self.client.patch("/faq/")
+        response = self.client.patch(endpoint)
         self.assertEqual(response.status_code, 404)
-        LOGGER.debug("FAQ returned not found for PATCH request")
+        LOGGER.debug("%s returned not found for PATCH request", view)
         self.assertTemplateUsed(response, "404.html")
         LOGGER.debug("Correct template used for 404 page")

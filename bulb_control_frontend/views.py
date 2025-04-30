@@ -419,18 +419,34 @@ def edit_bulb(request, ip):
     return render(request, "404.html", status=404)
 
 
-def clear_error(_) -> JsonResponse:
-    """Clears the error message from the context"""
-    variables.context["error"] = False
-    variables.context["errorMessage"] = ""
-    return JsonResponse({"result": True})
-
-
-def clear_success(_) -> JsonResponse:
+def clear_error(request) -> JsonResponse:
     """Clears the success message from the context"""
-    variables.context["success"] = False
-    variables.context["successMessage"] = ""
-    return JsonResponse({"result": True})
+    variables.separator()
+
+    if request.method == "POST":
+        variables.message_loud("Clearing error message")
+        variables.separator()
+        variables.context["error"] = False
+        variables.context["errorMessage"] = ""
+        return JsonResponse({"result": True})
+
+    variables.separator()
+    return render(request, "404.html", status=404)
+
+
+def clear_success(request) -> JsonResponse:
+    """Clears the success message from the context"""
+    variables.separator()
+
+    if request.method == "POST":
+        variables.message_loud("Clearing success message")
+        variables.separator()
+        variables.context["success"] = False
+        variables.context["successMessage"] = ""
+        return JsonResponse({"result": True})
+
+    variables.separator()
+    return render(request, "404.html", status=404)
 
 
 def faqs(request) -> HttpResponse:

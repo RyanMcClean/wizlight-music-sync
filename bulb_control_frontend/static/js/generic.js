@@ -16,12 +16,12 @@ function clear_message() {
     var error_element = document.getElementById('error-toast');
     var success_element = document.getElementById('success-toast');
     if (typeof error_element != 'undefined' && error_element != null) {
-        console.log('Clearing Error');
+        console.log('Clearing Error', { method: 'post' });
         fetch('/clearError/');
     }
     if (typeof success_element != 'undefined' && success_element != null) {
         console.log('Clearing Success');
-        fetch('/clearSuccess/');
+        fetch('/clearSuccess/', { method: 'post' });
     }
 }
 
