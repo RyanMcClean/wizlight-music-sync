@@ -17,11 +17,21 @@ function clear_message() {
     var success_element = document.getElementById('success-toast');
     if (typeof error_element != 'undefined' && error_element != null) {
         console.log('Clearing Error', { method: 'post' });
-        fetch('/clearError/');
+        fetch('/clearError/', {
+            method: 'post',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        });
     }
     if (typeof success_element != 'undefined' && success_element != null) {
         console.log('Clearing Success');
-        fetch('/clearSuccess/', { method: 'post' });
+        fetch('/clearSuccess/', {
+            method: 'post',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        });
     }
 }
 
