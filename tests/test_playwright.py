@@ -214,8 +214,9 @@ class PlaywrightTests(StaticLiveServerTestCase):
             LOGGER.debug("Page closed")
 
 
-def navigate_to_discover(page):
+def navigate_to_discover(self, page):
     """navigate to discover page"""
+    LOGGER.debug("Navigating to discover page from %s", page.url)
     if page.locator("#find-bulbs-button").is_visible():
         page.locator("#find-bulbs-button").click()
     else:
@@ -223,6 +224,11 @@ def navigate_to_discover(page):
             page.locator(".navbar-toggler-icon").click()
             if page.locator("#find-bulbs-button").is_visible():
                 page.locator("#find-bulbs-button").click()
+    page.wait_for_url("**", wait_until="domcontentloaded")
+    if "discover" in page.url:
+        LOGGER.debug("Successfully navigated to discover page")
+    else:
+        raise Exception("Failed to navigate to discover page")
 
 
 def about_tests(self, page):
