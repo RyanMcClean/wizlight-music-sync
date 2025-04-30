@@ -4,6 +4,7 @@
 import string
 from random import randint, choice, getrandbits
 import logging
+import inspect
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from test_helper import setup_logger
@@ -17,7 +18,7 @@ class DBValidationTests(TestCase):
 
     def test_invalid_bulb_creation(self):
         """Set invalid bulb name and ip and ensure it raises an appropriate error"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         bulb_array = []
         ip_array = []
@@ -53,7 +54,7 @@ class DBValidationTests(TestCase):
 
     def test_set_null_bulb_ip(self):
         """Set null bulb ip and ensure it raises an appropriate error"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         # Step 1, attempt to create bulb with only a name
         with self.assertRaisesRegex(
@@ -117,7 +118,7 @@ class DBValidationTests(TestCase):
 
     def test_set_null_bulb_name(self):
         """Set null bulb name and ensure it raises the appropriate error"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         # Step 1, attempt to create bulb with only an ip
         with self.assertRaisesRegex(
@@ -181,7 +182,7 @@ class DBValidationTests(TestCase):
 
     def test_set_int_value_invalid(self):
         """Set invalid int values for bulb and ensure appropriate errors are raised"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         bulb_array = []
         # Step 1, Create array of bulbs that have invalid int attribute values
@@ -227,7 +228,7 @@ class DBValidationTests(TestCase):
 
     def test_set_invalid_ip(self):
         """Set invalid ip values for bulb and ensure appropriate errors are raised"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         invalid_ip_bulb_array = []
         for _ in range(randint(100, 1000)):

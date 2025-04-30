@@ -8,10 +8,10 @@ formatter = logging.Formatter(
 )
 
 
-def setup_logger(name, logger):
+def setup_logger(class_name, name, logger):
     """Used to setup the logger in tests, helpful to reduce duplicated code"""
     # Set up logging for the test
-    log_filename = f"test_logs/individual_test_logs/{name}/test_set_null_object.log"
+    log_filename = f"test_logs/individual_test_logs/{class_name}/{name}.log"
     os.makedirs(os.path.dirname(log_filename), exist_ok=True)
     log_handler = logging.FileHandler(log_filename, "w")
     log_handler.setFormatter(formatter)

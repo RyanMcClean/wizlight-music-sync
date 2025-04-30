@@ -25,7 +25,7 @@ function clear_message() {
     }
 }
 
-// Launches audio sync
+// Launches or stops audio sync
 async function audioSync(element) {
     var audio_device = document.getElementById('audio_device_selector').value;
     var button = document.getElementById('activate-music-sync-button');

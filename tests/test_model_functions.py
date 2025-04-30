@@ -2,6 +2,7 @@
 """Unit tests for WizBulb models, tests that their user created functions work as expected."""
 
 import logging
+import inspect
 from django.test import TestCase
 from test_helper import setup_logger
 from bulb_control_frontend.models import Wizbulb
@@ -27,7 +28,7 @@ class ModelFunctionTests(TestCase):
 
     def test_str_method(self):
         """Test the __str__ method of Wizbulb"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         self.assertRegex(
             str(self.bulb),
@@ -41,7 +42,7 @@ class ModelFunctionTests(TestCase):
 
     def test_json_method(self):
         """Test the returnJSON method of Wizbulb"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         expected_json = {
             "bulb_ip": self.bulb.bulb_ip,

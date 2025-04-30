@@ -2,6 +2,7 @@
 
 import string
 import logging
+import inspect
 from random import randint, choice, getrandbits
 from django.test import TestCase
 from test_helper import setup_logger
@@ -75,7 +76,7 @@ class DBBulbCreationTests(TestCase):
 
     def test_bulb_creation(self):
         """Test if the bulbs are created correctly"""
-        setup_logger(__name__, LOGGER)
+        setup_logger(__name__, inspect.currentframe().f_code.co_name, LOGGER)
 
         for name, ip, red, blue, green, temp, state in zip(
             self.nameArray,

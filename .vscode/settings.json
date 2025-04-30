@@ -26,6 +26,8 @@
     ],
     "python.testing.unittestEnabled": false,
     "cSpell.words": [
+        "anybadge",
+        "csrftoken",
         "DGRAM",
         "domcontentloaded",
         "elif",

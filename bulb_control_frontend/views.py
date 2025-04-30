@@ -101,33 +101,42 @@ def discover(request) -> HttpResponse:
     """
     variables.separator()
 
-    ip = "255.255.255.255"
-    variables.message_loud("discover")
-    m = variables.client.sender(ip, packet="discover", attempts=5)
-    variables.context["ips"] = []
-    for bulb_response in m:
-        if [True for bulb in variables.context["bulbs"] if bulb_response["ip"] in bulb["bulb_ip"]]:
-            variables.message_loud("Hiding already saved bulb")
-        elif bulb_response["ip"] not in variables.context["ips"]:
-            variables.context["ips"].append(bulb_response["ip"])
+    if request.method == "GET":
+        ip = "255.255.255.255"
+        variables.message_loud("discover")
+        m = variables.client.sender(ip, packet="discover", attempts=5)
+        variables.context["ips"] = []
+        for bulb_response in m:
+            if [
+                True
+                for bulb in variables.context["bulbs"]
+                if bulb_response["ip"] in bulb["bulb_ip"]
+            ]:
+                variables.message_loud("Hiding already saved bulb")
+            elif bulb_response["ip"] not in variables.context["ips"]:
+                variables.context["ips"].append(bulb_response["ip"])
 
-    if (
-        variables.context["numBulbs"] <= 0
-        and len(variables.context["ips"]) <= 0
-        and len(variables.context["bulbs"]) <= 0
-    ):
-        variables.context["error"] = True
-        variables.context["errorMessage"] = (
-            "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
-        )
-        variables.message_loud(
-            "Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer."
-        )
-    else:
-        variables.context["ips"] = list(set(variables.context["ips"]))
+        if (
+            variables.context["numBulbs"] <= 0
+            and len(variables.context["ips"]) <= 0
+            and len(variables.context["bulbs"]) <= 0
+        ):
+            variables.context["error"] = True
+            variables.context["errorMessage"] = (
+                "Bulb discovery failed. Please ensure bulbs are "
+                + "connected to the same network as your computer."
+            )
+            variables.message_loud(
+                "Bulb discovery failed. Please ensure bulbs are "
+                + "connected to the same network as your computer."
+            )
+        else:
+            variables.context["ips"] = list(set(variables.context["ips"]))
+        variables.separator()
+        return render(request, "index.html", variables.context)
 
     variables.separator()
-    return render(request, "index.html", variables.context)
+    return render(request, "404.html", status=404)
 
 
 def toggle_bulb(request) -> JsonResponse | HttpResponse:
@@ -186,29 +195,34 @@ def query_bulb(request) -> JsonResponse | HttpResponse:
 
     if request.method == "POST":
         request = request.POST if request.body is None else json.loads(request.body.decode("utf-8"))
-        ip = request["ip"]
-        try:
-            bulb = Wizbulb.objects.get(bulb_ip=ip)
-            m = variables.client.sender(ip, "discover", expected_results=1, attempts=1)
-            if len(m) > 0 and "result" in m[0].keys():
-                m = m[0]
-                if "state" in m["result"].keys():
-                    bulb.bulb_state = m["result"]["state"]
-                    bulb.bulb_red = m["result"]["r"] if "r" in m["result"].keys() else 0
-                    bulb.bulb_green = m["result"]["g"] if "g" in m["result"].keys() else 0
-                    bulb.bulb_blue = m["result"]["b"] if "b" in m["result"].keys() else 0
-                    bulb.bulb_temp = m["result"]["temp"]
-                    bulb.bulb_brightness = m["result"]["dimming"]
-                    bulb.save()
-                    variables.separator()
-                    return JsonResponse(m)
-        except models.Wizbulb.DoesNotExist:
-            variables.message_loud(f"Bulb at {ip} does not exist", "error")
+        ip = request["ip"] if "ip" in request.keys() else None
+        if ip:
+            try:
+                bulb = Wizbulb.objects.get(bulb_ip=ip)
+                m = variables.client.sender(ip, "discover", expected_results=1, attempts=1)
+                if len(m) > 0 and "result" in m[0].keys():
+                    m = m[0]
+                    if "state" in m["result"].keys():
+                        bulb.bulb_state = m["result"]["state"]
+                        bulb.bulb_red = m["result"]["r"] if "r" in m["result"].keys() else 0
+                        bulb.bulb_green = m["result"]["g"] if "g" in m["result"].keys() else 0
+                        bulb.bulb_blue = m["result"]["b"] if "b" in m["result"].keys() else 0
+                        bulb.bulb_temp = m["result"]["temp"]
+                        bulb.bulb_brightness = m["result"]["dimming"]
+                        bulb.save()
+                        variables.separator()
+                        return JsonResponse(m)
+            except models.Wizbulb.DoesNotExist:
+                variables.message_loud(f"Bulb at {ip} does not exist", "error")
+                variables.separator()
+                return JsonResponse({"error": "bulb does not exist"})
+
+            variables.message_loud("Query error", "error")
             variables.separator()
-            return JsonResponse({"error": "bulb does not exist"})
-    variables.message_loud("Query error", "error")
+            return JsonResponse({"error": "could not query bulb"})
+
     variables.separator()
-    return JsonResponse({"error": "could not query bulb"})
+    return render(request, "404.html", status=404)
 
 
 def color_bulb(request) -> JsonResponse | HttpResponse:
@@ -247,9 +261,12 @@ def color_bulb(request) -> JsonResponse | HttpResponse:
 
                 variables.separator()
                 return JsonResponse(m)
-    variables.message_loud("Error, could not query bulb", "error")
+        variables.message_loud("Error, could not query bulb", "error")
+        variables.separator()
+        return JsonResponse({"error": "could not query bulb"})
+
     variables.separator()
-    return JsonResponse({"error": "could not query bulb"})
+    return render(request, "404.html", status=404)
 
 
 def activate_music_sync(request) -> JsonResponse:
@@ -261,7 +278,7 @@ def activate_music_sync(request) -> JsonResponse:
     variables.separator()
     variables.message_loud("Starting Audio Sync")
 
-    if request.body.decode("utf-8").isdigit():
+    if request.method == "POST" and request.body.decode("utf-8").isdigit():
         variables.message_loud(int(request.body.decode("utf-8")))
         audio_sync_thread = threading.Thread(
             target=audioSync, args=[int(request.body.decode("utf-8"))], daemon=True
@@ -278,13 +295,16 @@ def activate_music_sync(request) -> JsonResponse:
             variables.music_sync = False
             variables.separator()
 
-    if not variables.music_sync:
-        variables.message_loud("Audio Sync did not start", "error")
+        if not variables.music_sync:
+            variables.message_loud("Audio Sync did not start", "error")
+        variables.separator()
+        return JsonResponse({"result": variables.music_sync})
+
     variables.separator()
-    return JsonResponse({"result": variables.music_sync})
+    return render(request, "404.html", status=404)
 
 
-def stop_audio_sync(_) -> JsonResponse:
+def stop_audio_sync(request) -> JsonResponse:
     """Changes global variable to kill audio sync
 
     Args:
@@ -294,9 +314,14 @@ def stop_audio_sync(_) -> JsonResponse:
         JsonResponse: Returns true, as it stops the audio sync
     """
     variables.separator()
-    variables.message_loud("Stopping Audio Sync")
-    variables.music_sync = False
-    return JsonResponse({"result": True})
+
+    if request.method == "POST":
+        variables.message_loud("Stopping Audio Sync")
+        variables.music_sync = False
+        return JsonResponse({"result": True})
+
+    variables.separator()
+    return render(request, "404.html", status=404)
 
 
 def crud(request) -> HttpResponse:
@@ -331,25 +356,35 @@ def delete_bulb(request, ip):
         HttpResponse: renders crud page, with bulb deleted
     """
     variables.separator()
-    variables.message_loud(f"Deleting bulb at {ip}")
-    try:
-        Wizbulb.objects.filter(bulb_ip=ip).delete()
-        variables.context["bulbs"] = [x for x in variables.context["bulbs"] if x["bulb_ip"] != ip]
-        variables.context["success"] = True
-        variables.context["successMessage"] = f"Deleted bulb at {ip}"
-    except ValueError as e:
-        print(e)
+    if request.method == "POST":
+        # Delete specific bulb
+        variables.message_loud(f"Deleting bulb at {ip}")
+        try:
+            Wizbulb.objects.filter(bulb_ip=ip).delete()
+            variables.context["bulbs"] = [
+                x for x in variables.context["bulbs"] if x["bulb_ip"] != ip
+            ]
+            variables.context["success"] = True
+            variables.context["successMessage"] = f"Deleted bulb at {ip}"
 
-    bulbs = Wizbulb.objects.all()
-    for bulb in bulbs:
-        print(bulb)
+        except ValueError:
+            variables.context["error"] = True
+            variables.context["errorMessage"] = f"Error deleting bulb at {ip}"
+
+        except Wizbulb.DoesNotExist:
+            variables.context["error"] = True
+            variables.context["errorMessage"] = "The bulb does not exist"
+
+        variables.update_bulb_objects()
+        variables.separator()
+        return redirect("/crud/")
 
     variables.separator()
-    return render(request, "bulb_crud.html", variables.context)
+    return render(request, "404.html", status=404)
 
 
 def edit_bulb(request, ip):
-    """Render the edit bulb page"""
+    """Edit specific bulb"""
     variables.separator()
     if request.method == "POST":
         variables.message_loud(f"Editing bulb at {ip}")
@@ -372,8 +407,16 @@ def edit_bulb(request, ip):
             variables.context["error"] = True
             variables.context["errorMessage"] = "There was an error editing the bulb"
 
+        except Wizbulb.DoesNotExist:
+            variables.context["error"] = True
+            variables.context["errorMessage"] = "The bulb does not exist"
+
+        variables.update_bulb_objects()
+        variables.separator()
+        return redirect("/crud/")
+
     variables.separator()
-    return redirect("/crud/")
+    return render(request, "404.html", status=404)
 
 
 def clear_error(_) -> JsonResponse:
