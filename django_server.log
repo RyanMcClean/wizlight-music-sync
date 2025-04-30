@@ -1,29 +1,25 @@
-2025-04-30 16:57:08,601 - Main Logger - INFO - load ABOUT page
-2025-04-30 16:57:09,691 - Main Logger - INFO - load h2025-04-30 16:57:36,353 - Main Logger - ERROR - Audio Sync did not start
-2025-04-30 16:57:36,396 - Main Logger - INFO - color bulb
-2025-04-30 16:57:38,899 - Main Logger - ERROR - Error, could not query bulb
-2025-04-30 16:57:38,901 - Main Logger - INFO - color bulb
-2025-04-30 16:57:38,918 - Main Logger - INFO - color bulb
-2025-04-30 16:57:38,919 - Main Logger - INFO - color bulb
-2025-04-30 16:57:38,921 - Main Logger - INFO - color bulb
-- discover
-2025-04-30 16:57:19,493 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
-2025-04-30 16:57:20,409 - Main Logger - INFO - load home page
-2025-04-30 16:57:20,998 - Main Logger - INFO - load ABOUT page
-2025-04-30 16:57:21,960 - Main Logger - INFO - load ABOUT page
- Main Logger - INFO - load home page
-2025-04-30 16:57:16,327 - Main Logger - INFO - discover
-2025-04-30 16:57:18,831 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
-2025-04-30 16:57:19,278 - Main Logger - INFO - load home page
-2025-04-30 16:57:20,077 - Main Logger - INFO - load FAQ page
-2025-04-30 16:57:20,875 - Main Logger - INFO - load home page
-2025-04-30 16:57:21,710 - Main Logger - INFO - load FAQ page
-2025-04-30 16:57:22,543 - Main Logger - INFO - load home page
-2025-04-30 16:57:23,408 - Main Logger - INFO - load home page
-INFO - load ABOUT page
-2025-04-30 16:57:16,878 - Main Logger - INFO - discover
-2025-04-30 16:57:19,381 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
-2025-04-30 16:57:20,389 - Main Logger - INFO - discover
-2025-04-30 16:57:22,892 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
-2025-04-30 16:57:23,893 - Main Logger - INFO - load FAQ page
-2025-04-30 16:57:25,265 - Main Logger - INFO - load FAQ page
+2025-04-30 16:57:09,539 - Main Logger - INFO - load CRUD page
+2025-04-30 16:57:09,586 - Main Logger - INFO - load FA2025-04-30 16:57:39,212 - Main Logger - ERROR - Audio Sync did not start
+2025-04-30 16:57:39,253 - Main Logger - INFO - color bulb
+2025-04-30 16:57:41,756 - Main Logger - ERROR - Error, could not query bulb
+2025-04-30 16:57:41,758 - Main Logger - INFO - color bulb
+2025-04-30 16:57:41,775 - Main Logger - INFO - color bulb
+2025-04-30 16:57:41,776 - Main Logger - INFO - color bulb
+2025-04-30 16:57:41,778 - Main Logger - INFO - color bulb
+ load home page
+2025-04-30 16:57:16,637 - Main Logger - INFO - load home page
+2025-04-30 16:57:17,315 - Main Logger - INFO - load ABOUT page
+2025-04-30 16:57:18,389 - Main Logger - INFO - load home page
+2025-04-30 16:57:19,313 - Main Logger - INFO - load ABOUT page
+2025-04-30 16:57:19,994 - Main Logger - INFO - discover
+2025-04-30 16:57:22,497 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
+2025-04-30 16:57:23,449 - Main Logger - INFO - discover
+2025-04-30 16:57:25,950 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
+2025-04-30 16:57:27,146 - Main Logger - INFO - load FAQ page
+2025-04-30 16:57:28,609 - Main Logger - INFO - load FAQ page
+- Main Logger - INFO - load ABOUT page
+2025-04-30 16:57:24,788 - Main Logger - INFO - load ABOUT page
+n Logger - INFO - load home page
+2025-04-30 16:57:24,674 - Main Logger - INFO - load FAQ page
+2025-04-30 16:57:25,494 - Main Logger - INFO - load home page
+2025-04-30 16:57:26,238 - Main Logger - INFO - load home page
