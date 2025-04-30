@@ -75,5 +75,5 @@ jobs:
                   branch: badges
                   folder: test_logs
               if:
-                  matrix.os == 'ubuntu-latest' && matrix.python-version ==
-                  '3.12'
+                  ${{ matrix.os == 'ubuntu-latest' && matrix.python-version ==
+                  '3.12' }}
