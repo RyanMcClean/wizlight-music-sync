@@ -47,7 +47,7 @@ jobs:
             - name: Lint
               id: lint
               run: |
-                  pylint ./ | tee pylint.txt
+                  pylint ./ > pylint.txt
             - name: Create PyLint Badge
               run: |
                   score=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint.txt)
@@ -56,7 +56,7 @@ jobs:
             - name: Run Tests
               id: run_tests
               run: |
-                  pytest -s | tee pytest.txt
+                  pytest -s > pytest.txt
             - name: Create Coverage Badge
               run: |
                   coverage=$(sed -n 's/TOTAL\s*[0-9]\{1,3\}\s*[0-9]\{1,3\}\s*\.*//p' pytest.txt | sed -n 's/.$//p')
