@@ -214,7 +214,7 @@ class PlaywrightTests(StaticLiveServerTestCase):
             LOGGER.debug("Page closed")
 
 
-def navigate_to_discover(self, page):
+def navigate_to_discover(page):
     """navigate to discover page"""
     LOGGER.debug("Navigating to discover page from %s", page.url)
     if page.locator("#find-bulbs-button").is_visible():
