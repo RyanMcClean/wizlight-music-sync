@@ -52,7 +52,7 @@ jobs:
 
             - name: Create PyLint Badge
               run: |
-                  if [ ! $score ]; then exit 1; fi
+                  if [ ! "$score" ]; then exit 1; fi
                   score=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint.txt)
                   echo "Pylint score was $score"
                   anybadge --value=$score --file=test_logs/pylint.svg -l pylint 2=red 4=orange 8=yellow 10=green
@@ -64,7 +64,7 @@ jobs:
 
             - name: Create Coverage Badge
               run: |
-                  if [ ! $coverage ]; then exit 1; fi
+                  if [ ! "$coverage" ]; then exit 1; fi
                   coverage=$(sed -n 's/TOTAL\s*[0-9]\{1,3\}\s*[0-9]\{1,3\}\s*\.*//p' pytest.txt | sed -n 's/.$//p')
                   echo "Coverage was $coverage%"
                   anybadge --value=$coverage --file=test_logs/coverage.svg -l coverage 0=red 50=orange 80=yellow 100=green
