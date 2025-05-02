@@ -171,7 +171,7 @@ def main(device=None):
         for num in range(buffer_size):
             _, _, freq_bins, freq_amp = ear.get_audio_features()
             for i, x in enumerate(freq_bins):
-                # the 'else 1' is to prevent division by zero errors
+                # the 'else 1' is to prevent division by zero errors, when audio is not playing
                 if x.item() < 50:
                     freq_array["lowArray"][num] = (
                         freq_amp[i].item() if freq_amp[i].item() != 0 else 1
