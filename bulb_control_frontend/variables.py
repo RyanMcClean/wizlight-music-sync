@@ -13,12 +13,12 @@ try:
     from .models import Wizbulb
     from .forms import BulbForm
     from .helpers import NetworkHandler
-    from .audio_testing import get_working_device_list
+    from .audio_handler import get_working_device_list
 except ImportError:
     from models import Wizbulb
     from forms import BulbForm
     from helpers import NetworkHandler
-    from audio_testing import get_working_device_list
+    from audio_handler import get_working_device_list
 
 READY = False
 
@@ -116,6 +116,7 @@ def init():
         END = "\033[1;37;0m"
 
     client = NetworkHandler()
+    # Django context, used in the rendering of the Django templates
     context = {
         "regForm": BulbForm(),
         "ips": [],

@@ -17,7 +17,7 @@ from bulb_control_frontend import models
 
 from .forms import BulbForm
 from .models import Wizbulb
-from .audio_testing import main as audioSync
+from .audio_handler import main as audioSync
 from . import variables
 
 
