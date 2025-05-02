@@ -116,6 +116,7 @@ def init():
         END = "\033[1;37;0m"
 
     client = NetworkHandler()
+    # Django context, used in the rendering of the Django templates
     context = {
         "regForm": BulbForm(),
         "ips": [],
