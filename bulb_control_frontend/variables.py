@@ -13,12 +13,12 @@ try:
     from .models import Wizbulb
     from .forms import BulbForm
     from .helpers import NetworkHandler
-    from .audio_testing import get_working_device_list
+    from .audio_handler import get_working_device_list
 except ImportError:
     from models import Wizbulb
     from forms import BulbForm
     from helpers import NetworkHandler
-    from audio_testing import get_working_device_list
+    from audio_handler import get_working_device_list
 
 READY = False
 
