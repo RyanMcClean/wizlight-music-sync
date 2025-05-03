@@ -1,45 +1,39 @@
-2025-05-03 15:26:53,405 - Main Logger - INFO - Clearing 2025-05-03 15:26:55,127 - Main Logger - INFO - Bulb discover2025-05-03 15:27:22,623 - Main Logger - ERROR - Audio Sync did not start
-2025-05-03 15:27:22,627 - Main Logger - INFO - Starting Audio Sync
-2025-05-03 15:27:22,644 - Main Logger - INFO - Starting Audio Sync
-2025-05-03 15:27:22,645 - Main Logger - INFO - Starting Audio Sync
-2025-05-03 15:27:22,647 - Main Logger - INFO - Starting Audio Sync
-2025-05-03 15:27:22,653 - Main Logger - INFO - color bulb
-2025-05-03 15:27:25,156 - Main Logger - ERROR - Error, could not query bulb
-2025-05-03 15:27:25,158 - Main Logger - INFO - color bulb
-2025-05-03 15:27:25,160 - Main Logger - INFO - color bulb
-2025-05-03 15:27:25,161 - Main Logger - INFO - color bulb
-2025-05-03 15:27:25,162 - Main Logger - INFO - color bulb
-2025-05-03 15:27:25,167 - Main Logger - INFO - Deleting bulb at 127.0.0.1
-2025-05-03 15:27:25,189 - Main Logger - INFO - load CRUD page
-197 - Main Logger - INFO - Clearing success message
-2025-05-03 15:27:02,200 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:02,947 - Main Logger - INFO - discover
-2025-05-03 15:27:05,450 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
-2025-05-03 15:27:05,518 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:05,519 - Main Logger - INFO - Clearing success message
-2025-05-03 15:27:05,932 - Main Logger - INFO - load home page
-2025-05-03 15:27:06,026 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:06,026 - Main Logger - INFO - Clearing success message
-2025-05-03 15:27:06,613 - Main Logger - INFO - load FAQ page
-2025-05-03 15:27:06,698 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:06,706 - Main Logger - INFO - Clearing success message
-2025-05-03 15:27:07,530 - Main Logger - INFO - load home page
-2025-05-03 15:27:07,678 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:07,681 - Main Logger - INFO - Clearing success message
-2025-05-03 15:27:08,389 - Main Logger - INFO - load FAQ page
-2025-05-03 15:27:08,513 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:08,519 - Main Logger - INFO - Clearing success message
-2025-05-03 15:27:09,212 - Main Logger - INFO - load home page
-2025-05-03 15:27:09,316 - Main Logger - INFO - Clearing success message
-2025-05-03 15:27:09,319 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:10,107 - Main Logger - INFO - load home page
-2025-05-03 15:27:10,297 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:10,299 - Main Logger - INFO - Clearing success message
-5-03 15:27:09,893 - Main Logger - INFO - Clearing success message
-2025-05-03 15:27:09,897 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:10,680 - Main Logger - INFO - load FAQ page
-2025-05-03 15:27:10,779 - Main Logger - INFO - Clearing success message
-2025-05-03 15:27:10,781 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:11,402 - Main Logger - INFO - load FAQ page
-2025-05-03 15:27:11,533 - Main Logger - INFO - Clearing error message
-2025-05-03 15:27:11,535 - Main Logger - INFO - Clearing success message
+2025-05-03 15:26:56,884 - Main Logger - INFO - Clearing er2025-05-03 15:26:58,889 - Main Logger - ERROR - Error, cou2025-05-03 15:27:26,389 - Main Logger - ERROR - Audio Sync did not start
+2025-05-03 15:27:26,393 - Main Logger - INFO - Starting Audio Sync
+2025-05-03 15:27:26,410 - Main Logger - INFO - Starting Audio Sync
+2025-05-03 15:27:26,411 - Main Logger - INFO - Starting Audio Sync
+2025-05-03 15:27:26,413 - Main Logger - INFO - Starting Audio Sync
+2025-05-03 15:27:26,419 - Main Logger - INFO - discover
+2025-05-03 15:27:28,922 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
+25 - Main Logge2025-05-03 15:27:01,468 - Main Logge2025-05-03 15:27:02,034 - Main Logger - INFO - discover
+2025-05-03 15:27:04,537 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
+2025-05-03 15:27:04,582 - Main Logger - INFO - Clearing error message
+2025-05-03 15:27:04,588 - Main Logger - INFO - Clearing success message
+2025-05-03 15:27:05,615 - Main Logger - INFO - load home page
+2025-05-03 15:27:05,822 - Main Logger - INFO - Clearing error message
+2025-05-03 15:27:05,823 - Main Logger - INFO - Clearing success message
+2025-05-03 15:27:06,594 - Main Logger - INFO - discover
+2025-05-03 15:27:09,099 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the same network as your computer.
+2025-05-03 15:27:09,168 - Main Logger - INFO - Clearing error message
+2025-05-03 15:27:09,170 - Main Logger - INFO - Clearing success message
+2025-05-03 15:27:09,571 - Main Logger - INFO - load home page
+2025-05-03 15:27:09,671 - Main Logger - INFO - Clearing error message
+2025-05-03 15:27:09,673 - Main Logger - INFO - Clearing success message
+2025-05-03 15:27:10,367 - Main Logger - INFO - load FAQ page
+2025-05-03 15:27:10,434 - Main Logger - INFO - Clearing error message
+2025-05-03 15:27:10,447 - Main Logger - INFO - Clearing success message
+2025-05-03 15:27:11,096 - Main Logger - INFO - load home page
+2025-05-03 15:27:11,219 - Main Logger - INFO - Clearing error message
+2025-05-03 15:27:11,220 - Main Logger - INFO - Clearing success message
+2025-05-03 15:27:11,899 - Main Logger - INFO - load FAQ page
+2025-05-03 15:27:11,996 - Main Logger - INFO - Clearing error message
+2025-05-03 15:27:11,999 - Main Logger - INFO - Clearing success message
+2025-05-03 15:27:12,712 - Main Logger - INFO - load home page
+2025-05-03 15:27:12,813 - Mai2025-05-03 15:27:12,995 - Main Logger - INFO - Bulb discovery failed. Please ensure bulbs are connected to the sa2025-05-03 15:27:13,746 - Main Logger - INFO - load home page
+2025-05-03 15:27:13,923 - Main Logger - INFO - Clearing success message
+2025-05-03 15:27:13,927 - Main Logger2025-05-03 15:27:14,308 - Main Logger - INFO - load FAQ page
+2025-05-03 15:27:15,256 - Main Logger - INFO - Clearing error message
+2025-05-03 15:27:15,258 - Main Logger - INFO - Clearing success message
+2025-05-03 15:27:15,885 - Main Logger - INFO - load FAQ page
+2025-05-03 15:27:15,986 - Main Logger - INFO - Clearing error message
+2025-05-03 15:27:15,988 - Main Logger - INFO - Clearing success message
