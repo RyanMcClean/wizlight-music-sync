@@ -1,3 +1,5 @@
+"""Utilities needed for audio processing"""
+
 import numpy as np
 import math
 import scipy
@@ -80,7 +82,9 @@ class numpy_data_buffer:
         self.n_windows = n_windows
         self.data_dimensions = data_dimensions
         self.samples_per_window = samples_per_window
-        self.data = start_value * np.ones((self.n_windows, self.samples_per_window), dtype=dtype)
+        self.data = start_value * np.ones(
+            (self.n_windows, self.samples_per_window), dtype=dtype
+        )
 
         if self.data_dimensions == 1:
             self.total_samples = self.n_windows * self.samples_per_window

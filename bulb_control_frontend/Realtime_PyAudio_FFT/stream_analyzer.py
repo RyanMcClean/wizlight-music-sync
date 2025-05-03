@@ -1,3 +1,5 @@
+"""Provides access to continuously recorded (and mathematically processed) audio data."""
+
 import numpy as np
 import time
 import math
@@ -71,7 +73,9 @@ class Stream_Analyzer:
         self.FFT_window_size_ms = 1000 * self.FFT_window_size / self.rate
         self.fft = np.ones(int(self.FFT_window_size / 2), dtype=float)
         self.fftx = (
-            np.arange(int(self.FFT_window_size / 2), dtype=float) * self.rate / self.FFT_window_size
+            np.arange(int(self.FFT_window_size / 2), dtype=float)
+            * self.rate
+            / self.FFT_window_size
         )
 
         self.data_windows_to_buffer = math.ceil(
@@ -167,7 +171,9 @@ class Stream_Analyzer:
 
     def update_rolling_stats(self):
         self.rolling_bin_values.append_data(self.frequency_bin_energies)
-        self.bin_mean_values = np.mean(self.rolling_bin_values.get_buffer_data(), axis=0)
+        self.bin_mean_values = np.mean(
+            self.rolling_bin_values.get_buffer_data(), axis=0
+        )
         self.bin_mean_values = np.maximum(
             (1 - self.equalizer_strength) * np.mean(self.bin_mean_values),
             self.bin_mean_values,
@@ -175,22 +181,26 @@ class Stream_Analyzer:
 
     def update_features(self, n_bins=3):
 
-        latest_data_window = self.stream_reader.data_buffer.get_most_recent(self.FFT_window_size)
+        latest_data_window = self.stream_reader.data_buffer.get_most_recent(
+            self.FFT_window_size
+        )
 
         self.fft = getFFT(
             latest_data_window,
-            self.rate,
-            self.FFT_window_size,
             log_scale=self.log_features,
         )
         # Equalize pink noise spectrum falloff:
         self.fft = self.fft * self.power_normalization_coefficients
         self.num_ffts += 1
-        self.fft_fps = self.num_ffts / (time.time() - self.stream_reader.stream_start_time)
+        self.fft_fps = self.num_ffts / (
+            time.time() - self.stream_reader.stream_start_time
+        )
 
         if self.smoothing_length_ms > 0:
             self.feature_buffer.append_data(self.fft)
-            buffered_features = self.feature_buffer.get_most_recent(len(self.smoothing_kernel))
+            buffered_features = self.feature_buffer.get_most_recent(
+                len(self.smoothing_kernel)
+            )
             if len(buffered_features) == len(self.smoothing_kernel):
                 buffered_features = self.smoothing_kernel * buffered_features
                 self.fft = np.mean(buffered_features, axis=0)
@@ -222,7 +232,9 @@ class Stream_Analyzer:
             self.update_rolling_stats()
             self.stream_reader.new_data = False
 
-            self.frequency_bin_energies = np.nan_to_num(self.frequency_bin_energies, copy=True)
+            self.frequency_bin_energies = np.nan_to_num(
+                self.frequency_bin_energies, copy=True
+            )
             if self.apply_frequency_smoothing:
                 if self.filter_width > 3:
                     self.frequency_bin_energies = savgol_filter(
