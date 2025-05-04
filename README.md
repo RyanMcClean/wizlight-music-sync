@@ -12,8 +12,7 @@ light
 bulbs with the rhythm of music, either played from the local device, or the  
 ambient music, using the microphone of the device.
 
-The project has been developed in Python (There was an attempt in Java, but it
-did not work).
+The project has been developed in Python, containing some javascript, html, css.
 
 ## Features
 
@@ -44,14 +43,12 @@ did not work).
 
 # Installation:
 
-Currently there is no easily packaged way to install the system, this will be
-implemented as soon as it can be figured out.
-
-For now the way to install the system is to follow these steps:
+The way to install the system is to follow these steps:
 
 -   **Download the repository**:
 
-    -   clone this repository locally on your machine
+    -   Clone this repository locally on your machine
+    -   Run 'git submodule init' and 'git submodule update'
 
 -   **Create a virtual enviroment**:
 
