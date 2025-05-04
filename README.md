@@ -48,6 +48,7 @@ The way to install the system is to follow these steps:
 -   **Download the repository**:
 
     -   Clone this repository locally on your machine
+    -   Run 'git submodule init' and 'git submodule update'
 
 -   **Create a virtual enviroment**:
 

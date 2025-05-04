@@ -101,6 +101,9 @@ def discover(request) -> HttpResponse:
     """
     variables.separator()
 
+    audio_thread = threading.Thread(target=variables.update_working_audio_devices)
+    audio_thread.start()
+
     if request.method == "GET":
         ip = "255.255.255.255"
         variables.message_loud("discover")
