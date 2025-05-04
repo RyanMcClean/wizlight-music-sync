@@ -1,3 +1,3 @@
-2025-05-04 17:48:40,157 - DEBUG    - Bulb names array of length: 206 - ( test_db_validations.py : 30 )
-2025-05-04 17:48:40,299 - DEBUG    - Bulb creation for bulb array failed as expected - ( test_db_validations.py : 43 )
-2025-05-04 17:48:40,404 - DEBUG    - Bulb creation for ip array failed as expected - ( test_db_validations.py : 53 )
+2025-05-04 17:48:51,136 - DEBUG    - Bulb names array of length: 781 - ( test_db_validations.py : 30 )
+2025-05-04 17:48:51,562 - DEBUG    - Bulb creation for bulb array failed as expected - ( test_db_validations.py : 43 )
+2025-05-04 17:48:51,947 - DEBUG    - Bulb creation for ip array failed as expected - ( test_db_validations.py : 53 )
