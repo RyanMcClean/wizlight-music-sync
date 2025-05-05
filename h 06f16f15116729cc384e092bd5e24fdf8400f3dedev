@@ -1,0 +1,446 @@
+[33mcommit 06f16f15116729cc384e092bd5e24fdf8400f3de[m[33m ([m[1;36mHEAD -> [m[1;32mdev[m[33m)[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Mon May 5 15:11:38 2025 +0100
+
+    Remove outdated project presentation video file
+
+[33mcommit 3e588f91deb4808c6bd7aae7448de1dfd09dc076[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Mon May 5 15:09:19 2025 +0100
+
+    Update .gitignore to prevent tracking of .mp4 files in all directories
+
+[33mcommit e809c33cce09c8708e4600747008a16b2e249cd6[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Mon May 5 15:05:03 2025 +0100
+
+    Add .mp4 to .gitignore to prevent tracking of video files
+
+[33mcommit 208ca1ec0ba2458bdf1ee340b883ec1676fa62cf[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Mon May 5 14:53:02 2025 +0100
+
+    Delete outdated project documentation and meeting minutes; add new video file for project presentation.
+
+[33mcommit 8856192e87a84c87c1ad8e037a4a4d72c39d621d[m[33m ([m[1;31morigin/dev[m[33m)[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Mon May 5 14:19:31 2025 +0100
+
+    Refactor Stream_Analyzer and audio_handler for improved functionality; update helper methods for bulb control and adjust project report for clarity
+
+[33mcommit af46708bcc8fe42db6ab2b8afb2be5b7f446750c[m
+Merge: b59fade 77bac48
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Sun May 4 18:46:17 2025 +0100
+
+    Merge branch 'main' into dev
+
+[33mcommit b59fade83457e27c49de78fc70c3ee94c59af043[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Sun May 4 18:45:47 2025 +0100
+
+    Refactor code structure for improved readability and maintainability
+
+[33mcommit 088015152822680d08afc13b63f2dc3055499cda[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Sat May 3 20:45:55 2025 +0100
+
+    Refine project report: improve acknowledgements, update table of contents, and enhance clarity in installation process and security considerations
+
+[33mcommit bce2bbf247c827796453a25614ea44268832cfca[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Sat May 3 18:06:35 2025 +0100
+
+    Update README and project report: refine installation instructions and adjust table of contents for clarity
+
+[33mcommit 77bac48f4d118f13c33daa660c52630d7336892c[m
+Merge: 16a56bf bf07f75
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Sat May 3 16:31:32 2025 +0100
+
+    Merge pull request #51 from RyanMcClean/dev
+    
+    Dev - Final days merges
+
+[33mcommit bf07f75b7c11803218bb27caea7923ce203f0100[m
+Merge: 0b11f43 16a56bf
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Sat May 3 16:24:44 2025 +0100
+
+    Merge branch 'main' into dev
+
+[33mcommit 0b11f43195eb0669ab4f03666b3c79ef72081dbd[m
+Merge: 4e36fd4 ffd46fc
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Sat May 3 16:23:57 2025 +0100
+
+    Merge branch 'dev' of github.com:RyanU1328/wizlight-music-sync into dev
+
+[33mcommit 4e36fd44fe42582b4ff9422be4fd8743ed838762[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Sat May 3 16:23:48 2025 +0100
+
+    Refactor code structure for improved readability and maintainability
+
+[33mcommit 16a56bf1d7ffdb26258c7de686667f8ed35e557f[m
+Merge: 94e53c4 ffd46fc
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Fri May 2 16:44:46 2025 +0100
+
+    Merge pull request #50 from RyanMcClean/dev
+    
+    Dev - Final Weekend Merges
+
+[33mcommit ffd46fca6fd902b898816d5bf7b207d19d01d4e4[m
+Merge: 5287cfe 94e53c4
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Fri May 2 16:40:08 2025 +0100
+
+    Merge branch 'main' into dev
+
+[33mcommit 5287cfe6ffd9e8321f7a0e71ad19e54ed6fb9e18[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Fri May 2 16:38:22 2025 +0100
+
+    Enhance comments for clarity in audio_handler.py and update project report for improved readability and structure
+
+[33mcommit 99f6d4bbeccd02b7b880dc34a85b45d3b7f2afb6[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Fri May 2 15:40:59 2025 +0100
+
+    -rename audio_testing file for readability
+    - Updates to final report
+
+[33mcommit 7581e938d01cea671278e0699bef1b32d0c4daf2[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Fri May 2 10:53:00 2025 +0100
+
+    Add context comment for Django template rendering in init function and update project report for clarity
+
+[33mcommit c331687c3bfa5d2fc378d0787d76c4d9673e9e67[m
+Merge: 0c6dde3 1e8772a
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 23:19:29 2025 +0100
+
+    Merge branch 'dev' of github.com:RyanU1328/wizlight-music-sync into dev
+
+[33mcommit 0c6dde31577a52f2ed15ff7ee74ee917d91a96be[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 23:19:13 2025 +0100
+
+    Improve clarity and grammar in project report documentation
+
+[33mcommit 94e53c4d98f6ec6aedb2845623ff7053e8552860[m
+Merge: da0088b 1e8772a
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 20:13:18 2025 +0100
+
+    Merge pull request #49 from RyanMcClean/dev
+    
+    Dev - Increase stability of playwright tests
+
+[33mcommit 1e8772a357ffc702f2d89dc5c446e89237822f34[m
+Merge: 60aec9e da0088b
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 20:09:20 2025 +0100
+
+    Merge branch 'main' into dev
+
+[33mcommit 60aec9e592d0cfe8f2698165ab7b5a5751ef5814[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 20:05:04 2025 +0100
+
+    Refactor navigate_to_discover function to remove self parameter
+
+[33mcommit ca3f8334779d7f8406680ef9e8a6a8650a249529[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 20:01:09 2025 +0100
+
+    Refactor navigate_to_discover function to include self parameter and add logging for navigation success
+
+[33mcommit 9aa69895cf67d391a703b6ada39106786af72a3b[m
+Merge: 5a9f56a d73f5c5
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 19:52:07 2025 +0100
+
+    Merge branch 'dev' of github.com:RyanU1328/wizlight-music-sync into dev
+
+[33mcommit 5a9f56a6195f4a6a9491e22e714c95c5ca66069d[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 19:50:10 2025 +0100
+
+    Refactor badge publishing condition and enhance CSRF token handling in fetch requests
+
+[33mcommit d73f5c5b8c8b27173ab8a5c7f4eec28a07263e50[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 19:17:52 2025 +0100
+
+    Update django.yml
+
+[33mcommit 1655bd13eb2789aaf5d2219a8f0538973c05a615[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 19:13:01 2025 +0100
+
+    Fix syntax for conditional badge publishing in GitHub Actions workflow
+
+[33mcommit 79aa9c53f9b716c6f8e59e7c747b213ea1fe15a2[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 19:05:29 2025 +0100
+
+    Add conditional check for badge publishing based on OS and Python version
+
+[33mcommit 0e6433923c57fbced779d644b9a7b812fd885572[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:59:06 2025 +0100
+
+    Update bulb function tests to handle varying response results and reintroduce clear success/error tests
+
+[33mcommit c97533369985cda2e293be4b8a83d09cce7369f2[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:55:37 2025 +0100
+
+    Fix badge creation steps to correctly check for empty score and coverage values
+
+[33mcommit 913949c03cb124e0d1a59657ba7c402e03b74500[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:51:05 2025 +0100
+
+    Fix badge creation steps to correctly check for score and coverage values
+
+[33mcommit 2b3f3570203e6fa3c936977560fc3c9132dc5b8a[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:46:37 2025 +0100
+
+    Fix badge creation steps to correctly check for score and coverage values before exiting
+
+[33mcommit 6eed199bd1aa84fa4c0245250848129153b3389b[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:42:07 2025 +0100
+
+    Fix badge creation steps by moving exit condition checks for score and coverage to the correct position
+
+[33mcommit 51c904fb5e01eebdc94e79d16e4cb883dc24f620[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:38:49 2025 +0100
+
+    Fix badge creation steps by moving conditional checks for score and coverage to the correct position
+
+[33mcommit 701935dc185029bb1c1a464ab0ad61844d6643b2[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:35:36 2025 +0100
+
+    Fix conditional checks in badge creation steps to properly quote variables
+
+[33mcommit ad4341fa8bfa6d7f6ede884a1c9d3002ce254133[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:31:26 2025 +0100
+
+    Fix conditional checks in badge creation steps to properly quote variables
+
+[33mcommit 0ac1f5276e90b41f9a376a9964f090f77c3deb95[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:28:06 2025 +0100
+
+    Refactor Django CI workflow: clean up code, remove unnecessary badge folder creation, and fix exit syntax in badge creation steps
+
+[33mcommit b1e040dd2d478ed567f12022fbde1f45b5dd13f8[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:24:02 2025 +0100
+
+    Enhance error handling in CI workflow by redirecting lint and test output to files using tee; update pytest options to prevent coverage on fail
+
+[33mcommit 51509e19ed3b89190d9e906f90c4662bcec9bffc[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:12:02 2025 +0100
+
+    Redirect lint and test output to files using &> for better error handling
+
+[33mcommit 8e77766a4a28c813180125c591afda915e375b0f[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 18:03:08 2025 +0100
+
+    Fix output redirection in lint and test steps to append results to files
+
+[33mcommit 40c25f8dbee75ace6e9585e37b45f44088abc5f7[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 17:58:51 2025 +0100
+
+    Refactor lint and test commands to redirect output to files instead of using tee
+
+[33mcommit a77879249fcb117e9918256d5d2caa5d19175979[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 17:54:23 2025 +0100
+
+    Fixing issue where failed test doesn't fail GitHub actions
+
+[33mcommit cd85d5fc5d9c648471fc02d62faed358d1e5af28[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 17:33:07 2025 +0100
+
+    Update badge file paths in CI workflow to use test_logs directory
+
+[33mcommit c7f1a8b984fb9e8a56831bdf54e2545c3a8b6928[m
+Merge: 9930698 29e6abf
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 17:30:05 2025 +0100
+
+    Merge branch 'dev' of github.com:RyanU1328/wizlight-music-sync into dev
+
+[33mcommit 9930698e4c14a6115a989ce90f80cf9c69439bb1[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 17:29:46 2025 +0100
+
+    Remove --no-cov-on-fail option from pytest addopts for cleaner coverage reporting
+
+[33mcommit da0088bbc7114cc3317b21b5d3d1bb291159eeeb[m
+Merge: 2d46832 29e6abf
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 17:21:18 2025 +0100
+
+    Merge pull request #48 from RyanMcClean/dev
+    
+    Dev - Final week updates
+
+[33mcommit 29e6abf3ee65c623443112d53375847e2b8d85e3[m
+Merge: b7824b0 2d46832
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 16:50:39 2025 +0100
+
+    Merge branch 'main' into dev
+
+[33mcommit b7824b0c0cd2143a8795a2aeae30b9a38e3d5321[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 16:50:00 2025 +0100
+
+    Updates to Project report
+
+[33mcommit 184d546d6d3648ef6e8ae7aef26b713689e2bcd4[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 13:57:21 2025 +0100
+
+    Enhance error and success message clearing with POST method and logging
+
+[33mcommit eebb9adb6d8a2f6d05872d46aaa20fe5082ae1bf[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Wed Apr 30 12:31:04 2025 +0100
+
+    Refactor tests and views for improved error handling and logging
+    
+    - Updated view functions to return 404 responses for unsupported methods.
+    - Enhanced logging in test cases to include method names for better traceability.
+    - Modified test cases to check for 404 responses on invalid requests.
+    - Improved bulb discovery logic to handle GET requests more effectively.
+    - Added new tests for CRUD operations and navigation between pages.
+    - Updated logger setup to reduce code duplication and improve clarity.
+
+[33mcommit d4e33e7e00686571dbe1c6ff69b3587b3d4e2f7b[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Tue Apr 29 21:57:20 2025 +0100
+
+    Add error handling for bulb discovery in query_bulb view
+
+[33mcommit 63365b15b084b05a551714d994fe82b5dabf7e1f[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Tue Apr 29 00:09:19 2025 +0100
+
+    Add bulb brightness field to Wizbulb model and update related methods
+
+[33mcommit ca35e51ef810c3dac06c0138e5eb4e6fe4f67cb2[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Mon Apr 28 13:05:29 2025 +0100
+
+    Add 'Ooops' to cSpell words in settings.json
+
+[33mcommit 5e67f4ac5ddf9cab6541909e0a173d9986dd8212[m
+Author: Ryan McClean <ryan1328@hotmail.com>
+Date:   Mon Apr 28 12:59:45 2025 +0100
+
+    Fix typos in virtual environment instructions in README and add 'runserver' to cSpell words in settings
+
+[33mcommit 0a7ead3cb4f8b23397ce7e03d8d8172e0106f7d6[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Mon Apr 28 12:57:03 2025 +0100
+
+    Fix formatting in installation instructions for Windows in README
+
+[33mcommit 2d468325ec054ded686595073b4e17c3cab87059[m
+Merge: 893099d 779a7c0
+Author: Ryan McClean <86496134+RyanMcClean@users.noreply.github.com>
+Date:   Mon Apr 28 12:56:09 2025 +0100
+
+    Merge pull request #47 from RyanMcClean/dev
+    
+    Dev - Update Main to newest work
+
+[33mcommit 779a7c089846e816adcb56b98a6659ff98ea0f42[m
+Merge: db857f4 893099d
+Author: Ryan McClean <86496134+RyanMcClean@users.noreply.github.com>
+Date:   Mon Apr 28 12:52:27 2025 +0100
+
+    Merge branch 'main' into dev
+
+[33mcommit db857f4ade39bf25ad7d485727567658e200d009[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Mon Apr 28 12:51:51 2025 +0100
+
+    Update settings and documentation; add validation attributes in HTML templates and enhance installation instructions in README
+
+[33mcommit 4849a2ceeeaba493ee9084aca2990e5c68d423ec[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Mon Apr 28 01:36:19 2025 +0100
+
+    Refactor project report and documentation; enhance clarity and detail in user interface design, security considerations, and backend architecture. Update API endpoint descriptions and improve testing framework by consolidating logging setup in test cases. Adjust bulb creation tests for better validation and logging practices. Update project configuration to disable specific linting errors.
+
+[33mcommit dc34b6d3a81be287e2bbcde8bdd3c9364ca3aefa[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Sat Apr 26 18:56:05 2025 +0100
+
+    Fix coverage output message in CI workflow to include percentage sign
+
+[33mcommit 4fe853725776851c3e35046ee719742e7db2b51a[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Sat Apr 26 01:06:11 2025 +0100
+
+    Fix coverage extraction in CI workflow to accurately parse coverage percentage
+
+[33mcommit b12f8e180335c43b43f8f19b783ff3ab6415c0bf[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Sat Apr 26 00:44:22 2025 +0100
+
+    Fix coverage extraction in CI workflow to correctly parse coverage percentage
+
+[33mcommit 00e55bfb3a510a5711d6785346553edf6df551a5[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Sat Apr 26 00:38:36 2025 +0100
+
+    Fix coverage extraction command in CI workflow
+
+[33mcommit 68b2bc5573dccfefcd91a094bbf8a0315bea5417[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Sat Apr 26 00:34:59 2025 +0100
+
+    Refactor test coverage extraction in CI workflow; remove unused coverage badge step
+
+[33mcommit 5f0ff8b7b1b1112273844f3162d8fc3222275c96[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Sat Apr 26 00:19:49 2025 +0100
+
+    Enhance test coverage reporting in CI workflow; update pytest options to remove HTML report generation
+
+[33mcommit fc2b473e1a8a50f027c4c11d6ab721ed826fb46c[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Fri Apr 25 23:55:46 2025 +0100
+
+    Refactor code for improved readability and consistency across multiple files; add black to requirements
+
+[33mcommit cf380f45fe9d22512caaafc1ecfb5ad143af4c35[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Fri Apr 25 23:55:05 2025 +0100
+
+    Add problem matcher for Setup Playwright task to improve error detection
+
+[33mcommit ea2129a58280d69fe42596bac1b9dcad28f7d6d7[m
+Author: Ryan <ryan1328@hotmail.com>
+Date:   Fri Apr 25 15:56:01 2025 +0100
+
+    Remove unnecessary div tags from README badge section for improved formatting
