@@ -117,6 +117,10 @@ def main(device=None):
     """Main function to run the audio sync"""
     packet = "turn_to_full"
 
+    ips = []
+    for bulb in variables.bulbs:
+        ips.append(bulb.bulb_ip)
+
     ear = Stream_Analyzer(
         # Pyaudio (portaudio) device index, defaults to first mic input
         device=device,
@@ -128,8 +132,8 @@ def main(device=None):
         visualize=False,
         verbose=True,
     )
-    for bulb in variables.bulbs:
-        ip = bulb.bulb_ip
+    for bulb in variables.context["bulbs"]:
+        ip = bulb["bulb_ip"]
         variables.client.sender(ip, "turn_on", attempts=5)
 
     buffer_size = 100
@@ -166,7 +170,7 @@ def main(device=None):
         freq_array[str(key) + "_avg"] = max(freq_array[key])
 
     # Set initial values for variance, this will be changed by the equations later
-    variance = 1
+    variance = 100
     while variables.music_sync:
         for num in range(buffer_size):
             _, _, freq_bins, freq_amp = ear.get_audio_features()
@@ -188,6 +192,12 @@ def main(device=None):
                     break
 
             for key in list(freq_array.keys()):
+                if "_avg" in str(key):
+                    freq_array[key] = (sum(freq_array[key.replace("_avg", "")])) / len(
+                        freq_array[key.replace("_avg", "")]
+                    )
+
+            for key in list(freq_array.keys()):
                 if "_avg" not in str(key):
                     beat_limit = freq_array[str(key) + "_avg"] + (
                         freq_array[str(key) + "_avg"] * variance
@@ -195,15 +205,18 @@ def main(device=None):
                     freq = freq_array[key][num]
                     if freq > beat_limit:
                         variables.message_loud(key)
-                        for bulb in variables.bulbs:
-                            ip = bulb.bulb_ip
-                            beat_thread = Thread(target=beat, args=(ip, packet))
+                        if isinstance(ips, list):
+                            for ip in ips:
+                                beat_thread = Thread(target=beat, args=(ip, packet))
+                                beat_thread.start()
+                        elif isinstance(ips, str):
+                            beat_thread = Thread(target=beat, args=(ips, packet))
                             beat_thread.start()
                         packet = "turn_to_half" if packet == "turn_to_full" else "turn_to_full"
-                        time.sleep(0.01)
+                        _, _, freq_bins, freq_amp = ear.get_audio_features()
+
                         break
 
-                    freq_array[str(key) + "_avg"] = (sum(freq_array[key])) / len(freq_array[key])
                     per_diff = 0
                     for x in freq_array[key]:
                         per_diff += freq_array[key + "_avg"] / x
