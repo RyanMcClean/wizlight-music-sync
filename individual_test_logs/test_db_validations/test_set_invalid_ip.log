@@ -1,2 +1,2 @@
-2025-05-05 17:12:40,007 - DEBUG    - Invalid IP bulb array of length: 213 - ( test_db_validations.py : 239 )
-2025-05-05 17:12:40,137 - DEBUG    - Bulb creations with invalid IPs failed as expected - ( test_db_validations.py : 247 )
+2025-05-05 17:13:02,371 - DEBUG    - Invalid IP bulb array of length: 108 - ( test_db_validations.py : 239 )
+2025-05-05 17:13:02,460 - DEBUG    - Bulb creations with invalid IPs failed as expected - ( test_db_validations.py : 247 )
