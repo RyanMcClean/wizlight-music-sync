@@ -17,7 +17,7 @@ class NetworkHandler:
             "discover": b'{"method":"getPilot","params":{}}',
             "turn_on": b'{"id":1,"method":"setState","params":{"state":true}}',
             "turn_off": b'{"id":1,"method":"setState","params":{"state":false}}',
-            "turn_to_half": b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":10}}',
+            "turn_to_half": b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":5}}',
             "turn_to_full": b'{"id":1,"method":"setPilot","params":{"temp":2000,"dimming":100}}',
             # Registration is not currently used, but can be used in future development
             "registration": b'{"method":"registration","params":{"phoneMac":'

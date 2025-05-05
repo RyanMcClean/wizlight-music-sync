@@ -135,11 +135,11 @@ def init():
 
     def update_working_audio_devices():
         """Updates context with working tested audio devices from the host machine"""
-        if context["numBulbs"] > 0 or len(context["bulbs"]) > 0:
-            devices = get_working_device_list()
-            for device in devices:
-                if device not in context["audioDevices"]:
-                    context["audioDevices"].append(device)
+
+        devices = get_working_device_list()
+        for device in devices:
+            if device not in context["audioDevices"]:
+                context["audioDevices"].append(device)
         context["audioDevices"] = [
             dict(x) for x in {tuple(y.items()) for y in context["audioDevices"]}
         ]
