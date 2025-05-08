@@ -1,1 +1,1 @@
-2025-05-08 01:57:43,803 - DEBUG    - Bulb creations with invalid int values failed as expected - ( test_db_validations.py : 227 )
+2025-05-08 01:57:51,758 - DEBUG    - Bulb creations with invalid int values failed as expected - ( test_db_validations.py : 227 )
